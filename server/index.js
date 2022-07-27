@@ -12,8 +12,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
-app.get('/api/hello', (req, res) => {
-  res.json({ hello: 'world' });
+app.post('/api/workout', (req, res, next) => {
+  // get current user id
+  // get exercise name
+
 });
 
 app.use(errorMiddleware);
