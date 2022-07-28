@@ -21,8 +21,6 @@ CREATE TABLE "public"."users" (
 CREATE TABLE "public"."workout templates" (
 	"workoutId" serial NOT NULL UNIQUE,
 	"userId" serial NOT NULL UNIQUE,
-	"exercises" serial UNIQUE,
-	"templateName",
 	CONSTRAINT "workout templates_pk" PRIMARY KEY ("workoutId")
 ) WITH (
   OIDS=FALSE
@@ -32,10 +30,9 @@ CREATE TABLE "public"."workout templates" (
 
 CREATE TABLE "public"."exercise" (
 	"exerciseId" serial NOT NULL UNIQUE,
-	"exerciseName" TEXT NOT NULL UNIQUE,
-	"bodyPart" serial NOT NULL,
+	"name" TEXT NOT NULL UNIQUE,
+	"muscleGroup" TEXT NOT NULL,
 	"equipment" TEXT NOT NULL,
-	"setId" integer,
 	"notes" TEXT,
 	CONSTRAINT "exercise_pk" PRIMARY KEY ("exerciseId")
 ) WITH (
@@ -45,10 +42,10 @@ CREATE TABLE "public"."exercise" (
 
 
 CREATE TABLE "public"."sets" (
-	"setId" serial NOT NULL,
-	"reps" integer NOT NULL,
-	"weight" integer NOT NULL,
-	CONSTRAINT "sets_pk" PRIMARY KEY ("setId")
+	"workoutId" serial NOT NULL,
+	"exerciseId" int NOT NULL,
+	"reps" int NOT NULL,
+	"weight" int NOT NULL
 ) WITH (
   OIDS=FALSE
 );
@@ -57,6 +54,7 @@ CREATE TABLE "public"."sets" (
 
 
 ALTER TABLE "workout templates" ADD CONSTRAINT "workout templates_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "workout templates" ADD CONSTRAINT "workout templates_fk1" FOREIGN KEY ("exercises") REFERENCES "exercise"("exerciseId");
 
-ALTER TABLE "exercise" ADD CONSTRAINT "exercise_fk0" FOREIGN KEY ("setId") REFERENCES "sets"("setId");
+
+ALTER TABLE "sets" ADD CONSTRAINT "sets_fk0" FOREIGN KEY ("workoutId") REFERENCES "workout templates"("workoutId");
+ALTER TABLE "sets" ADD CONSTRAINT "sets_fk1" FOREIGN KEY ("exerciseId") REFERENCES "exercise"("exerciseId");
