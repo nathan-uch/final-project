@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.post('/api/workout', (req, res, next) => {
-  const { userId } = req.body;
+  const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
