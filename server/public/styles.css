@@ -2,39 +2,28 @@ body {
   font-family: Quicksand, sans-serif;
 }
 
+/* NAVBARS */
 .navbar {
-  min-height: 70px;
-  background-color: black;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 3rem;
-}
-
-.logo-container {
-  min-width: 150px;
-  min-height: 50px;
-}
-
-.logo-anchor {
-  position: relative;
+  min-height: 60px;
 }
 
 .logo-img {
   position: absolute;
-  bottom: 10;
+  min-height: 40px;
+  z-index: 1;
+  top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
+  object-fit: contain;
 }
 
 .logo-text {
   position: absolute;
-  top: 15px;
-  left: 12px;
+  top: 20px;
+  left: 30px;
   color: #ffe247;
-  letter-spacing: 0.8rem;
+  letter-spacing: 0.6rem;
   text-decoration: none;
-  margin: 0;
+  z-index: 2;
 }
 
 .fa-arrow-right-from-bracket {
@@ -45,4 +34,21 @@ body {
 .fa-arrow-right-from-bracket:active,
 .fa-arrow-right-from-bracket:visited {
   text-decoration: none;
+}
+
+.navbar-menu,
+.navbar-item:focus-within,
+a.navbar-item:hover {
+  background-color: hsl(0deg, 0%, 4%) !important;
+}
+
+.bot-navbar-icon {
+  width: 50px;
+  min-height: 45px;
+  object-fit: contain;
+}
+
+.body-container {
+  margin-top: 65px;
+  padding: 1.5rem;
 }
