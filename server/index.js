@@ -23,6 +23,19 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
+app.get('/api/all-exercises', (req, res, next) => {
+  const sql = `
+    select *
+    from "exercises"
+    order by "name" desc
+  `;
+  db.query(sql)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
@@ -35,7 +48,7 @@ app.post('/api/workout', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const newWorkout = res.rows;
-      res.status(200).json(newWorkout);
+      res.status(201).json(newWorkout);
     })
     .catch(err => next(err));
 });
