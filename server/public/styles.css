@@ -1,0 +1,48 @@
+body {
+  font-family: Quicksand, sans-serif;
+}
+
+.navbar {
+  min-height: 70px;
+  background-color: black;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 3rem;
+}
+
+.logo-container {
+  min-width: 150px;
+  min-height: 50px;
+}
+
+.logo-anchor {
+  position: relative;
+}
+
+.logo-img {
+  position: absolute;
+  bottom: 10;
+  left: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.logo-text {
+  position: absolute;
+  top: 15px;
+  left: 12px;
+  color: #ffe247;
+  letter-spacing: 0.8rem;
+  text-decoration: none;
+  margin: 0;
+}
+
+.fa-arrow-right-from-bracket {
+  color: #ffe247;
+}
+
+.fa-arrow-right-from-bracket:link,
+.fa-arrow-right-from-bracket:active,
+.fa-arrow-right-from-bracket:visited {
+  text-decoration: none;
+}
