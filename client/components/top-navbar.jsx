@@ -13,7 +13,10 @@ export default class TopNavbar extends React.Component {
               </figure>
             <h2 className="m-0 is-size-5 logo-text has-text-weight-bold">Strive</h2>
             </a>
+          <div className="navbar-menu is-hidden-touch desktop-links">
+            <a href="#" className="navbar-item top-links is-size-5 has-text-weight-semibold">Workouts</a>
           </div>
+        </div>
         <div className="navbar-end ">
             <div className="navbar-item">
               <a href="#">

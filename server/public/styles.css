@@ -26,8 +26,19 @@ body {
   z-index: 2;
 }
 
-.fa-arrow-right-from-bracket {
+.desktop-links {
+  margin-left: 10rem;
+}
+
+.top-links {
+  z-index: 3;
   color: #ffe247;
+  letter-spacing: 0.2rem;
+}
+
+.top-links:hover,
+.fa-arrow-right-from-bracket {
+  color: #ffe247 !important;
 }
 
 .fa-arrow-right-from-bracket:link,
@@ -48,9 +59,33 @@ a.navbar-item:hover {
   object-fit: contain;
 }
 
+/* BODY CONTAINER */
+
+a {
+  color: #4a4a4a;
+}
+
 .body-container {
-  margin-top: 65px;
+  margin: 65px 0;
   padding: 1.5rem;
+}
+
+/* EXERCISES PAGE */
+
+a.box:hover {
+  border: none !important;
+  background-color: rgb(173, 173, 173) !important;
+  box-shadow:
+    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%) !important;
+}
+
+.exercise-container {
+  gap: 2rem;
+}
+
+.box:last-child {
+  margin-bottom: 1.5rem;
 }
 
 /* LOADING SPINNER */
@@ -74,7 +109,7 @@ a.navbar-item:hover {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #fff;
+  background: #ffe247;
   margin: -4px 0 0 -4px;
 }
 
