@@ -28,11 +28,11 @@ CREATE TABLE "public"."workout templates" (
 
 
 
-CREATE TABLE "public"."exercise" (
+CREATE TABLE "public"."exercises" (
 	"exerciseId" serial NOT NULL UNIQUE,
 	"name" TEXT NOT NULL UNIQUE,
 	"muscleGroup" TEXT NOT NULL,
-	"equipment" TEXT NOT NULL,
+	"equipment" TEXT,
 	"notes" TEXT,
 	CONSTRAINT "exercise_pk" PRIMARY KEY ("exerciseId")
 ) WITH (
