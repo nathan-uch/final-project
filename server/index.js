@@ -27,7 +27,7 @@ app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
     select *
     from "exercises"
-    order by "name" desc
+    order by "name" desc;
   `;
   db.query(sql)
     .then(result => {
@@ -49,6 +49,23 @@ app.post('/api/workout', (req, res, next) => {
     .then(result => {
       const newWorkout = res.rows;
       res.status(201).json(newWorkout);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/workout/add-set', (req, res, next) => {
+  const { workoutId, exerciseId } = req.body;
+  if (!workoutId || !exerciseId) throw new ClientError(400, 'Existing workoutId and exerciseId are required');
+  const params = [workoutId, exerciseId];
+  const sql = `
+    insert into "sets" ("workoutId", "exerciseId")
+    values ($1, $2)
+    returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const addedSets = res.rows;
+      res.status(201).json(addedSets);
     })
     .catch(err => next(err));
 });
