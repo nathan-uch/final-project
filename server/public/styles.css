@@ -71,21 +71,46 @@ a {
 }
 
 /* EXERCISES PAGE */
-
-a.box:hover {
-  border: none !important;
-  background-color: rgb(173, 173, 173) !important;
-  box-shadow:
-    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
-    0 0 0 1px rgb(10 10 10 / 2%) !important;
-}
-
 .exercise-container {
   gap: 2rem;
 }
 
 .box:last-child {
   margin-bottom: 1.5rem;
+}
+
+.exercise-card {
+  position: relative;
+  border: 2px solid #dbdbdb;
+}
+
+.selected-exercise-card {
+  position: relative;
+  border: 2px solid black;
+}
+
+.selected-exercise-card:hover,
+.exercise-card.box:hover {
+  box-shadow:
+    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%) !important;
+}
+
+.exercise-card.box:hover {
+  border: 2px solid rgba(173, 173, 173) !important;
+  background-color: rgb(173, 173, 173) !important;
+}
+
+.selected-exercise-card.box:hover {
+  background-color: #fffae4 !important;
+  border: 2px solid black !important;
+}
+
+.fa-check {
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  color: #ffe247;
 }
 
 /* LOADING SPINNER */
