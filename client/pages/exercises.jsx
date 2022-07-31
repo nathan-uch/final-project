@@ -4,8 +4,14 @@ function ExerciseCard({ name, allSelected, setAllSelected }) {
   const [isSelected, setSelected] = useState(false);
 
   function handleClick() {
-    !isSelected ? setSelected(true) : setSelected(false);
-    setAllSelected({ ...allSelected, name });
+    if (!isSelected) {
+      setSelected(true);
+      setAllSelected([...allSelected, name]);
+    } else {
+      setSelected(false);
+      const updatedSelected = allSelected.filter(exer => exer !== name);
+      setAllSelected(updatedSelected);
+    }
   }
 
   return (
@@ -23,7 +29,7 @@ function ExerciseCard({ name, allSelected, setAllSelected }) {
 export default function Exercises(props) {
   const [exercises, setExercises] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const [allSelected, setAllSelected] = useState({});
+  const [allSelected, setAllSelected] = useState([]);
 
   useEffect(() => {
     fetch('/api/all-exercises')
