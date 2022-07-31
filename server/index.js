@@ -36,6 +36,24 @@ app.get('/api/all-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/workout/sets', (req, res, next) => {
+  const { workoutId } = req.body;
+  if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
+  const params = [workoutId];
+  const sql = `
+    select *
+    from "sets"
+    where "workoutId" = $1
+    order by "exerciseId" desc;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const sets = res.rows;
+      res.status(201).json(sets);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
