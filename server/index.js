@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
+// gets all exercises
 app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
     select *
@@ -36,6 +37,7 @@ app.get('/api/all-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// gets all exercises in a workout
 app.get('/api/workout/sets', (req, res, next) => {
   const { workoutId } = req.body;
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
@@ -48,12 +50,13 @@ app.get('/api/workout/sets', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const sets = res.rows;
-      res.status(201).json(sets);
+      const sets = result.rows;
+      res.status(200).json(sets);
     })
     .catch(err => next(err));
 });
 
+// creates new workout
 app.post('/api/workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
@@ -71,18 +74,31 @@ app.post('/api/workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/workout/add-set', (req, res, next) => {
-  const { workoutId, exerciseId } = req.body;
-  if (!workoutId || !exerciseId) throw new ClientError(400, 'Existing workoutId and exerciseId are required');
-  const params = [workoutId, exerciseId];
+// adds multiple new exercises (as sets) in workout
+app.post('/api/workout/new-exercises', (req, res, next) => {
+  const { workoutId, exerciseIds } = req.body;
+  if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'Existing workoutId and exerciseId are required');
+  const params = [Number(workoutId)];
+  exerciseIds.forEach(id => {
+    params.push(Number(id));
+  });
+  let paramIndex = 1;
+  const ids = exerciseIds.map((id, index) => {
+    paramIndex++;
+    if (index !== exerciseIds.length - 1) {
+      return `($1, $${paramIndex})`;
+    } else {
+      return `($1, $${paramIndex})`;
+    }
+  });
   const sql = `
     insert into "sets" ("workoutId", "exerciseId")
-    values ($1, $2)
+    values ${ids}
     returning *;
   `;
   db.query(sql, params)
     .then(result => {
-      const addedSets = res.rows;
+      const addedSets = result.rows;
       res.status(201).json(addedSets);
     })
     .catch(err => next(err));

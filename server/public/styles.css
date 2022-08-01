@@ -121,6 +121,7 @@ a {
   position: fixed;
   width: 30%;
   bottom: 0;
+  right: 0;
   z-index: 30;
   border: 1px solid #ababab;
   border-top-left-radius: 6px;
@@ -151,6 +152,7 @@ a {
   max-height: 200px;
   overflow: scroll;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .add-clear-exercises-mobile {
