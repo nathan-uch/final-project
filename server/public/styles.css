@@ -71,21 +71,111 @@ a {
 }
 
 /* EXERCISES PAGE */
-
-a.box:hover {
-  border: none !important;
-  background-color: rgb(173, 173, 173) !important;
-  box-shadow:
-    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
-    0 0 0 1px rgb(10 10 10 / 2%) !important;
-}
-
 .exercise-container {
   gap: 2rem;
 }
 
 .box:last-child {
   margin-bottom: 1.5rem;
+}
+
+.exercise-card {
+  max-height: 55px;
+  border: 2px solid #dbdbdb;
+}
+
+.exercise-card:last-child {
+  margin-bottom: 70px;
+}
+
+.selected-exercise-card {
+  position: relative;
+  border: 2px solid black;
+}
+
+.selected-exercise-card:hover,
+.exercise-card.box:hover {
+  box-shadow:
+    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%) !important;
+}
+
+.exercise-card.box:hover {
+  border: 2px solid rgba(173, 173, 173) !important;
+  background-color: rgb(173, 173, 173) !important;
+}
+
+.selected-exercise-card.box:hover {
+  background-color: #fffae4 !important;
+  border: 2px solid black !important;
+}
+
+.fa-check {
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  color: #ffe247;
+}
+
+.exercises-container-desktop {
+  position: fixed;
+  width: 30%;
+  bottom: 0;
+  right: 0;
+  z-index: 30;
+  border: 1px solid #ababab;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.exercise-form-desktop {
+  max-height: 350px;
+  transition: max-height 0.5s;
+}
+
+.collapse {
+  max-height: 0;
+}
+
+.toggle-show-exercises-desktop {
+  width: 100%;
+  font-family: inherit;
+  background-color: black;
+  color: #ffe247;
+  border: none;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  cursor: pointer;
+}
+
+.exercise-list {
+  max-height: 200px;
+  overflow: scroll;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.add-clear-exercises-mobile {
+  width: 100%;
+  min-height: 50px;
+  position: fixed;
+  bottom: 36px;
+  z-index: 30;
+  border-top: 2px solid white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.add-exercises-btn,
+.clear-btn {
+  font-family: inherit;
+  width: 40%;
+  max-height: 50px;
+  box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.5) !important;
+}
+
+.add-exercises-btn {
+  background-color: #ffe247;
 }
 
 /* LOADING SPINNER */

@@ -44,8 +44,8 @@ CREATE TABLE "public"."exercises" (
 CREATE TABLE "public"."sets" (
 	"workoutId" serial NOT NULL,
 	"exerciseId" int NOT NULL,
-	"reps" int NOT NULL,
-	"weight" int NOT NULL
+	"reps" int,
+	"weight" int
 ) WITH (
   OIDS=FALSE
 );
@@ -57,4 +57,4 @@ ALTER TABLE "workout templates" ADD CONSTRAINT "workout templates_fk0" FOREIGN K
 
 
 ALTER TABLE "sets" ADD CONSTRAINT "sets_fk0" FOREIGN KEY ("workoutId") REFERENCES "workout templates"("workoutId");
-ALTER TABLE "sets" ADD CONSTRAINT "sets_fk1" FOREIGN KEY ("exerciseId") REFERENCES "exercise"("exerciseId");
+ALTER TABLE "sets" ADD CONSTRAINT "sets_fk1" FOREIGN KEY ("exerciseId") REFERENCES "exercises"("exerciseId");
