@@ -74,7 +74,7 @@ app.post('/api/workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// adds multiple new exercises (as sets) in workout
+// saves multiple new exercises (as sets) in workout
 app.post('/api/workout/new-exercises', (req, res, next) => {
   const { workoutId, exerciseIds } = req.body;
   if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'Existing workoutId and exerciseId are required');

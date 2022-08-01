@@ -53,6 +53,24 @@ export default function Exercises(props) {
 
   function handleSaveExercises(e) {
     e.preventDefault();
+    const savedExercises = [];
+    for (let i = 0; i < allSelected.length; i++) {
+      for (let e = 0; e < exercises.length; e++) {
+        if (allSelected[i] === exercises[e].name) {
+          savedExercises.push(exercises[e].exerciseId);
+        }
+      }
+    }
+    const body = { workoutId: 1, exerciseIds: savedExercises };
+    fetch('/api/workout/new-exercises', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .catch(err => console.error('ERROR:', err));
   }
 
   function clearExercises() {
