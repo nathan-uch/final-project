@@ -80,8 +80,12 @@ a {
 }
 
 .exercise-card {
-  position: relative;
+  max-height: 55px;
   border: 2px solid #dbdbdb;
+}
+
+.exercise-card:last-child {
+  margin-bottom: 70px;
 }
 
 .selected-exercise-card {
@@ -113,6 +117,42 @@ a {
   color: #ffe247;
 }
 
+.exercises-container-desktop {
+  position: fixed;
+  width: 30%;
+  bottom: 0;
+  z-index: 30;
+  border: 1px solid #ababab;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.exercise-form-desktop {
+  max-height: 350px;
+  transition: max-height 0.5s;
+}
+
+.collapse {
+  max-height: 0;
+}
+
+.toggle-show-exercises-desktop {
+  width: 100%;
+  font-family: inherit;
+  background-color: black;
+  color: #ffe247;
+  border: none;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  cursor: pointer;
+}
+
+.exercise-list {
+  max-height: 200px;
+  overflow: scroll;
+  width: 100%;
+}
+
 .add-clear-exercises-mobile {
   width: 100%;
   min-height: 50px;
@@ -124,10 +164,16 @@ a {
   border-bottom-right-radius: 0 !important;
 }
 
+.add-exercises-btn,
 .clear-btn {
   font-family: inherit;
-  font-size: 1.5rem !important;
   width: 40%;
+  max-height: 50px;
+  box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.5) !important;
+}
+
+.add-exercises-btn {
+  background-color: #ffe247;
 }
 
 /* LOADING SPINNER */
