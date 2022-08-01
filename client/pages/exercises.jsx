@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-function ExerciseCard({ name, allSelected, setAllSelected }) {
+function ExerciseCard({ name, allSelected, setAllSelected, clearAll }) {
   const [isSelected, setSelected] = useState(false);
+
+  useEffect(() => {
+    if (clearAll) setSelected(false);
+  }, [clearAll]);
 
   function handleClick() {
     if (!isSelected) {
@@ -30,6 +34,7 @@ export default function Exercises(props) {
   const [exercises, setExercises] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [allSelected, setAllSelected] = useState([]);
+  const [clearAll, setClearAll] = useState(false);
 
   useEffect(() => {
     fetch('/api/all-exercises')
@@ -41,17 +46,35 @@ export default function Exercises(props) {
       .catch(err => console.error('ERROR:', err));
   }, []);
 
+  useEffect(() => {
+    setClearAll(false);
+  }, [clearAll]);
+
+  function clearExercises() {
+    setClearAll(true);
+    setAllSelected([]);
+  }
+
   return (
-    <div className="body-container has-text-centered">
-      <a href="#"><i className='fa-solid fa-arrow-left fa-2x mx-5'></i></a>
-      <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercise</h3>
-      <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
-          {isLoading
-            ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            : exercises.map(exercise =>
-              <ExerciseCard key={exercise.name} name={exercise.name} setAllSelected={setAllSelected} allSelected={allSelected} />
-            )}
+    <>
+      <div className="body-container has-text-centered">
+        <a href="#"><i className='fa-solid fa-arrow-left fa-2x mx-5'></i></a>
+        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercise</h3>
+        <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
+            {isLoading
+              ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+              : exercises.map(exercise =>
+                <ExerciseCard key={exercise.name} name={exercise.name} setAllSelected={setAllSelected} allSelected={allSelected} clearAll={clearAll} />
+              )}
         </div>
-    </div>
+      </div>
+      {allSelected.length !== 0
+        ? <article className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
+        is-justify-content-space-evenly has-background-grey-lighter">
+          <button onClick={clearExercises} className='clear-btn button is-white is-responsive my-3'>Clear</button>
+        </article>
+        : ''
+      }
+    </>
   );
 }

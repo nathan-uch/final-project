@@ -113,6 +113,23 @@ a {
   color: #ffe247;
 }
 
+.add-clear-exercises-mobile {
+  width: 100%;
+  min-height: 50px;
+  position: fixed;
+  bottom: 36px;
+  z-index: 30;
+  border-top: 2px solid white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.clear-btn {
+  font-family: inherit;
+  font-size: 1.5rem !important;
+  width: 40%;
+}
+
 /* LOADING SPINNER */
 
 .lds-roller {
