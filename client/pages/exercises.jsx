@@ -70,6 +70,9 @@ export default function Exercises(props) {
       body: JSON.stringify(body)
     })
       .then(response => response.json())
+      .then(data =>
+        clearExercises()
+      )
       .catch(err => console.error('ERROR:', err));
   }
 
