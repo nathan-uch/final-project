@@ -1,0 +1,70 @@
+{
+  "exercises": [
+    {
+      "exerciseId": 1,
+      "name": "Bench Press",
+      "equipment": "barbell",
+      "sets": [
+        {
+          "reps": 10,
+          "weight": 35,
+          "completed": true
+        },
+        {
+          "reps": 10,
+          "weight": 35,
+          "completed": true
+        },
+        {
+          "reps": 10,
+          "weight": 35,
+          "completed": true
+        }
+      ]
+    },
+    {
+      "exerciseId": 5,
+      "name": "Incline Press",
+      "equipment": "dumbbell",
+      "sets": [
+        {
+          "reps": 8,
+          "weight": 30,
+          "completed": true
+        },
+        {
+          "reps": 8,
+          "weight": 30,
+          "completed": true
+        },
+        {
+          "reps": 8,
+          "weight": 30,
+          "completed": true
+        }
+      ]
+    },
+    {
+      "exerciseId": 7,
+      "name": "Overhead Press",
+      "equipment": "dumbbell",
+      "sets": [
+        {
+          "reps": 8,
+          "weight": 25,
+          "completed": true
+        },
+        {
+          "reps": 8,
+          "weight": 25,
+          "completed": true
+        },
+        {
+          "reps": 8,
+          "weight": 25,
+          "completed": true
+        }
+      ]
+    }
+  ]
+}

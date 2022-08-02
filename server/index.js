@@ -43,10 +43,15 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
   const params = [workoutId];
   const sql = `
-    select *
+    select "sets"."workoutId",
+           "sets"."exerciseId",
+           "sets"."reps",
+           "sets"."weight",
+           "exercises"."name",
+           "exercises"."equipment"
     from "sets"
-    where "workoutId" = $1
-    order by "exerciseId" desc;
+    join "exercises" using ("exerciseId")
+    where "sets"."workoutId" = $1;
   `;
   db.query(sql, params)
     .then(result => {
