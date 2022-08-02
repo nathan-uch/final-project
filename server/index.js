@@ -38,8 +38,8 @@ app.get('/api/all-exercises', (req, res, next) => {
 });
 
 // gets all exercises in a workout
-app.get('/api/workout/sets', (req, res, next) => {
-  const { workoutId } = req.body;
+app.get('/api/workout/:workoutId', (req, res, next) => {
+  const workoutId = Number(req.params.workoutId);
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
   const params = [workoutId];
   const sql = `
@@ -57,7 +57,7 @@ app.get('/api/workout/sets', (req, res, next) => {
 });
 
 // creates new workout
-app.post('/api/workout', (req, res, next) => {
+app.post('/api/new-workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];

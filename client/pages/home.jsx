@@ -1,14 +1,14 @@
 import React from 'react';
 import TopNavbar from '../components/top-navbar';
-import Exercises from '../pages/exercises';
+import WorkoutPage from '../pages/workout';
 import BotNavbar from '../components/bot-navbar';
 
 export default function Home(props) {
   return (
-    <div>
+    <>
       <TopNavbar />
-      <Exercises />
+      <WorkoutPage />
       <BotNavbar />
-    </div>
+    </>
   );
 }
