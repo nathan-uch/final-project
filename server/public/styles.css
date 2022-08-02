@@ -71,9 +71,6 @@ a {
 }
 
 /* EXERCISES PAGE */
-.exercise-container {
-  gap: 2rem;
-}
 
 .box:last-child {
   margin-bottom: 1.5rem;
@@ -111,13 +108,14 @@ a {
 }
 
 .fa-check {
-  color: #ffe247;
+  color: #dbdbdb;
 }
 
-.selected {
+.selected-check {
   position: absolute;
   top: 8px;
   right: 5px;
+  color: #ffe247;
 }
 
 .exercises-container-desktop {
@@ -179,6 +177,57 @@ a {
 
 .add-exercises-btn {
   background-color: #ffe247;
+}
+
+/* WORKOUT PAGE */
+.card {
+  width: 30rem;
+  min-width: 280px;
+}
+
+.arrow {
+  max-width: 35px;
+}
+
+.unselected-check {
+  margin-top: 0.3rem;
+}
+
+.exercise-name {
+  color: #ffe247;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.sets-title,
+.reps-title,
+.weight-title,
+.exer-done-title,
+.set-num {
+  min-width: 30px;
+}
+
+.reps-input,
+.weight-input {
+  min-width: 60px;
+  max-width: 90px;
+  height: 45px;
+  border: none;
+  border-radius: 6px;
+}
+
+.add-set-btn {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.card-footer {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.set-done-btn {
+  border: none;
 }
 
 /* LOADING SPINNER */
