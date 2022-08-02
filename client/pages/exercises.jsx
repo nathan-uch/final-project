@@ -25,7 +25,7 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll }) {
     </a>
       : <a onClick={handleClick} className="selected-exercise-card has-background-white column is-size-5-mobile mx-5 is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card box  has-text-centered">
         <p className="title is-inline is-size-4">{name}</p>
-      <i className='fa-solid fa-check fa-2x mr-4'></i>
+        <i className='fa-solid fa-check fa-2x mr-4 selected'></i>
     </a>
   );
 }

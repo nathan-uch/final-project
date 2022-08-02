@@ -111,10 +111,13 @@ a {
 }
 
 .fa-check {
+  color: #ffe247;
+}
+
+.selected {
   position: absolute;
   top: 8px;
   right: 5px;
-  color: #ffe247;
 }
 
 .exercises-container-desktop {
