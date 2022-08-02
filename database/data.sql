@@ -13,3 +13,7 @@ values                  (1, 'Bench Press', 'Chest', 'barbell'),
                         (6, 'Lat Pulldown', 'Back', 'cable bar'),
                         (7, 'Overhead Press', 'Deltoids', 'dumbbell'),
                         (8, 'Leg Press', 'Quads', 'machine');
+
+insert into "sets" ("workoutId", "exerciseId")
+values             (1, 2),
+                   (1, 5);
