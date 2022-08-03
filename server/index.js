@@ -45,6 +45,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
   const sql = `
     select "sets"."workoutId",
            "sets"."exerciseId",
+           "sets"."setOrder",
            "sets"."reps",
            "sets"."weight",
            "exercises"."name",
