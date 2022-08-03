@@ -231,6 +231,10 @@ a {
   border: none;
 }
 
+.done-check {
+  color: #ffe247;
+}
+
 /* LOADING SPINNER */
 
 .lds-roller {

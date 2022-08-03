@@ -1,5 +1,52 @@
 import React, { useState, useEffect } from 'react';
 
+function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
+  const [reps, setReps] = useState(0);
+  const [weight, setWeight] = useState(0);
+
+  function toggleSetDone() {
+    if (!reps || !weight) {
+      return false;
+    }
+    const updatedDoneValue = exerciseSets.map((set, index) => {
+      if (setIndex === index) {
+        return !isDone ? { ...set, isDone: true } : { ...set, isDone: false };
+      }
+      return set;
+    });
+    setSets(updatedDoneValue);
+  }
+
+  function repsChange(e) {
+    setReps(e.target.value);
+  }
+
+  function weightChange(e) {
+    setWeight(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const updatedRepsAndWeight = exerciseSets.map((set, index) => {
+      if (setIndex === index) {
+        return { ...set, reps, weight };
+      }
+      return set;
+    });
+    setSets(updatedRepsAndWeight);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
+      <p className="mx-3 is-size-4 set-num">{setOrder}</p>
+      <input required type="number" min="1" value={reps} onChange={repsChange} className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+      <input required type="number" min="1" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+      <button href="#" className="set-done-btn has-background-white" onClick={toggleSetDone} type="submit">
+        <i className={`fa-solid fa-check fa-3x mx-4 ${isDone ? 'done-check' : 'unselected-check'}`}></i></button>
+    </form>
+  );
+}
+
 function Exercise({ name, exerciseId }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
@@ -9,10 +56,6 @@ function Exercise({ name, exerciseId }) {
     changeSetCount(prevCount => prevCount + 1);
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-  }
-
   return (
     <div className="card mb-5">
       <div className="card-header">
@@ -20,19 +63,13 @@ function Exercise({ name, exerciseId }) {
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
-          <p className="sets-title is-inline is-size-5 has-text-weight-semibold">Set</p>
+          <p className="mx-3 sets-title is-inline is-size-5 has-text-weight-semibold">Set</p>
           <p className="mx-3 reps-title is-inline is-size-5 has-text-weight-semibold">Reps</p>
           <p className="mx-3 weight-title is-inline is-size-5 has-text-weight-semibold">Weight</p>
           <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
         </div>
-        {/* SETS */}
         {exerciseSets.map((set, index) =>
-          <form key={index} onSubmit={handleSubmit} className="mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
-            <p className="is-size-4 set-num">{set.setOrder}</p>
-            <input required type="number" min="1" className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-            <input required type="number" min="1" className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-            <button href="#" className="set-done-btn has-background-white" type="submit"><i className="fa-solid fa-check fa-3x mx-4 unselected-check"></i></button>
-          </form>
+          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} />
         )}
       </div>
       <div className="card-footer">
@@ -62,7 +99,7 @@ export default function WorkoutPage(props) {
         {!workoutExercises
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workoutExercises.map((exercise, index) =>
-            <Exercise key={index} name={exercise.name} exerciseId={exercise.exerciseId} />
+            <Exercise key={index} name={exercise.name} exerciseId={exercise.exerciseId} exerciseIndex={index} />
           )}
       </div>
     </div>
