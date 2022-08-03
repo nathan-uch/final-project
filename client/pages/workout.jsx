@@ -37,10 +37,15 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
+    <form onSubmit={handleSubmit} className="set-form mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
       <p className="mx-3 is-size-4 set-num">{setOrder}</p>
-      <input required type="number" min="1" value={reps} onChange={repsChange} className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-      <input required type="number" min="1" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+      {!isDone
+        ? <input required type="number" min="1" value={reps} onChange={repsChange} className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+        : <p className="reps-value is-size-4 mr-3">{reps}</p>}
+      {!isDone
+        ? <input required type="number" min="1" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+        : <p className="weight-value is-size-4 mr-3">{weight}</p>
+      }
       <button href="#" className="set-done-btn has-background-white" onClick={toggleSetDone} type="submit">
         <i className={`fa-solid fa-check fa-3x mx-4 ${isDone ? 'done-check' : 'unselected-check'}`}></i></button>
     </form>
