@@ -55,8 +55,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const sets = result.rows;
-      res.status(200).json(sets);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -79,10 +78,10 @@ app.post('/api/new-workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// saves multiple new exercises (as sets) in workout
+// saves multiple NEW exercises (as sets) in workout
 app.post('/api/workout/new-exercises', (req, res, next) => {
   const { workoutId, exerciseIds } = req.body;
-  if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'Existing workoutId and exerciseId are required');
+  if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'ERROR: Existing workoutId and exerciseId are required');
   const params = [Number(workoutId)];
   exerciseIds.forEach(id => {
     params.push(Number(id));
@@ -98,7 +97,7 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
   });
   const sql = `
     insert into "sets" ("workoutId", "exerciseId")
-    values ${ids}
+    values             ${ids}
     returning *;
   `;
   db.query(sql, params)
@@ -107,6 +106,44 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
       res.status(201).json(addedSets);
     })
     .catch(err => next(err));
+});
+
+app.patch('/api/workout/:workoutId', (req, res, next) => {
+  const workoutId = Number(req.body.workoutId);
+  const { exercises } = req.body;
+  if (!exercises) throw new ClientError(400, 'ERROR: No exercises found.');
+  exercises.forEach(exercise => {
+    const { exerciseId, sets } = exercise;
+    const setPromises = sets.map(set => {
+      const { reps, weight, setOrder } = set;
+      const params = [reps, weight, setOrder, workoutId, exerciseId];
+      if (setOrder === 1) {
+        const updateSql = `
+        update "sets"
+        set    "reps" = $1,
+               "weight" = $2
+        where  "setOrder" = $3
+        and     "workoutId" = $4
+        and    "exerciseId" = $5
+        returning *
+        `;
+        return db.query(updateSql, params);
+      } else {
+        const addSql = `
+        insert into "sets" ("reps", "weight", "setOrder", "workoutId", "exerciseId")
+        values             ($1, $2, $3, $4, $5)
+        returning *;
+        `;
+        return db.query(addSql, params);
+      }
+    });
+    Promise.all(setPromises)
+      .then(result => {
+        const resultSets = result.rows;
+        res.status(204).json(resultSets);
+      })
+      .catch(err => next(err));
+  });
 });
 
 app.use(errorMiddleware);

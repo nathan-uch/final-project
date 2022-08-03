@@ -44,6 +44,7 @@ CREATE TABLE "public"."exercises" (
 CREATE TABLE "public"."sets" (
 	"workoutId" serial NOT NULL,
 	"exerciseId" int NOT NULL,
+  "setOrder" int NOT NULL,
 	"reps" int,
 	"weight" int
 ) WITH (

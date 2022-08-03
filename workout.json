@@ -1,4 +1,5 @@
 {
+  "workoutId": 1,
   "exercises": [
     {
       "exerciseId": 1,
@@ -6,19 +7,19 @@
       "equipment": "barbell",
       "sets": [
         {
+          "setOrder": 1,
           "reps": 10,
-          "weight": 35,
-          "completed": true
+          "weight": 35
         },
         {
+          "setOrder": 2,
           "reps": 10,
-          "weight": 35,
-          "completed": true
+          "weight": 35
         },
         {
+          "setOrder": 3,
           "reps": 10,
-          "weight": 35,
-          "completed": true
+          "weight": 35
         }
       ]
     },
@@ -28,19 +29,19 @@
       "equipment": "dumbbell",
       "sets": [
         {
+          "setOrder": 1,
           "reps": 8,
-          "weight": 30,
-          "completed": true
+          "weight": 30
         },
         {
+          "setOrder": 2,
           "reps": 8,
-          "weight": 30,
-          "completed": true
+          "weight": 30
         },
         {
+          "setOrder": 3,
           "reps": 8,
-          "weight": 30,
-          "completed": true
+          "weight": 30
         }
       ]
     },
@@ -50,19 +51,19 @@
       "equipment": "dumbbell",
       "sets": [
         {
+          "setOrder": 1,
           "reps": 8,
-          "weight": 25,
-          "completed": true
+          "weight": 25
         },
         {
+          "setOrder": 2,
           "reps": 8,
-          "weight": 25,
-          "completed": true
+          "weight": 25
         },
         {
+          "setOrder": 3,
           "reps": 8,
-          "weight": 25,
-          "completed": true
+          "weight": 25
         }
       ]
     }

@@ -14,6 +14,7 @@ values                  (1, 'Bench Press', 'Chest', 'barbell'),
                         (7, 'Overhead Press', 'Deltoids', 'dumbbell'),
                         (8, 'Leg Press', 'Quads', 'machine');
 
-insert into "sets" ("workoutId", "exerciseId")
-values             (1, 2),
-                   (1, 5);
+insert into "sets" ("workoutId", "exerciseId", "setOrder")
+values             (1, 1, 1),
+                   (1, 5, 1),
+                   (1, 7, 1)
