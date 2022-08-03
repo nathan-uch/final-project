@@ -227,6 +227,7 @@ a {
 }
 
 .set-done-btn {
+  cursor: pointer;
   border: none;
 }
 

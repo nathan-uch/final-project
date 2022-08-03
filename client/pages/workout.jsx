@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 function Set() {
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
-    <form className="mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
+    <form onSubmit={handleSubmit} className="mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
       <p className="is-size-4 set-num">1</p>
       <input type="number" min="1" className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
       <input type="number" min="1" className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-      <button href="#" className="set-done-btn has-background-white" ><i className="fa-solid fa-check fa-3x mx-4 unselected-check"></i></button>
+      <button href="#" className="set-done-btn has-background-white" type="submit"><i className="fa-solid fa-check fa-3x mx-4 unselected-check"></i></button>
     </form>
   );
 }
