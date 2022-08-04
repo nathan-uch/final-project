@@ -110,6 +110,10 @@ function SaveWorkoutModal() {
     !isOpen ? setOpenClose(true) : setOpenClose(false);
   }
 
+  function saveWorkout() {
+    toggleModal();
+  }
+
   return (
     <>
       <button type="button" className="save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
@@ -119,7 +123,7 @@ function SaveWorkoutModal() {
           <div className='save-workout-modal modal-content has-background-white p-3'>
             <p className="is-size-3">Do you want to save this workout?</p>
             <p className='is-size-5 has-text-danger my-3'>Sets that are not marked &apos;done&apos; won&apos;t be saved</p>
-            <button type="button" className="confirm-save-workout-btn button is-large m-3">Save</button>
+            <button type="button" className="confirm-save-workout-btn button is-large m-3" onClick={saveWorkout} >Save</button>
             <button type="button" className="cancel-save-workout-btn button is-large m-3" onClick={toggleModal}>Cancel</button>
           </div>
         </div>

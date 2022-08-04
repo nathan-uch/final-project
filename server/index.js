@@ -56,7 +56,25 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      res.status(200).json(result.rows);
+      const splitExercises = result.rows.map(exercise => {
+        const exerObj = {
+          exerciseId: exercise.exerciseId,
+          name: exercise.name,
+          equipment: exercise.equipment,
+          sets: [{
+            setOrder: 1,
+            reps: null,
+            weight: null
+          }]
+        };
+        return exerObj;
+      });
+      const workout = {
+        workoutId: result.rows[0].workoutId,
+        exercises: splitExercises
+      };
+
+      res.status(200).json(workout);
     })
     .catch(err => next(err));
 });
