@@ -75,6 +75,7 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
       .catch(err => console.error('ERROR:', err));
 
     setWorkoutExercises(updatedWorkoutExercises);
+    setDeleteOpen(false);
   }
 
   return (

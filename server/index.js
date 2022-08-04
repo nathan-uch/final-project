@@ -109,6 +109,7 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// edits 1st set and adds other sets to workout
 app.patch('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.body.workoutId);
   const { exercises } = req.body;
@@ -148,6 +149,7 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// deletes an exercise from workout
 app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   const exerciseId = Number(req.params.exerciseId);
