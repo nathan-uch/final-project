@@ -211,6 +211,16 @@ a {
   box-shadow: none;
 }
 
+.pop-delete-btn {
+  position: absolute;
+  right: 0;
+  bottom: -40px;
+}
+
+.pop-delete-btn:hover {
+  background-color: #f14668 !important;
+}
+
 .set-form {
   height: 47px;
 }
@@ -263,6 +273,10 @@ a {
 
 .done-check {
   color: #ffe247;
+}
+
+.hidden {
+  display: none;
 }
 
 /* LOADING SPINNER */
