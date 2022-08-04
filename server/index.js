@@ -148,6 +148,25 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
+  const workoutId = Number(req.params.workoutId);
+  const exerciseId = Number(req.params.exerciseId);
+  if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
+  const params = [workoutId, exerciseId];
+  const sql = `
+  delete from "sets"
+  where "workoutId" = $1
+  and "exerciseId" = $2
+  returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const deletedSets = result.rows;
+      res.status(204).json(deletedSets);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
