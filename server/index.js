@@ -73,7 +73,6 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
         workoutId: result.rows[0].workoutId,
         exercises: splitExercises
       };
-
       res.status(200).json(workout);
     })
     .catch(err => next(err));

@@ -52,10 +52,11 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   );
 }
 
-function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExercises }) {
+function Exercise({ workoutId, exercise, workout, setWorkout }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
   const [deleteIsOpen, setDeleteOpen] = useState(false);
+  const exerciseId = exercise.exerciseId;
 
   function addNewSet() {
     setSets([...exerciseSets, { setOrder: setCount + 1, reps: null, weight: null, isDone: false }]);
@@ -67,21 +68,21 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
   }
 
   function deleteExercise() {
-    const updatedWorkoutExercises = workoutExercises.filter(exercise =>
+    const finalWorkout = { workoutId, exercises: null };
+    const updatedWorkoutExercises = workout.exercises.filter(exercise =>
       exercise.exerciseId !== exerciseId ? exercise : false
     );
-
+    finalWorkout.exercises = updatedWorkoutExercises;
     fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
       .catch(err => console.error('ERROR:', err));
-
-    setWorkoutExercises(updatedWorkoutExercises);
+    setWorkout(finalWorkout);
     setDeleteOpen(false);
   }
 
   return (
     <div className="card mb-5">
       <div className="card-header has-background-black exercise-head is-relative">
-        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{exercise.name}</h3>
         <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
         <button type="button" className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`} onClick={deleteExercise}>Delete</button>
       </div>
@@ -103,7 +104,7 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
   );
 }
 
-function SaveWorkoutModal() {
+function SaveWorkoutModal({ workout }) {
   const [isOpen, setOpenClose] = useState(false);
 
   function toggleModal() {
@@ -133,14 +134,14 @@ function SaveWorkoutModal() {
 }
 
 export default function WorkoutPage(props) {
-  const [workoutExercises, setWorkoutExercises] = useState(null);
+  const [workout, setWorkout] = useState(null);
   const workoutId = 1;
 
   useEffect(() => {
     fetch(`/api/workout/${workoutId}`)
       .then(response => response.json())
       .then(data => {
-        setWorkoutExercises(data);
+        setWorkout(data);
       })
       .catch(err => console.error('ERROR:', err));
   }, []);
@@ -148,12 +149,12 @@ export default function WorkoutPage(props) {
   return (
     <div className='body-container has-text-centered'>
       <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
-      <SaveWorkoutModal />
+      <SaveWorkoutModal workout={workout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
-        {!workoutExercises
+        {!workout
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-          : workoutExercises.map((exercise, index) =>
-            <Exercise key={index} name={exercise.name} workoutId={workoutId} exerciseId={exercise.exerciseId} exerciseIndex={index} workoutExercises={workoutExercises} setWorkoutExercises={setWorkoutExercises}/>
+          : workout.exercises.map((exercise, index) =>
+            <Exercise key={index} workoutId={workoutId} exercise={exercise} workout={workout} setWorkout={setWorkout}/>
           )}
       </div>
     </div>
