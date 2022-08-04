@@ -112,8 +112,8 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
 app.patch('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.body.workoutId);
   const { exercises } = req.body;
-  if (!exercises) throw new ClientError(400, 'ERROR: No exercises found.');
-  exercises.forEach(exercise => {
+  if (!exercises) throw new ClientError(400, 'ERROR: Missing exercises.');
+  const exercisePromises = exercises.flatMap(exercise => {
     const { exerciseId, sets } = exercise;
     const setPromises = sets.map(set => {
       const { reps, weight, setOrder } = set;
@@ -138,13 +138,14 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
         return db.query(addSql, params);
       }
     });
-    Promise.all(setPromises)
-      .then(result => {
-        const resultSets = result.rows;
-        res.status(204).json(resultSets);
-      })
-      .catch(err => next(err));
+    return setPromises;
   });
+  Promise.all(exercisePromises)
+    .then(result => {
+      const resultSets = result.rows;
+      res.status(204).json(resultSets);
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
