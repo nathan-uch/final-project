@@ -63,8 +63,9 @@ function Exercise({ name, exerciseId }) {
 
   return (
     <div className="card mb-5">
-      <div className="card-header">
-        <h3 className="exercise-name card-header-title has-background-black has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+      <div className="card-header has-background-black exercise-head is-relative">
+        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+        <button type="button" className="delete-exercise-btn button is-large has-background-black">...</button>
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">

@@ -185,6 +185,32 @@ a {
   min-width: 280px;
 }
 
+.exercise-head {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.exercise-name {
+  color: #ffe247;
+}
+
+.delete-exercise-btn {
+  color: #ffe247;
+  position: absolute;
+  right: 0;
+  border: none;
+  padding-bottom: 25px;
+}
+
+.delete-exercise-btn:hover,
+.delete-exercise-btn:focus,
+.delete-exercise-btn:focus-visible,
+.delete-exercise-btn:active {
+  border: none;
+  color: #ffe247;
+  box-shadow: none;
+}
+
 .set-form {
   height: 47px;
 }
@@ -201,12 +227,6 @@ a {
 
 .unselected-check {
   margin-top: 0.3rem;
-}
-
-.exercise-name {
-  color: #ffe247;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
 }
 
 .sets-title,
