@@ -52,19 +52,38 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   );
 }
 
-function Exercise({ name, exerciseId }) {
+function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExercises }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
+  const [deleteIsOpen, setDeleteOpen] = useState(false);
 
   function addNewSet() {
     setSets([...exerciseSets, { setOrder: setCount + 1, reps: null, weight: null, isDone: false }]);
     changeSetCount(prevCount => prevCount + 1);
   }
 
+  function openDelete() {
+    deleteIsOpen ? setDeleteOpen(false) : setDeleteOpen(true);
+  }
+
+  function deleteExercise() {
+    const updatedWorkoutExercises = workoutExercises.filter(exercise =>
+      exercise.exerciseId !== exerciseId ? exercise : false
+    );
+
+    fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
+      .catch(err => console.error('ERROR:', err));
+
+    setWorkoutExercises(updatedWorkoutExercises);
+    setDeleteOpen(false);
+  }
+
   return (
     <div className="card mb-5">
-      <div className="card-header">
-        <h3 className="exercise-name card-header-title has-background-black has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+      <div className="card-header has-background-black exercise-head is-relative">
+        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+        <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
+        <button type="button" className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`} onClick={deleteExercise}>Delete</button>
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
@@ -104,7 +123,7 @@ export default function WorkoutPage(props) {
         {!workoutExercises
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workoutExercises.map((exercise, index) =>
-            <Exercise key={index} name={exercise.name} exerciseId={exercise.exerciseId} exerciseIndex={index} />
+            <Exercise key={index} name={exercise.name} workoutId={workoutId} exerciseId={exercise.exerciseId} exerciseIndex={index} workoutExercises={workoutExercises} setWorkoutExercises={setWorkoutExercises}/>
           )}
       </div>
     </div>

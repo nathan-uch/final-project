@@ -109,6 +109,7 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// edits 1st set and adds other sets to workout
 app.patch('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.body.workoutId);
   const { exercises } = req.body;
@@ -144,6 +145,26 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .then(result => {
       const resultSets = result.rows;
       res.status(204).json(resultSets);
+    })
+    .catch(err => next(err));
+});
+
+// deletes an exercise from workout
+app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
+  const workoutId = Number(req.params.workoutId);
+  const exerciseId = Number(req.params.exerciseId);
+  if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
+  const params = [workoutId, exerciseId];
+  const sql = `
+  delete from "sets"
+  where "workoutId" = $1
+  and "exerciseId" = $2
+  returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const deletedSets = result.rows;
+      res.status(204).json(deletedSets);
     })
     .catch(err => next(err));
 });
