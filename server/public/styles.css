@@ -185,6 +185,16 @@ a {
   min-width: 280px;
 }
 
+.set-form {
+  height: 47px;
+}
+
+.reps-value,
+.weight-value {
+  height: 45px;
+  width: 90px;
+}
+
 .arrow {
   max-width: 35px;
 }
@@ -227,7 +237,12 @@ a {
 }
 
 .set-done-btn {
+  cursor: pointer;
   border: none;
+}
+
+.done-check {
+  color: #ffe247;
 }
 
 /* LOADING SPINNER */

@@ -99,17 +99,17 @@ export default function Exercises(props) {
       </div>
       {allSelected.length !== 0
         ? <>
-            <form className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
+            <form onSubmit={handleSaveExercises} className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
             is-justify-content-space-evenly has-background-grey-lighter">
-              <button onClick={handleSaveExercises} type="submit" className='add-exercises-btn button is-size-4 my-3'>Add all</button>
+              <button type="submit" className='add-exercises-btn button is-size-4 my-3'>Add all</button>
               <button onClick={clearExercises} type="button" className='clear-btn button is-white is-size-4 my-3'>Clear</button>
             </form>
             <div className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
               <button onClick={toggleExerciseDisplay} className='toggle-show-exercises-desktop is-size-4 p-3'>Selected Exercises<i className={`mx-2 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i></button>
-              <form className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${expandExercisesDisplay ? '' : 'collapse'}`}>
+              <form onSubmit={handleSaveExercises} className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${expandExercisesDisplay ? '' : 'collapse'}`}>
                 <p className="my-2">Total Exercises: {allSelected.length}</p>
                 <ul className="exercise-list m-4 is-size-4">{allSelected.map(exer => <li key={exer}>{exer}</li>)}</ul>
-                <button onClick={handleSaveExercises} type="submit" className='add-exercises-btn button m-2 is-size-5'>Add all</button>
+                <button type="submit" className='add-exercises-btn button m-2 is-size-5'>Add all</button>
                 <button onClick={clearExercises} type="button" className='clear-btn button is-white m-2 is-size-5'>Clear</button>
               </form>
             </div>

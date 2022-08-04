@@ -43,15 +43,20 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
   const params = [workoutId];
   const sql = `
-    select *
+    select "sets"."workoutId",
+           "sets"."exerciseId",
+           "sets"."setOrder",
+           "sets"."reps",
+           "sets"."weight",
+           "exercises"."name",
+           "exercises"."equipment"
     from "sets"
-    where "workoutId" = $1
-    order by "exerciseId" desc;
+    join "exercises" using ("exerciseId")
+    where "sets"."workoutId" = $1;
   `;
   db.query(sql, params)
     .then(result => {
-      const sets = result.rows;
-      res.status(200).json(sets);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -74,10 +79,10 @@ app.post('/api/new-workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// saves multiple new exercises (as sets) in workout
+// saves multiple NEW exercises (as sets) in workout
 app.post('/api/workout/new-exercises', (req, res, next) => {
   const { workoutId, exerciseIds } = req.body;
-  if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'Existing workoutId and exerciseId are required');
+  if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'ERROR: Existing workoutId and exerciseId are required');
   const params = [Number(workoutId)];
   exerciseIds.forEach(id => {
     params.push(Number(id));
@@ -93,13 +98,52 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
   });
   const sql = `
     insert into "sets" ("workoutId", "exerciseId")
-    values ${ids}
+    values             ${ids}
     returning *;
   `;
   db.query(sql, params)
     .then(result => {
       const addedSets = result.rows;
       res.status(201).json(addedSets);
+    })
+    .catch(err => next(err));
+});
+
+app.patch('/api/workout/:workoutId', (req, res, next) => {
+  const workoutId = Number(req.body.workoutId);
+  const { exercises } = req.body;
+  if (!exercises) throw new ClientError(400, 'ERROR: Missing exercises.');
+  const exercisePromises = exercises.flatMap(exercise => {
+    const { exerciseId, sets } = exercise;
+    const setPromises = sets.map(set => {
+      const { reps, weight, setOrder } = set;
+      const params = [reps, weight, setOrder, workoutId, exerciseId];
+      if (setOrder === 1) {
+        const updateSql = `
+        update "sets"
+        set    "reps" = $1,
+               "weight" = $2
+        where  "setOrder" = $3
+        and     "workoutId" = $4
+        and    "exerciseId" = $5
+        returning *
+        `;
+        return db.query(updateSql, params);
+      } else {
+        const addSql = `
+        insert into "sets" ("reps", "weight", "setOrder", "workoutId", "exerciseId")
+        values             ($1, $2, $3, $4, $5)
+        returning *;
+        `;
+        return db.query(addSql, params);
+      }
+    });
+    return setPromises;
+  });
+  Promise.all(exercisePromises)
+    .then(result => {
+      const resultSets = result.rows;
+      res.status(204).json(resultSets);
     })
     .catch(err => next(err));
 });

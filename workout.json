@@ -1,0 +1,71 @@
+{
+  "workoutId": 1,
+  "exercises": [
+    {
+      "exerciseId": 1,
+      "name": "Bench Press",
+      "equipment": "barbell",
+      "sets": [
+        {
+          "setOrder": 1,
+          "reps": 10,
+          "weight": 35
+        },
+        {
+          "setOrder": 2,
+          "reps": 10,
+          "weight": 35
+        },
+        {
+          "setOrder": 3,
+          "reps": 10,
+          "weight": 35
+        }
+      ]
+    },
+    {
+      "exerciseId": 5,
+      "name": "Incline Press",
+      "equipment": "dumbbell",
+      "sets": [
+        {
+          "setOrder": 1,
+          "reps": 8,
+          "weight": 30
+        },
+        {
+          "setOrder": 2,
+          "reps": 8,
+          "weight": 30
+        },
+        {
+          "setOrder": 3,
+          "reps": 8,
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "exerciseId": 7,
+      "name": "Overhead Press",
+      "equipment": "dumbbell",
+      "sets": [
+        {
+          "setOrder": 1,
+          "reps": 8,
+          "weight": 25
+        },
+        {
+          "setOrder": 2,
+          "reps": 8,
+          "weight": 25
+        },
+        {
+          "setOrder": 3,
+          "reps": 8,
+          "weight": 25
+        }
+      ]
+    }
+  ]
+}
