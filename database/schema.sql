@@ -18,7 +18,7 @@ CREATE TABLE "public"."users" (
 
 
 
-CREATE TABLE "public"."workout templates" (
+CREATE TABLE "public"."workout" (
 	"workoutId" serial NOT NULL UNIQUE,
 	"userId" serial NOT NULL UNIQUE,
 	CONSTRAINT "workout templates_pk" PRIMARY KEY ("workoutId")

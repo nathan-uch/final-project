@@ -180,6 +180,8 @@ a {
 }
 
 /* WORKOUT PAGE */
+
+/* EXERCISE */
 .card {
   width: 30rem;
   min-width: 280px;
@@ -192,6 +194,29 @@ a {
 
 .exercise-name {
   color: #ffe247;
+}
+
+/* SETS */
+
+/* MODAL */
+.confirm-save-workout-btn,
+.cancel-save-workout-btn {
+  height: 2.7rem;
+  padding: 0 1.5rem;
+}
+
+.save-workout-modal {
+  width: 22rem !important;
+}
+
+.save-workout-btn,
+.confirm-save-workout-btn {
+  background-color: #ffe247;
+  border: none;
+  border-radius: 6px;
+  box-shadow:
+    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0 0 1px rgb(10 10 10 / 2%);
 }
 
 .delete-exercise-btn {

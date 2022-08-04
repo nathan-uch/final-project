@@ -103,6 +103,31 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
   );
 }
 
+function SaveWorkoutModal() {
+  const [isOpen, setOpenClose] = useState(false);
+
+  function toggleModal() {
+    !isOpen ? setOpenClose(true) : setOpenClose(false);
+  }
+
+  return (
+    <>
+      <button type="button" className="save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
+      <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
+        <div>
+          <div className="modal-background" onClick={toggleModal}></div>
+          <div className='save-workout-modal modal-content has-background-white p-3'>
+            <p className="is-size-3">Do you want to save this workout?</p>
+            <p className='is-size-5 has-text-danger my-3'>Sets that are not marked &apos;done&apos; won&apos;t be saved</p>
+            <button type="button" className="confirm-save-workout-btn button is-large m-3">Save</button>
+            <button type="button" className="cancel-save-workout-btn button is-large m-3" onClick={toggleModal}>Cancel</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function WorkoutPage(props) {
   const [workoutExercises, setWorkoutExercises] = useState(null);
   const workoutId = 1;
@@ -118,7 +143,8 @@ export default function WorkoutPage(props) {
 
   return (
     <div className='body-container has-text-centered'>
-      <h3 className="is-inline is-size-3 has-text-weight-semibold">New Workout</h3>
+      <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
+      <SaveWorkoutModal />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workoutExercises
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

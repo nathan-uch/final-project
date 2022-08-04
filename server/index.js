@@ -67,7 +67,7 @@ app.post('/api/new-workout', (req, res, next) => {
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
-    insert into "workout templates" ("userId")
+    insert into "workout" ("userId")
     values ($1)
     returning *;
   `;
