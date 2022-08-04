@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
+function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
   const [weight, setWeight] = useState(0);
 
@@ -10,7 +10,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
     }
     const updatedDoneValue = exerciseSets.map((set, index) => {
       if (setIndex === index) {
-        return !isDone ? { ...set, isDone: true } : { ...set, isDone: false };
+        return !isDone ? { ...set, isDone: true, reps, weight } : { ...set, isDone: false };
       }
       return set;
     });
@@ -18,22 +18,16 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   }
 
   function repsChange(e) {
-    setReps(e.target.value);
+    setReps(+e.target.value);
   }
 
   function weightChange(e) {
-    setWeight(e.target.value);
+    setWeight(+e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const updatedRepsAndWeight = exerciseSets.map((set, index) => {
-      if (setIndex === index) {
-        return { ...set, reps, weight };
-      }
-      return set;
-    });
-    setSets(updatedRepsAndWeight);
+    updateWorkout();
   }
 
   return (
@@ -57,6 +51,12 @@ function Exercise({ workoutId, exercise, workout, setWorkout }) {
   const [setCount, changeSetCount] = useState(1);
   const [deleteIsOpen, setDeleteOpen] = useState(false);
   const exerciseId = exercise.exerciseId;
+
+  function updateWorkout() {
+    const finishedSets = exerciseSets.filter(set => set.isDone);
+    const updatedExercise = exercise;
+    updatedExercise.sets = finishedSets;
+  }
 
   function addNewSet() {
     setSets([...exerciseSets, { setOrder: setCount + 1, reps: null, weight: null, isDone: false }]);
@@ -94,7 +94,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout }) {
           <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
         </div>
         {exerciseSets.map((set, index) =>
-          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} />
+          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} updateWorkout={updateWorkout} />
         )}
       </div>
       <div className="card-footer">
@@ -113,6 +113,19 @@ function SaveWorkoutModal({ workout }) {
 
   function saveWorkout() {
     toggleModal();
+    const finalWorkout = workout;
+    for (let i = 0; i < finalWorkout.exercises.length; i++) {
+      if (finalWorkout.exercises[i].sets.length === 1 && !finalWorkout.exercises[i].sets[0].isDone) {
+        finalWorkout.exercises.splice(i, 1);
+      }
+    }
+
+    fetch(`/api/workout/${workout.workoutId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(finalWorkout)
+    })
+      .catch(err => console.error('ERROR:', err));
   }
 
   return (
