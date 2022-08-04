@@ -52,7 +52,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   );
 }
 
-function Exercise({ name, exerciseId, workoutExercises, setWorkoutExercises }) {
+function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExercises }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
   const [deleteIsOpen, setDeleteOpen] = useState(false);
@@ -70,6 +70,10 @@ function Exercise({ name, exerciseId, workoutExercises, setWorkoutExercises }) {
     const updatedWorkoutExercises = workoutExercises.filter(exercise =>
       exercise.exerciseId !== exerciseId ? exercise : false
     );
+
+    fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
+      .catch(err => console.error('ERROR:', err));
+
     setWorkoutExercises(updatedWorkoutExercises);
   }
 
@@ -118,7 +122,7 @@ export default function WorkoutPage(props) {
         {!workoutExercises
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workoutExercises.map((exercise, index) =>
-            <Exercise key={index} name={exercise.name} exerciseId={exercise.exerciseId} exerciseIndex={index} workoutExercises={workoutExercises} setWorkoutExercises={setWorkoutExercises}/>
+            <Exercise key={index} name={exercise.name} workoutId={workoutId} exerciseId={exercise.exerciseId} exerciseIndex={index} workoutExercises={workoutExercises} setWorkoutExercises={setWorkoutExercises}/>
           )}
       </div>
     </div>
