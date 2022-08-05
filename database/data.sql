@@ -1,7 +1,7 @@
 insert into "users" ("username", "hashedPassword", "createdAt")
 values              ('admin', 'a', '2022-07-27T16:01:32.134Z');
 
-insert into "workout templates" ("userId")
+insert into "workout" ("userId")
 values                          (1);
 
 insert into "exercises" ("exerciseId", "name", "muscleGroup", "equipment")

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
+function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
   const [weight, setWeight] = useState(0);
 
@@ -10,7 +10,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
     }
     const updatedDoneValue = exerciseSets.map((set, index) => {
       if (setIndex === index) {
-        return !isDone ? { ...set, isDone: true } : { ...set, isDone: false };
+        return !isDone ? { ...set, isDone: true, reps, weight } : { ...set, isDone: false };
       }
       return set;
     });
@@ -18,22 +18,16 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   }
 
   function repsChange(e) {
-    setReps(e.target.value);
+    setReps(+e.target.value);
   }
 
   function weightChange(e) {
-    setWeight(e.target.value);
+    setWeight(+e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const updatedRepsAndWeight = exerciseSets.map((set, index) => {
-      if (setIndex === index) {
-        return { ...set, reps, weight };
-      }
-      return set;
-    });
-    setSets(updatedRepsAndWeight);
+    updateWorkout();
   }
 
   return (
@@ -52,10 +46,17 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex }) {
   );
 }
 
-function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExercises }) {
+function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
   const [deleteIsOpen, setDeleteOpen] = useState(false);
+  const exerciseId = exercise.exerciseId;
+
+  function updateWorkout() {
+    const finishedSets = exerciseSets.filter(set => set.isDone);
+    const updatedExercise = exercise;
+    updatedExercise.sets = finishedSets;
+  }
 
   function addNewSet() {
     setSets([...exerciseSets, { setOrder: setCount + 1, reps: null, weight: null, isDone: false }]);
@@ -66,24 +67,23 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
     deleteIsOpen ? setDeleteOpen(false) : setDeleteOpen(true);
   }
 
-  function deleteExercise() {
-    const updatedWorkoutExercises = workoutExercises.filter(exercise =>
+  function confirmDelete() {
+    const finalWorkout = { workoutId, exercises: null };
+    const updatedWorkoutExercises = workout.exercises.filter(exercise =>
       exercise.exerciseId !== exerciseId ? exercise : false
     );
-
-    fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
-      .catch(err => console.error('ERROR:', err));
-
-    setWorkoutExercises(updatedWorkoutExercises);
+    finalWorkout.exercises = updatedWorkoutExercises;
+    deleteExercise([exerciseId]);
+    setWorkout(finalWorkout);
     setDeleteOpen(false);
   }
 
   return (
     <div className="card mb-5">
       <div className="card-header has-background-black exercise-head is-relative">
-        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{name}</h3>
+        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{exercise.name}</h3>
         <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
-        <button type="button" className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`} onClick={deleteExercise}>Delete</button>
+        <button type="button" className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`} onClick={confirmDelete}>Delete</button>
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
@@ -93,7 +93,7 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
           <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
         </div>
         {exerciseSets.map((set, index) =>
-          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} />
+          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} updateWorkout={updateWorkout} />
         )}
       </div>
       <div className="card-footer">
@@ -103,27 +103,95 @@ function Exercise({ workoutId, name, exerciseId, workoutExercises, setWorkoutExe
   );
 }
 
+function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
+  const [isOpen, setOpenClose] = useState(false);
+
+  function toggleModal() {
+    !isOpen ? setOpenClose(true) : setOpenClose(false);
+  }
+
+  function saveWorkout() {
+    toggleModal();
+    const finalWorkout = workout;
+    const deleteExercises = [];
+    const finalExercises = [];
+    for (let i = 0; i < workout.exercises.length; i++) {
+      if (workout.exercises[i].sets.length === 1 && !workout.exercises[i].sets[0].isDone) {
+        deleteExercises.push(workout.exercises[i].exerciseId);
+      } else {
+        finalExercises.push(workout.exercises[i]);
+      }
+    }
+
+    finalExercises.sort((a, b) => {
+      return a.setOrder - b.setOrder;
+    });
+    finalExercises.forEach(exercise => {
+      exercise.sets.forEach((set, index) => {
+        set.setOrder = index + 1;
+      });
+    });
+
+    finalWorkout.exercises = finalExercises;
+
+    deleteExercise(deleteExercises);
+    setWorkout(finalWorkout);
+
+    fetch(`/api/workout/${workout.workoutId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(finalWorkout)
+    })
+      .catch(err => console.error('ERROR:', err));
+  }
+
+  return (
+    <>
+      <button type="button" className="save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
+      <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
+        <div>
+          <div className="modal-background" onClick={toggleModal}></div>
+          <div className='save-workout-modal modal-content has-background-white p-3'>
+            <p className="is-size-3">Do you want to save this workout?</p>
+            <p className='is-size-5 has-text-danger my-3'>Sets that are not marked &apos;done&apos; won&apos;t be saved</p>
+            <button type="button" className="confirm-save-workout-btn button is-large m-3" onClick={saveWorkout} >Save</button>
+            <button type="button" className="cancel-save-workout-btn button is-large m-3" onClick={toggleModal}>Cancel</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function WorkoutPage(props) {
-  const [workoutExercises, setWorkoutExercises] = useState(null);
+  const [workout, setWorkout] = useState(null);
   const workoutId = 1;
 
   useEffect(() => {
     fetch(`/api/workout/${workoutId}`)
       .then(response => response.json())
       .then(data => {
-        setWorkoutExercises(data);
+        setWorkout(data);
       })
       .catch(err => console.error('ERROR:', err));
   }, []);
 
+  function deleteExercise(exerciseIds) {
+    exerciseIds.forEach(exerciseId =>
+      fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
+        .catch(err => console.error('ERROR:', err))
+    );
+  }
+
   return (
     <div className='body-container has-text-centered'>
-      <h3 className="is-inline is-size-3 has-text-weight-semibold">New Workout</h3>
+      <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
+      <SaveWorkoutModal workout={workout} deleteExercise={deleteExercise} setWorkout={setWorkout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
-        {!workoutExercises
+        {!workout
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-          : workoutExercises.map((exercise, index) =>
-            <Exercise key={index} name={exercise.name} workoutId={workoutId} exerciseId={exercise.exerciseId} exerciseIndex={index} workoutExercises={workoutExercises} setWorkoutExercises={setWorkoutExercises}/>
+          : workout.exercises.map((exercise, index) =>
+            <Exercise key={index} workoutId={workoutId} exercise={exercise} workout={workout} setWorkout={setWorkout} deleteExercise={deleteExercise}/>
           )}
       </div>
     </div>
