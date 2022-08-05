@@ -78,14 +78,37 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// gets all completed workouts from a user
+app.get('/api/user/:userId/workouts', (req, res, next) => {
+  const userId = 1;
+  if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
+  const params = [userId];
+  const sql = `
+    select *
+    from      "sets"
+    join      "workouts" using ("workoutId")
+    where     "workouts"."userId" = $1
+    and       "sets"."reps" IS NOT NULL
+    and       "sets"."weight" IS NOT NULL
+    order by  "exerciseId" desc,
+              "setOrder" desc;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const userWorkouts = result.rows;
+      res.status(200).json(userWorkouts);
+    })
+    .catch(err => next(err));
+});
+
 // creates new workout
 app.post('/api/new-workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
-    insert into "workout" ("userId")
-    values ($1)
+    insert into "workouts" ("userId")
+    values      ($1)
     returning *;
   `;
   db.query(sql, params)
@@ -115,7 +138,7 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
   });
   const sql = `
     insert into "sets" ("workoutId", "exerciseId")
-    values             ${ids}
+    values      ${ids}
     returning *;
   `;
   db.query(sql, params)
@@ -173,9 +196,9 @@ app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
   if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
   const params = [workoutId, exerciseId];
   const sql = `
-  delete from "sets"
-  where "workoutId" = $1
-  and "exerciseId" = $2
+  delete from   "sets"
+  where         "workoutId" = $1
+  and           "exerciseId" = $2
   returning *;
   `;
   db.query(sql, params)
