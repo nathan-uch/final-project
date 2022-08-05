@@ -59,6 +59,11 @@ a.navbar-item:hover {
   object-fit: contain;
 }
 
+.nav-user-icon {
+  width: 35px !important;
+  height: auto !important;
+}
+
 /* BODY CONTAINER */
 
 a {

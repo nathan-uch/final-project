@@ -84,9 +84,13 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
-    select *
+    select    "sets".*,
+              "workouts"."workoutId",
+              "exercises"."name",
+              "exercises"."equipment"
     from      "sets"
     join      "workouts" using ("workoutId")
+    join      "exercises" using ("exerciseId")
     where     "workouts"."userId" = $1
     and       "sets"."reps" IS NOT NULL
     and       "sets"."weight" IS NOT NULL
