@@ -84,18 +84,52 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
-    select    "sets".*,
-              "workouts"."workoutId",
-              "exercises"."name",
-              "exercises"."equipment"
-    from      "sets"
-    join      "workouts" using ("workoutId")
-    join      "exercises" using ("exerciseId")
-    where     "workouts"."userId" = $1
-    and       "sets"."reps" IS NOT NULL
-    and       "sets"."weight" IS NOT NULL
-    order by  "exerciseId" desc,
-              "setOrder" desc;
+    with "bestSetCTE" as (
+      select    *,
+                "reps" * "weight" as "volume",
+                row_number() over (partition by "workoutId", "exerciseId" order by "reps" * "weight" desc)
+      from      "sets"
+      join      "workouts" using ("workoutId")
+      join      "exercises" using ("exerciseId")
+      where     "reps" IS NOT NULL
+      and       "weight" IS NOT NULL
+      and       "userId" = $1
+      group by  "sets"."exerciseId",
+                "sets"."workoutId",
+                "sets"."setOrder",
+                "sets"."reps",
+                "sets"."weight",
+                "workouts"."userId",
+                "exercises"."name",
+                "exercises"."muscleGroup",
+                "exercises"."equipment",
+                "exercises"."notes"
+    ),
+    "totalSetsCTE" as (
+      select      count("sets".*) as "totalSets",
+                  "exerciseId",
+                  "workouts"."workoutId"
+      from        "sets"
+      join        "workouts" using ("workoutId")
+      join        "exercises" using ("exerciseId")
+      where       "workouts"."userId" = $1
+      and         "sets"."reps" IS NOT NULL
+      and         "sets"."weight" IS NOT NULL
+      group by    "exercises"."exerciseId",
+                  "workouts"."workoutId",
+                  "sets"."exerciseId"
+      order by    "exerciseId" desc
+    )
+    select    "equipment",
+              "exerciseId",
+              "name",
+              "reps",
+              "totalSets",
+              "weight",
+              "workoutId"
+    from      "bestSetCTE"
+    join      "totalSetsCTE" using ("workoutId", "exerciseId")
+    where     "row_number" = 1;
   `;
   db.query(sql, params)
     .then(result => {

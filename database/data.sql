@@ -6,7 +6,9 @@ values              ('admin', 'a'),
 insert into "workouts" ("workoutId", "userId")
 values                          (1, 1),
                                 (2, 1),
-                                (3, 2);
+                                (3, 2),
+                                (4, 1);
+
 
 
 insert into "exercises" ("exerciseId", "name", "muscleGroup", "equipment")
@@ -21,8 +23,6 @@ values                  (1, 'Bench Press', 'Chest', 'barbell'),
 
 insert into "sets" ("workoutId", "exerciseId", "setOrder")
 values             (1, 1, 1),
-                   (1, 4, 1),
-                   (2, 5, 1),
                    (2, 7, 1),
                    (3, 2, 1);
 
@@ -32,11 +32,9 @@ values             (2, 1, 1, 10, 100),
                    (2, 3, 2, 8, 90),
                    (2, 3, 3, 8, 90),
                    (2, 4, 1, 12, 60),
-                   (2, 4, 2, 12, 60),
-                   (2, 4, 3, 12, 60);
-
-insert into "sets" ("workoutId", "exerciseId", "setOrder", "reps", "weight")
-values             (3, 1, 1, 10, 100),
+                   (4, 6, 1, 12, 30),
+                   (4, 6, 2, 10, 60),
+                   (4, 7, 1, 10, 70),
                    (3, 1, 1, 8, 90),
                    (3, 1, 2, 8, 90),
                    (3, 2, 2, 12, 50);
