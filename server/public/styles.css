@@ -201,8 +201,6 @@ a {
   color: #ffe247;
 }
 
-/* SETS */
-
 /* MODAL */
 .confirm-save-workout-btn,
 .cancel-save-workout-btn {
@@ -307,6 +305,12 @@ a {
 
 .hidden {
   display: none;
+}
+
+/* USER PROFILE */
+
+.exercise-col {
+  max-width: 205px;
 }
 
 /* LOADING SPINNER */

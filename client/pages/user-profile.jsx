@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react';
 
-function DesktopWorkoutCard() {
+function ExerciseTableRow({ exercise }) {
+
+  return (
+    <tr>
+      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment ? exercise.equipment : ''}`}</td>
+      <td className="py-0">{`${exercise.weight} x ${exercise.reps}`}</td>
+    </tr>
+  );
+}
+
+function DesktopWorkoutCard({ index, workout, workoutId }) {
+  const [wId] = useState(workoutId[0]);
 
   return (
     <div className="card has-background-grey-lighter center mb-5">
       <div className="card-content px-0">
-        <h4>Workout 1</h4>
+        <h4>Workout {index + 1}</h4>
         <table className="table has-text-left is-fullwidth has-background-grey-lighter">
           <thead>
             <tr>
-              <th>Exercise:</th>
+              <th className="exercise-col">Exercise:</th>
               <th>Best Set:</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="py-0">3x Bench Press - Barbell</td>
-              <td className="py-0">60kg x 8</td>
-            </tr>
-            <tr>
-              <td className="py-0">3x Incline Press - Dumbbell</td>
-              <td className="py-0">50kg x 8</td>
-            </tr>
-            <tr>
-              <td className="py-0">4x Chest Fly - Cable</td>
-              <td className="py-0">30kg x 10</td>
-            </tr>
+            {workout[wId].map(exercise => {
+              return <ExerciseTableRow key={exercise.exerciseId} exercise={exercise} />;
+            })}
           </tbody>
         </table>
       </div>
@@ -65,14 +67,16 @@ export default function UserProfile() {
         <div className="card center">
           <div className="card-content">
             <h3 className="is-size-3">username</h3>
-            <p>Total Workouts: {}</p>
+            <p>Total Workouts: {!workouts ? '' : workouts.length}</p>
           </div>
         </div>
 
         <h3 className='my-5 is-size-3'>Workout History</h3>
-        {workouts.map((workout, index) => {
-          return <DesktopWorkoutCard key={index} />;
-        })}
+        {!workouts
+          ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          : workouts.map((workout, index) => {
+            return <DesktopWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
+          })}
       </div>
     </div>
   );
