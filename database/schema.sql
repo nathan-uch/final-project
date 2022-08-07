@@ -30,7 +30,7 @@ CREATE TABLE "public"."workouts" (
 
 CREATE TABLE "public"."exercises" (
 	"exerciseId" serial NOT NULL UNIQUE,
-	"name" TEXT NOT NULL UNIQUE,
+	"name" TEXT NOT NULL,
 	"muscleGroup" TEXT NOT NULL,
 	"equipment" TEXT,
 	"notes" TEXT,

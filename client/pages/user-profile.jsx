@@ -56,7 +56,7 @@ export default function UserProfile() {
         setWorkouts(final);
       })
       .catch(err => console.error('ERROR:', err));
-  }, []);
+  }, [workouts]);
 
   return (
     <div className='body-container has-text-centered'>
@@ -66,7 +66,7 @@ export default function UserProfile() {
       <div className="is-hidden-dekstop">
         <div className="card center">
           <div className="card-content">
-            <h3 className="is-size-3">username</h3>
+            <h3 className="is-size-3">arnold123</h3>
             <p>Total Workouts: {!workouts ? '' : workouts.length}</p>
           </div>
         </div>

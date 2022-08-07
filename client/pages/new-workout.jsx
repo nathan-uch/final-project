@@ -10,7 +10,7 @@ export default function NewWorkout() {
   return (
     <form onSubmit={handleSubmit} className='body-container has-text-centered'>
       <h3 className="is-size-3 mb-4">Quick Start</h3>
-      <button type="submit" className="button">Begin a new Workout</button>
+      <button type="submit" className="button primary-button is-size-5 p-5">Begin a new Workout</button>
     </form>
   );
 }

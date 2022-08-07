@@ -28,7 +28,7 @@ app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
     select *
     from "exercises"
-    order by "name" desc;
+    order by "name" asc;
   `;
   db.query(sql)
     .then(result => {
