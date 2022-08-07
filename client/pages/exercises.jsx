@@ -74,6 +74,7 @@ export default function Exercises(props) {
         clearExercises()
       )
       .catch(err => console.error('ERROR:', err));
+    window.location.hash = 'workout';
   }
 
   function clearExercises() {
@@ -88,7 +89,7 @@ export default function Exercises(props) {
   return (
     <>
       <div className="body-container has-text-centered">
-        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercise</h3>
+        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercises</h3>
         <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
             {isLoading
               ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

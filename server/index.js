@@ -168,14 +168,10 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
   let paramIndex = 1;
   const ids = exerciseIds.map((id, index) => {
     paramIndex++;
-    if (index !== exerciseIds.length - 1) {
-      return `($1, $${paramIndex})`;
-    } else {
-      return `($1, $${paramIndex})`;
-    }
+    return `($1, $${paramIndex}, 1)`;
   });
   const sql = `
-    insert into "sets" ("workoutId", "exerciseId")
+    insert into "sets" ("workoutId", "exerciseId", "setOrder")
     values      ${ids}
     returning *;
   `;
