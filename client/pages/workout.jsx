@@ -124,9 +124,6 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       }
     }
 
-    finalExercises.sort((a, b) => {
-      return a.setOrder - b.setOrder;
-    });
     finalExercises.forEach(exercise => {
       exercise.sets.forEach((set, index) => {
         set.setOrder = index + 1;
@@ -136,7 +133,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     finalWorkout.exercises = finalExercises;
 
     deleteExercise(deleteExercises);
-    setWorkout(finalWorkout);
+    setWorkout(null);
 
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
@@ -167,8 +164,8 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage(props) {
   const [workout, setWorkout] = useState(null);
-  const workoutId = 1;
 
+  const workoutId = 1;
   useEffect(() => {
     fetch(`/api/workout/${workoutId}`)
       .then(response => response.json())

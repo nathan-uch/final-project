@@ -70,7 +70,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
         return exerObj;
       });
       const workout = {
-        workoutId: result.rows[0].workoutId,
+        workoutId,
         exercises: splitExercises
       };
       res.status(200).json(workout);
@@ -129,7 +129,8 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
               "workoutId"
     from      "bestSetCTE"
     join      "totalSetsCTE" using ("workoutId", "exerciseId")
-    where     "row_number" = 1;
+    where     "row_number" = 1
+    order by "name" asc;
   `;
   db.query(sql, params)
     .then(result => {
