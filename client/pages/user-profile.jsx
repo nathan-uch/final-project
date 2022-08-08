@@ -40,22 +40,25 @@ export default function UserProfile() {
   const userId = 1;
 
   useEffect(() => {
-    fetch(`/api/user/${userId}/workouts`)
-      .then(response => response.json())
-      .then(data => {
-        const final = [];
-        const splitByWorkout = {};
-        data.forEach(set => {
-          const wId = set.workoutId;
-          if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
-          splitByWorkout[wId].push(set);
-        });
-        for (const key of Object.keys(splitByWorkout)) {
-          final.push({ [key]: splitByWorkout[key] });
-        }
-        setWorkouts(final);
-      })
-      .catch(err => console.error('ERROR:', err));
+    const interval = setInterval(() => {
+      fetch(`/api/user/${userId}/workouts`)
+        .then(response => response.json())
+        .then(data => {
+          const final = [];
+          const splitByWorkout = {};
+          data.forEach(set => {
+            const wId = set.workoutId;
+            if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
+            splitByWorkout[wId].push(set);
+          });
+          for (const key of Object.keys(splitByWorkout)) {
+            final.push({ [key]: splitByWorkout[key] });
+          }
+          setWorkouts(final);
+        })
+        .catch(err => console.error('ERROR:', err));
+    }, 500);
+    return () => clearInterval(interval);
   }, [workouts]);
 
   return (

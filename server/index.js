@@ -23,7 +23,6 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
-// gets all exercises
 app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
     select *
@@ -37,7 +36,6 @@ app.get('/api/all-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// gets all exercises in a workout
 app.get('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
@@ -78,7 +76,6 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// gets all completed workouts from a user
 app.get('/api/user/:userId/workouts', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
@@ -140,7 +137,6 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// creates new workout
 app.post('/api/new-workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
@@ -158,7 +154,6 @@ app.post('/api/new-workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// saves multiple NEW exercises (as sets) in workout
 app.post('/api/workout/new-exercises', (req, res, next) => {
   const { workoutId, exerciseIds } = req.body;
   if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'ERROR: Existing workoutId and exerciseId are required');
@@ -184,9 +179,8 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// edits 1st set and adds other sets to workout
 app.patch('/api/workout/:workoutId', (req, res, next) => {
-  const workoutId = Number(req.body.workoutId);
+  const workoutId = Number(req.params.workoutId);
   const { exercises } = req.body;
   if (!exercises) throw new ClientError(400, 'ERROR: Missing exercises.');
   const exercisePromises = exercises.flatMap(exercise => {
@@ -224,7 +218,6 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// deletes an exercise from workout
 app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   const exerciseId = Number(req.params.exerciseId);

@@ -79,7 +79,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   return (
-    <div className="card mb-5">
+    <div className="card mb-6">
       <div className="card-header has-background-black exercise-head is-relative">
         <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{exercise.name}</h3>
         <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
@@ -131,9 +131,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     });
 
     finalWorkout.exercises = finalExercises;
-
     deleteExercise(deleteExercises);
-    setWorkout(null);
 
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
@@ -162,10 +160,10 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
   );
 }
 
-export default function WorkoutPage(props) {
+export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-
   const workoutId = 1;
+
   useEffect(() => {
     fetch(`/api/workout/${workoutId}`)
       .then(response => response.json())
@@ -185,12 +183,21 @@ export default function WorkoutPage(props) {
   return (
     <div className='body-container has-text-centered'>
       <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
-      <SaveWorkoutModal workout={workout} deleteExercise={deleteExercise} setWorkout={setWorkout} />
+      <SaveWorkoutModal
+        workout={workout}
+        deleteExercise={deleteExercise}
+        setWorkout={setWorkout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workout.exercises.map((exercise, index) =>
-            <Exercise key={index} workoutId={workoutId} exercise={exercise} workout={workout} setWorkout={setWorkout} deleteExercise={deleteExercise}/>
+            <Exercise
+              key={index}
+              workoutId={workoutId}
+              exercise={exercise}
+              workout={workout}
+              setWorkout={setWorkout}
+              deleteExercise={deleteExercise}/>
           )}
       </div>
     </div>
