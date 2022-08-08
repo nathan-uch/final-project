@@ -1,20 +1,50 @@
-insert into "users" ("username", "hashedPassword", "createdAt")
-values              ('admin', 'a', '2022-07-27T16:01:32.134Z');
+insert into "users" ("username", "hashedPassword")
+values              ('admin', 'a');
 
-insert into "workout" ("userId")
-values                          (1);
+insert into "workouts" ("workoutId", "userId")
+values                 (1, 1);
 
 insert into "exercises" ("exerciseId", "name", "muscleGroup", "equipment")
-values                  (1, 'Bench Press', 'Chest', 'barbell'),
-                        (2, 'Pull ups', 'Back', null),
-                        (3, 'Deadlift', 'Hamstrings', 'barbell'),
-                        (4, 'Squats', 'Quads', 'barbell'),
-                        (5, 'Incline Press', 'Chest', 'barbell'),
-                        (6, 'Lat Pulldown', 'Back', 'cable bar'),
-                        (7, 'Overhead Press', 'Deltoids', 'dumbbell'),
-                        (8, 'Leg Press', 'Quads', 'machine');
-
-insert into "sets" ("workoutId", "exerciseId", "setOrder")
-values             (1, 1, 1),
-                   (1, 5, 1),
-                   (1, 7, 1)
+values                  (1, 'Bench Press', 'Chest', 'Barbell'),
+                        (2, 'Bench Press', 'Chest', 'Dumbbell'),
+                        (3, 'Incline Press', 'Chest', 'Barbell'),
+                        (4, 'Incline Press', 'Chest', 'Dumbbell'),
+                        (5, 'Decline Press', 'Chest', 'Barbell'),
+                        (6, 'Decline Press', 'Chest', 'Dumbbell'),
+                        (7, 'Pec Deck', 'Chest', null),
+                        (8, 'Chest Fly', 'Chest', 'Cable'),
+                        (9, 'Dips', 'Chest', null),
+                        (10, 'Tricep Overhead Ext.', 'Triceps', 'Dumbbell'),
+                        (11, 'Skullcrusher', 'Triceps', 'Barbell'),
+                        (12, 'Tricep Extension', 'Triceps', 'Cable'),
+                        (13, 'Deadlift', 'Legs, Back', 'Barbell'),
+                        (14, 'Pull Ups', 'Back', null),
+                        (15, 'Chin Ups', 'Back', null),
+                        (16, 'Lat Pulldown', 'Back', 'Cable bar'),
+                        (17, 'Seated Row', 'Back', 'Cable'),
+                        (18, 'One Arm Row', 'Back', 'Dumbbell'),
+                        (19, 'T-Bar Row', 'Back', 'T-Bar'),
+                        (20, 'Bicep Curl', 'Biceps', 'Barbell'),
+                        (21, 'Alt. Bicep Curl', 'Biceps', 'Dumbbell'),
+                        (22, 'Hammer Curl', 'Biceps', 'Dumbbell'),
+                        (23, 'Overhand Curl', 'Biceps', 'Barbell'),
+                        (24, 'Overhand Curl', 'Biceps', 'Dumbbell'),
+                        (25, 'Overhead Press', 'Deltoids', 'Barbell'),
+                        (26, 'Overhead Press', 'Deltoids', 'Machine'),
+                        (27, 'Seated Overhead Press', 'Deltoids', 'Dumbbell'),
+                        (28, 'Lateral Raises', 'Deltoids', 'Dumbbell'),
+                        (29, 'Cable Lateral Raises', 'Deltoids', 'Cable'),
+                        (30, 'Front Raises', 'Deltoids', 'Dumbbell'),
+                        (31, 'Reverse Fly', 'Deltoids', 'Dumbbell'),
+                        (32, 'Reverse Fly', 'Deltoids', 'Machine'),
+                        (33, 'Face Pull', 'Deltoids', 'Cable'),
+                        (34, 'Squats', 'Legs', 'Barbell'),
+                        (35, 'Leg Press', 'Legs', 'Machine'),
+                        (36, 'Sumo Deadlift', 'Legs', 'Barbell'),
+                        (37, 'Romainian Deadlift', 'Legs', 'Barbell'),
+                        (38, 'Lounges', 'Legs', 'Barbell'),
+                        (39, 'Front Squat', 'Legs', 'Barbell'),
+                        (40, 'Hip Thrust', 'Legs', 'Barbell'),
+                        (41, 'Leg Extension', 'Legs', 'Machine'),
+                        (42, 'Leg Curl', 'Legs', 'Machine'),
+                        (43, 'Calf Raise', 'Legs', 'Dumbbell');

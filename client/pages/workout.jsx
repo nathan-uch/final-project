@@ -5,7 +5,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   const [weight, setWeight] = useState(0);
 
   function toggleSetDone() {
-    if (!reps || !weight) {
+    if (!reps) {
       return false;
     }
     const updatedDoneValue = exerciseSets.map((set, index) => {
@@ -37,7 +37,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
         ? <input required type="number" min="1" value={reps} onChange={repsChange} className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
         : <p className="reps-value is-size-4 mr-3">{reps}</p>}
       {!isDone
-        ? <input required type="number" min="1" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+        ? <input type="number" min="0" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
         : <p className="weight-value is-size-4 mr-3">{weight}</p>
       }
       <button href="#" className="set-done-btn has-background-white" onClick={toggleSetDone} type="submit">
@@ -79,7 +79,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   return (
-    <div className="card mb-5">
+    <div className="card mb-6">
       <div className="card-header has-background-black exercise-head is-relative">
         <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{exercise.name}</h3>
         <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
@@ -89,7 +89,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
           <p className="mx-3 sets-title is-inline is-size-5 has-text-weight-semibold">Set</p>
           <p className="mx-3 reps-title is-inline is-size-5 has-text-weight-semibold">Reps</p>
-          <p className="mx-3 weight-title is-inline is-size-5 has-text-weight-semibold">Weight</p>
+          <p className="mx-3 weight-title is-inline is-size-5 has-text-weight-semibold">Weight (lb)</p>
           <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
         </div>
         {exerciseSets.map((set, index) =>
@@ -110,7 +110,8 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     !isOpen ? setOpenClose(true) : setOpenClose(false);
   }
 
-  function saveWorkout() {
+  function saveWorkout(e) {
+    e.preventDefault();
     toggleModal();
     const finalWorkout = workout;
     const deleteExercises = [];
@@ -123,9 +124,6 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       }
     }
 
-    finalExercises.sort((a, b) => {
-      return a.setOrder - b.setOrder;
-    });
     finalExercises.forEach(exercise => {
       exercise.sets.forEach((set, index) => {
         set.setOrder = index + 1;
@@ -133,9 +131,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     });
 
     finalWorkout.exercises = finalExercises;
-
     deleteExercise(deleteExercises);
-    setWorkout(finalWorkout);
 
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
@@ -143,27 +139,28 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       body: JSON.stringify(finalWorkout)
     })
       .catch(err => console.error('ERROR:', err));
+    window.location.hash = 'user-profile';
   }
 
   return (
     <>
-      <button type="button" className="save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
+      <button type="button" className="primary-button save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
       <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
-        <div>
+        <form onSubmit={saveWorkout}>
           <div className="modal-background" onClick={toggleModal}></div>
           <div className='save-workout-modal modal-content has-background-white p-3'>
             <p className="is-size-3">Do you want to save this workout?</p>
             <p className='is-size-5 has-text-danger my-3'>Sets that are not marked &apos;done&apos; won&apos;t be saved</p>
-            <button type="button" className="confirm-save-workout-btn button is-large m-3" onClick={saveWorkout} >Save</button>
+            <button type="submit" className="primary-button confirm-save-workout-btn button is-large m-3">Save</button>
             <button type="button" className="cancel-save-workout-btn button is-large m-3" onClick={toggleModal}>Cancel</button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
 }
 
-export default function WorkoutPage(props) {
+export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
   const workoutId = 1;
 
@@ -186,12 +183,21 @@ export default function WorkoutPage(props) {
   return (
     <div className='body-container has-text-centered'>
       <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
-      <SaveWorkoutModal workout={workout} deleteExercise={deleteExercise} setWorkout={setWorkout} />
+      <SaveWorkoutModal
+        workout={workout}
+        deleteExercise={deleteExercise}
+        setWorkout={setWorkout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workout.exercises.map((exercise, index) =>
-            <Exercise key={index} workoutId={workoutId} exercise={exercise} workout={workout} setWorkout={setWorkout} deleteExercise={deleteExercise}/>
+            <Exercise
+              key={index}
+              workoutId={workoutId}
+              exercise={exercise}
+              workout={workout}
+              setWorkout={setWorkout}
+              deleteExercise={deleteExercise}/>
           )}
       </div>
     </div>

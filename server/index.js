@@ -23,12 +23,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
-// gets all exercises
 app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
     select *
     from "exercises"
-    order by "name" desc;
+    order by "name" asc;
   `;
   db.query(sql)
     .then(result => {
@@ -37,7 +36,6 @@ app.get('/api/all-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// gets all exercises in a workout
 app.get('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
@@ -70,7 +68,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
         return exerObj;
       });
       const workout = {
-        workoutId: result.rows[0].workoutId,
+        workoutId,
         exercises: splitExercises
       };
       res.status(200).json(workout);
@@ -78,14 +76,74 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// creates new workout
+app.get('/api/user/:userId/workouts', (req, res, next) => {
+  const userId = 1;
+  if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
+  const params = [userId];
+  const sql = `
+    with "bestSetCTE" as (
+      select    *,
+                "reps" * "weight" as "volume",
+                row_number() over (partition by "workoutId", "exerciseId" order by "reps" * "weight" desc)
+      from      "sets"
+      join      "workouts" using ("workoutId")
+      join      "exercises" using ("exerciseId")
+      where     "reps" IS NOT NULL
+      and       "weight" IS NOT NULL
+      and       "userId" = $1
+      group by  "sets"."exerciseId",
+                "sets"."workoutId",
+                "sets"."setOrder",
+                "sets"."reps",
+                "sets"."weight",
+                "workouts"."userId",
+                "exercises"."name",
+                "exercises"."muscleGroup",
+                "exercises"."equipment",
+                "exercises"."notes"
+    ),
+    "totalSetsCTE" as (
+      select      count("sets".*) as "totalSets",
+                  "exerciseId",
+                  "workouts"."workoutId"
+      from        "sets"
+      join        "workouts" using ("workoutId")
+      join        "exercises" using ("exerciseId")
+      where       "workouts"."userId" = $1
+      and         "sets"."reps" IS NOT NULL
+      and         "sets"."weight" IS NOT NULL
+      group by    "exercises"."exerciseId",
+                  "workouts"."workoutId",
+                  "sets"."exerciseId"
+      order by    "exerciseId" desc
+    )
+    select    "equipment",
+              "exerciseId",
+              "name",
+              "reps",
+              "totalSets",
+              "weight",
+              "workoutId"
+    from      "bestSetCTE"
+    join      "totalSetsCTE" using ("workoutId", "exerciseId")
+    where     "row_number" = 1
+    order by "name" asc;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const userWorkouts = result.rows;
+      res.status(200).json(userWorkouts);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/new-workout', (req, res, next) => {
   const userId = 1;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
-    insert into "workout" ("userId")
-    values ($1)
+    insert into "workouts" ("userId")
+    values      ($1)
     returning *;
   `;
   db.query(sql, params)
@@ -96,7 +154,6 @@ app.post('/api/new-workout', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// saves multiple NEW exercises (as sets) in workout
 app.post('/api/workout/new-exercises', (req, res, next) => {
   const { workoutId, exerciseIds } = req.body;
   if (!workoutId || exerciseIds.length < 1) throw new ClientError(400, 'ERROR: Existing workoutId and exerciseId are required');
@@ -107,15 +164,11 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
   let paramIndex = 1;
   const ids = exerciseIds.map((id, index) => {
     paramIndex++;
-    if (index !== exerciseIds.length - 1) {
-      return `($1, $${paramIndex})`;
-    } else {
-      return `($1, $${paramIndex})`;
-    }
+    return `($1, $${paramIndex}, 1)`;
   });
   const sql = `
-    insert into "sets" ("workoutId", "exerciseId")
-    values             ${ids}
+    insert into "sets" ("workoutId", "exerciseId", "setOrder")
+    values      ${ids}
     returning *;
   `;
   db.query(sql, params)
@@ -126,9 +179,8 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// edits 1st set and adds other sets to workout
 app.patch('/api/workout/:workoutId', (req, res, next) => {
-  const workoutId = Number(req.body.workoutId);
+  const workoutId = Number(req.params.workoutId);
   const { exercises } = req.body;
   if (!exercises) throw new ClientError(400, 'ERROR: Missing exercises.');
   const exercisePromises = exercises.flatMap(exercise => {
@@ -166,16 +218,15 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// deletes an exercise from workout
 app.delete('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   const exerciseId = Number(req.params.exerciseId);
   if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
   const params = [workoutId, exerciseId];
   const sql = `
-  delete from "sets"
-  where "workoutId" = $1
-  and "exerciseId" = $2
+  delete from   "sets"
+  where         "workoutId" = $1
+  and           "exerciseId" = $2
   returning *;
   `;
   db.query(sql, params)
