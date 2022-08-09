@@ -37,6 +37,18 @@ app.get('/api/all-exercises', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/all-usernames', (req, res, next) => {
+  const sql = `
+  select "username"
+  from "users";
+  `;
+  db.query(sql)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   if (!workoutId) throw new ClientError(400, 'ERROR: Invalid workoutId.');
