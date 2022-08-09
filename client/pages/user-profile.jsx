@@ -10,7 +10,7 @@ function ExerciseTableRow({ exercise }) {
   );
 }
 
-function DesktopWorkoutCard({ index, workout, workoutId }) {
+function MobileWorkoutCard({ index, workout, workoutId }) {
   const [wId] = useState(workoutId[0]);
 
   return (
@@ -62,11 +62,28 @@ export default function UserProfile() {
   }, [workouts]);
 
   return (
-    <div className='body-container has-text-centered'>
-      <div className='is-hidden-touch'>
+    <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>
+      <div className='is-hidden-touch columns m-0 profile-desktop-body'>
+        <div className="column is-4 has-text-centered profile-desktop-left-col">
+          <h3 className="my-3 is-size-3">arnold123</h3>
+          <p className="is-size-5">Total Workouts: {!workouts ? '' : workouts.length}</p>
+        </div>
+        <div className="column is-8 px-4 is-flex is-flex-direction-column is-align-items-center">
+          <h3 className="my-3 is-size-3">Workout History</h3>
+            <div className="card">
+              <div className="card-content px-0">
+                <h4>Workout {}</h4>
+                <p>Total Exercises: </p>
+              </div>
+            </div>
+          {/* {!workouts
+            ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            : ''
+          } */}
+        </div>
       </div>
 
-      <div className="is-hidden-dekstop">
+      <div className="is-hidden-desktop pt-6 profile-mobile-body">
         <div className="card center">
           <div className="card-content">
             <h3 className="is-size-3">arnold123</h3>
@@ -84,11 +101,7 @@ export default function UserProfile() {
         {!workouts
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workouts.map((workout, index) => {
-            return <DesktopWorkoutCard
-                    key={index}
-                    index={index}
-                    workout={workout}
-                    workoutId={Object.keys(workout)} />;
+            return <MobileWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
           })}
       </div>
     </div>
