@@ -150,6 +150,7 @@ app.post('/api/new-workout', (req, res, next) => {
     .then(result => {
       const newWorkout = res.rows;
       res.status(201).json(newWorkout);
+      if (!res.ok()) window.location.hash = 'error';
     })
     .catch(err => next(err));
 });
