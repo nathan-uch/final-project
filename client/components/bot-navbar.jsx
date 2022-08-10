@@ -8,12 +8,12 @@ export default class BotNavbar extends React.Component {
         <div className="navbar-menu is-active is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around p-0">
           <a href="#user-profile" className="navbar-item p-0">
             <figure className="image navbar-icon">
-              <img src="images/user-icon.png" className="bot-navbar-icon my-2 nav-user-icon" />
+              <img src="/images/user-icon.png" className="bot-navbar-icon my-2 nav-user-icon" />
             </figure>
           </a>
           <a href="#new-workout" className="navbar-item p-0">
             <figure className="image navbar-icon">
-              <img src="images/db-yellow.png" className="bot-navbar-icon my-2" />
+              <img src="/images/db-yellow.png" className="bot-navbar-icon my-2" />
             </figure>
           </a>
         </div>

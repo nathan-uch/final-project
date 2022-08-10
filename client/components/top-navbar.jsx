@@ -9,7 +9,7 @@ export default class TopNavbar extends React.Component {
         <div className="navbar-start">
             <a href="#" className="navbar-item">
               <figure className="image is-48x48">
-                <img className="logo-img" src="images/flame-red.png" alt="logo icon" />
+                <img className="logo-img" src="/images/flame-red.png" alt="logo icon" />
               </figure>
             <h2 className="m-0 is-size-5 logo-text has-text-weight-bold">Strive</h2>
             </a>
