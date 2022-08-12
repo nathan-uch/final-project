@@ -84,7 +84,11 @@ export default function UserProfile() {
         {!workouts
           ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           : workouts.map((workout, index) => {
-            return <DesktopWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
+            return <DesktopWorkoutCard
+                    key={index}
+                    index={index}
+                    workout={workout}
+                    workoutId={Object.keys(workout)} />;
           })}
       </div>
     </div>

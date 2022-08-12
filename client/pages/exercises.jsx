@@ -96,7 +96,14 @@ export default function Exercises(props) {
             {isLoading
               ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
               : exercises.map(exercise =>
-                <ExerciseCard key={exercise.exerciseId} exerciseId={exercise.exerciseId} name={exercise.name} setAllSelected={setAllSelected} allSelected={allSelected} clearAll={clearAll} equipment={exercise.equipment} />
+                <ExerciseCard
+                  key={exercise.exerciseId}
+                  exerciseId={exercise.exerciseId}
+                  name={exercise.name}
+                  setAllSelected={setAllSelected}
+                  allSelected={allSelected}
+                  clearAll={clearAll}
+                  equipment={exercise.equipment} />
               )}
         </div>
       </div>
@@ -111,7 +118,9 @@ export default function Exercises(props) {
               <button onClick={toggleExerciseDisplay} className='toggle-show-exercises-desktop is-size-4 p-3'>Selected Exercises<i className={`exer-chevron mr-2 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i></button>
               <form onSubmit={handleSaveExercises} className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${expandExercisesDisplay ? '' : 'collapse'}`}>
                 <p className="my-2">Total Exercises: {allSelected.length}</p>
-              <ul className="exercise-list m-4 is-size-5">{allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}</ul>
+              <ul className="exercise-list m-4 is-size-5">
+                {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
+              </ul>
                 <button type="submit" className='primary-button add-exercises-btn button m-2 is-size-5'>Add all</button>
                 <button onClick={clearExercises} type="button" className='clear-btn button is-white m-2 is-size-5'>Clear</button>
               </form>

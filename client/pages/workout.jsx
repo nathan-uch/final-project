@@ -31,16 +31,32 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="set-form mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
+    <form onSubmit={handleSubmit}
+      className="set-form mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
       <p className="mx-3 is-size-4 set-num">{setOrder}</p>
       {!isDone
-        ? <input required type="number" min="1" value={reps} onChange={repsChange} className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+        ? <input
+            required
+            type="number"
+            min="1"
+            value={reps}
+            onChange={repsChange}
+            className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
         : <p className="reps-value is-size-4 mr-3">{reps}</p>}
       {!isDone
-        ? <input type="number" min="0" value={weight} onChange={weightChange} className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
+        ? <input
+            type="number"
+            min="0"
+            value={weight}
+            onChange={weightChange}
+            className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
         : <p className="weight-value is-size-4 mr-3">{weight}</p>
       }
-      <button href="#" className="set-done-btn has-background-white" onClick={toggleSetDone} type="submit">
+      <button
+        href="#"
+        className="set-done-btn has-background-white"
+        onClick={toggleSetDone}
+        type="submit">
         <i className={`fa-solid fa-check fa-3x mx-4 ${isDone ? 'done-check' : 'unselected-check'}`}></i></button>
     </form>
   );
@@ -81,9 +97,13 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   return (
     <div className="card mb-6">
       <div className="card-header has-background-black exercise-head is-relative">
-        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">{exercise.name}</h3>
-        <button type="button" className="delete-exercise-btn button is-large has-background-black" onClick={openDelete}>...</button>
-        <button type="button" className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`} onClick={confirmDelete}>Delete</button>
+        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">
+          {exercise.name}</h3>
+        <button type="button" className="delete-exercise-btn button is-large has-background-black"
+          onClick={openDelete}>...</button>
+        <button type="button"
+          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`}
+          onClick={confirmDelete}>Delete</button>
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
@@ -93,11 +113,20 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
           <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
         </div>
         {exerciseSets.map((set, index) =>
-          <Set key={index} setOrder={set.setOrder} isDone={set.isDone} setIndex={index} exerciseSets={exerciseSets} setSets={setSets} updateWorkout={updateWorkout} />
+          <Set
+            key={index}
+            setOrder={set.setOrder}
+            isDone={set.isDone}
+            setIndex={index}
+            exerciseSets={exerciseSets}
+            setSets={setSets}
+            updateWorkout={updateWorkout} />
         )}
       </div>
       <div className="card-footer">
-        <button type="button" onClick={addNewSet} className="add-set-btn button is-size-5 my-2 has-background-grey-lighter">Add set</button>
+        <button type="button"
+          onClick={addNewSet}
+          className="add-set-btn button is-size-5 my-2 has-background-grey-lighter">Add set</button>
       </div>
     </div>
   );
@@ -144,7 +173,9 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
   return (
     <>
-      <button type="button" className="primary-button save-workout-btn button is-medium mt-3 px-6" onClick={toggleModal} >Save Workout</button>
+      <button type="button"
+        className="primary-button save-workout-btn button is-medium mt-3 px-6"
+        onClick={toggleModal} >Save Workout</button>
       <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
         <form onSubmit={saveWorkout}>
           <div className="modal-background" onClick={toggleModal}></div>
