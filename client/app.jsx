@@ -24,8 +24,7 @@ export default function App() {
     if (path === 'new-workout') return <NewWorkout />;
     if (path === 'exercise-list') return <Exercises />;
     if (path === 'workout') return <Workout />;
-    if (path === 'error') return <ErrorPage />;
-    return <UserProfile />;
+    return <ErrorPage />;
   }
 
   return (

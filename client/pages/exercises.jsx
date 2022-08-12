@@ -72,7 +72,6 @@ export default function Exercises(props) {
       body: JSON.stringify(body)
     })
       .then(response => {
-        if (!response.ok) window.location.hash = 'error';
         response.json();
       })
       .then(data => clearExercises())
