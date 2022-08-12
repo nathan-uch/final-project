@@ -71,10 +71,10 @@ export default function Exercises(props) {
       },
       body: JSON.stringify(body)
     })
-      .then(response => response.json())
-      .then(data =>
-        clearExercises()
-      )
+      .then(response => {
+        response.json();
+      })
+      .then(data => clearExercises())
       .catch(err => console.error('ERROR:', err));
     window.location.hash = 'workout';
   }

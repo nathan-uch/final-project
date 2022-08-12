@@ -71,6 +71,12 @@ export default function UserProfile() {
           <div className="card-content">
             <h3 className="is-size-3">arnold123</h3>
             <p>Total Workouts: {!workouts ? '' : workouts.length}</p>
+            {workouts !== null && workouts.length === 0
+              ? <>
+                  <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
+                </>
+              : false
+            }
           </div>
         </div>
 
