@@ -55,21 +55,23 @@ git clone git@github.com:nathan-uch/final-project.git
 cd final-project
 ```
 
-2. Install dependencies with npm
+2. Install [PostgreSQL](https://www.postgresql.org/download/)
+
+3. Install dependencies with npm
 ```shell
 npm install
 ```
 
-3. Start and import example database to PostgreSQL
+4. Start and import example database to PostgreSQL
 ```shell
 sudo service postgresql start
 npm run db:import
 ```
 Optional: Use [pgweb](https://github.com/sosedoff/pgweb) to view your database
 
-4. Start the server. Once the server is online, view the application on http://localhost:3000 in your browser.
+5. Start the server. Once the server is online, view the application on http://localhost:3000 in your browser.
 ```shell
 npm run dev
 ```
 
-5. Enjoy coding!
+6. Enjoy coding!
