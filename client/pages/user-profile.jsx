@@ -40,26 +40,23 @@ export default function UserProfile() {
   const userId = 1;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(`/api/user/${userId}/workouts`)
-        .then(response => response.json())
-        .then(data => {
-          const final = [];
-          const splitByWorkout = {};
-          data.forEach(set => {
-            const wId = set.workoutId;
-            if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
-            splitByWorkout[wId].push(set);
-          });
-          for (const key of Object.keys(splitByWorkout)) {
-            final.push({ [key]: splitByWorkout[key] });
-          }
-          setWorkouts(final);
-        })
-        .catch(err => console.error('ERROR:', err));
-    }, 500);
-    return () => clearInterval(interval);
-  }, [workouts]);
+    fetch(`/api/user/${userId}/workouts`)
+      .then(response => response.json())
+      .then(data => {
+        const final = [];
+        const splitByWorkout = {};
+        data.forEach(set => {
+          const wId = set.workoutId;
+          if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
+          splitByWorkout[wId].push(set);
+        });
+        for (const key of Object.keys(splitByWorkout)) {
+          final.push({ [key]: splitByWorkout[key] });
+        }
+        setWorkouts(final);
+      })
+      .catch(err => console.error('ERROR:', err));
+  }, []);
 
   return (
     <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>
@@ -83,7 +80,7 @@ export default function UserProfile() {
         </div>
       </div>
 
-      <div className="is-hidden-desktop pt-6 profile-mobile-body">
+      <div className="is-hidden-desktop mx-4 pt-6 profile-mobile-body">
         <div className="card center">
           <div className="card-content">
             <h3 className="is-size-3">arnold123</h3>

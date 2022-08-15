@@ -7,6 +7,7 @@ import Workout from '../client/pages/workout';
 import UserProfile from '../client/pages/user-profile';
 import BotNavbar from '../client/components/bot-navbar';
 import ErrorPage from '../client/components/error';
+import AuthPage from '../client/pages/auth';
 
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
@@ -24,6 +25,7 @@ export default function App() {
     if (path === 'new-workout') return <NewWorkout />;
     if (path === 'exercise-list') return <Exercises />;
     if (path === 'workout') return <Workout />;
+    if (path === 'sign-up') return <AuthPage />;
     return <ErrorPage />;
   }
 

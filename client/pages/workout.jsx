@@ -36,7 +36,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
       <p className="mx-3 is-size-4 set-num">{setOrder}</p>
       {!isDone
         ? <input
-            required
+            required={true}
             type="number"
             min="1"
             value={reps}

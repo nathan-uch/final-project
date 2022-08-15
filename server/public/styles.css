@@ -16,6 +16,38 @@ body {
   transform: scale(0.95);
 }
 
+/* AUTH */
+
+.auth-body {
+  height: 100%;
+  min-height: 100vh;
+  color: #ffe247;
+  padding-top: 6rem;
+}
+
+.auth-logo {
+  min-width: 240px;
+  height: 100px;
+}
+
+.auth-logo-img {
+  position: absolute;
+  top: 0;
+  left: -16px;
+  z-index: 1;
+}
+
+.auth-logo-text {
+  position: absolute;
+  z-index: 2;
+  font-size: 3.5rem;
+  letter-spacing: 1.2rem;
+}
+
+.auth-form {
+  width: 250px;
+}
+
 /* NAVBAR */
 .navbar {
   min-height: 60px;
