@@ -21,19 +21,26 @@ export default function App() {
 
   function renderRoute() {
     const { path } = curRoute;
-    if (path === 'user-profile' || path === '') return <UserProfile />;
-    if (path === 'new-workout') return <NewWorkout />;
-    if (path === 'exercise-list') return <Exercises />;
-    if (path === 'workout') return <Workout />;
-    if (path === 'sign-up') return <AuthPage />;
-    return <ErrorPage />;
+    let page = null;
+    if (path === 'sign-up') {
+      return <AuthPage />;
+    } else {
+      if (path === 'user-profile' || path === '') page = <UserProfile />;
+      if (path === 'new-workout') page = <NewWorkout />;
+      if (path === 'exercise-list') page = <Exercises />;
+      if (path === 'workout') page = <Workout />;
+      page = <ErrorPage />;
+    }
+    return (
+      <>
+        <TopNavbar />
+        {page}
+        <BotNavbar />
+      </>
+    );
   }
 
   return (
-    <>
-      <TopNavbar />
-      {renderRoute()};
-      <BotNavbar />
-    </>
+    renderRoute()
   );
 }

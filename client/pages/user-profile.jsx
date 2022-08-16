@@ -4,7 +4,7 @@ function ExerciseTableRow({ exercise }) {
 
   return (
     <tr>
-      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment ? exercise.equipment : ''}`}</td>
+      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment && exercise.equipment}`}</td>
       <td className="py-0">{`${exercise.reps} x ${exercise.weight}`}</td>
     </tr>
   );
@@ -63,7 +63,7 @@ export default function UserProfile() {
       <div className='is-hidden-touch columns m-0 profile-desktop-body'>
         <div className="column is-4 has-text-centered profile-desktop-left-col">
           <h3 className="my-3 is-size-3">arnold123</h3>
-          <p className="is-size-5">Total Workouts: {!workouts ? '' : workouts.length}</p>
+          <p className="is-size-5">Total Workouts: {workouts && workouts.length}</p>
         </div>
         <div className="column is-8 px-4 is-flex is-flex-direction-column is-align-items-center">
           <h3 className="my-3 is-size-3">Workout History</h3>
@@ -73,9 +73,9 @@ export default function UserProfile() {
                 <p>Total Exercises: </p>
               </div>
             </div>
-          {/* {!workouts
-            ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            : ''
+          {/* {!workouts &&
+            <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
           } */}
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function UserProfile() {
         <div className="card center">
           <div className="card-content">
             <h3 className="is-size-3">arnold123</h3>
-            <p>Total Workouts: {!workouts ? '' : workouts.length}</p>
+            <p>Total Workouts: {workouts && workouts.length}</p>
             {workouts !== null && workouts.length === 0
               ? <>
                   <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>

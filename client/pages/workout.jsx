@@ -102,7 +102,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
         <button type="button" className="delete-exercise-btn button is-large has-background-black"
           onClick={openDelete}>...</button>
         <button type="button"
-          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`}
+          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!deleteIsOpen && 'hidden'}`}
           onClick={confirmDelete}>Delete</button>
       </div>
       <div className="card-content pt-3 pb-0">
@@ -176,7 +176,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       <button type="button"
         className="primary-button save-workout-btn button is-medium mt-3 px-6"
         onClick={toggleModal} >Save Workout</button>
-      <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
+      <div className={`modal ${isOpen && 'is-active'}`} >
         <form onSubmit={saveWorkout}>
           <div className="modal-background" onClick={toggleModal}></div>
           <div className='save-workout-modal modal-content has-background-white p-3'>
