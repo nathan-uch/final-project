@@ -22,6 +22,7 @@ export default function App() {
   function renderRoute() {
     const { path } = curRoute;
     let page = null;
+
     if (path === 'sign-up') {
       return <AuthPage />;
     } else {
@@ -31,6 +32,7 @@ export default function App() {
       if (path === 'workout') page = <Workout />;
       page = <ErrorPage />;
     }
+
     return (
       <>
         <TopNavbar />
