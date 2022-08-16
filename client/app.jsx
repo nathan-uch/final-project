@@ -6,11 +6,13 @@ import Exercises from '../client/pages/exercises';
 import Workout from '../client/pages/workout';
 import UserProfile from '../client/pages/user-profile';
 import BotNavbar from '../client/components/bot-navbar';
-import ErrorPage from '../client/components/error';
+import ErrorPage from '../client/pages/error';
 import AuthPage from '../client/pages/auth';
+import AppContext from '../client/lib/app-context';
 
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
+  const contextValue = { curRoute };
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
@@ -22,15 +24,20 @@ export default function App() {
   function renderRoute() {
     const { path } = curRoute;
     let page = null;
-
     if (path === 'sign-up' || path === 'sign-in') {
       return <AuthPage />;
     } else {
-      if (path === 'user-profile' || path === '') page = <UserProfile />;
-      if (path === 'new-workout') page = <NewWorkout />;
-      if (path === 'exercise-list') page = <Exercises />;
-      if (path === 'workout') page = <Workout />;
-      page = <ErrorPage />;
+      if (path === 'user-profile' || path === '') {
+        page = <UserProfile />;
+      } else if (path === 'new-workout') {
+        page = <NewWorkout />;
+      } else if (path === 'exercise-list') {
+        page = <Exercises />;
+      } else if (path === 'workout') {
+        page = <Workout />;
+      } else {
+        return <ErrorPage />;
+      }
     }
 
     return (
@@ -43,6 +50,8 @@ export default function App() {
   }
 
   return (
-    renderRoute()
+    <AppContext.Provider value={contextValue}>
+      {renderRoute()}
+    </AppContext.Provider>
   );
 }

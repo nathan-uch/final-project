@@ -396,6 +396,19 @@ a.no-workout-msg:hover {
   border-right: 2px solid #7c7c7c;
 }
 
+/* ERROR PAGE */
+
+.error-page {
+  color: #ffe247;
+  min-height: 100vh;
+  padding: 4rem 0;
+  margin: 0 !important;
+}
+
+.error-go-back-anchor {
+  color: inherit;
+}
+
 /* LOADING SPINNER */
 
 .lds-roller {
