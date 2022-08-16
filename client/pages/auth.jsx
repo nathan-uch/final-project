@@ -17,11 +17,21 @@ function AuthForm({ existingUsernames }) {
     e.preventDefault();
     const { username } = userInfo;
     if (existingUsernames.includes(username)) setDisplayMessage('error');
+    fetch('/api/sign-up', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userInfo)
+    })
+      .catch(err => console.error('ERROR:', err));
+    setDisplayMessage('success');
+    setTimeout(() => {
+      window.location.hash = 'sign-in';
+    }, 4000);
   }
 
   function showDisplayMessage() {
-    if (displayMessage === 'error') return <p className='auth-error-message my-5 py-3 px-3 has-text-weight-bold has-background-danger-light'><i className="fa-solid fa-xmark fa-lg mr-3"></i>This username already exists.</p>;
-    if (displayMessage === 'success') return <p className='auth-success-message my-5 has-text-weight-bold has-background-success-light'><i className="fa-solid fa-check fa-lg mr-3"></i>Account created! You are ready to STRVE!</p>;
+    if (displayMessage === 'error') return <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'><i className="fa-solid fa-xmark fa-lg mr-3"></i>Username already exists.</p>;
+    if (displayMessage === 'success') return <p className='auth-success-message has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'><i className="fa-solid fa-check fa-lg mr-3"></i>Account created! <br />You are ready to STRVE!</p>;
   }
 
   return (
@@ -33,7 +43,6 @@ function AuthForm({ existingUsernames }) {
         onChange={handleChange}
         required={true}
         minLength={6}
-        maxLength={12}
         type="text"
         name="username"
         className="py-2 px-3 mb-4 is-size-5"

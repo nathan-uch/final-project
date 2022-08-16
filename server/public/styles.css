@@ -60,6 +60,11 @@ body {
   border: 2px solid #dc2627;
 }
 
+.auth-success-message {
+  color: #419552;
+  border: 2px solid #419552;
+}
+
 /* NAVBAR */
 .navbar {
   min-height: 60px;
