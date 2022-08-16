@@ -23,7 +23,7 @@ export default function App() {
     const { path } = curRoute;
     let page = null;
 
-    if (path === 'sign-up') {
+    if (path === 'sign-up' || path === 'sign-in') {
       return <AuthPage />;
     } else {
       if (path === 'user-profile' || path === '') page = <UserProfile />;

@@ -17,7 +17,7 @@ function AuthForm({ existingUsernames }) {
     e.preventDefault();
     const { username } = userInfo;
     if (existingUsernames.includes(username)) setDisplayMessage('error');
-    fetch('/api/sign-up', {
+    fetch('/api/auth/sign-up', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userInfo)

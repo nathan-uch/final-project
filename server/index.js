@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const pg = require('pg');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 const errorMiddleware = require('./error-middleware');
 const ClientError = require('./client-error');
 
@@ -154,7 +155,7 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/sign-up', (req, res, next) => {
+app.post('/api/auth/sign-up', (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
   argon2
@@ -171,6 +172,37 @@ app.post('/api/sign-up', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       res.status(201).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(401, 'Invalid login.');
+  const params = [username];
+  const sql = `
+  select "userId", "hashedPassword", "username"
+  from "users"
+  where "username" = $1
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const username = result.rows[0].username;
+      const hashedPassword = result.rows[0].hashedPassword;
+      if (!username) throw new ClientError(401, 'Username does not exist.');
+      argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) throw new ClientError(401, 'Invalid login.');
+          const payload = {
+            userId: result.rows[0].userId,
+            username
+          };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          const responseObj = { token, payload };
+          res.status(200).json(responseObj);
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });

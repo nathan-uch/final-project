@@ -1,7 +1,5 @@
 insert into "users" ("username", "hashedPassword")
-values              ('admin', '$argon2id$v=19$m=4096,t=3,p=1$AgjArfS8eSx5JX4GUgnHoQ$YVCloNJv/y6NBE6agT3BMwSoIy913NAP5qojfgED4Rg'),
-                    ('abcdef', 'abc'),
-                    ('123456', '123');
+values              ('admin', '$argon2id$v=19$m=4096,t=3,p=1$AgjArfS8eSx5JX4GUgnHoQ$YVCloNJv/y6NBE6agT3BMwSoIy913NAP5qojfgED4Rg');
 
 insert into "workouts" ("workoutId", "userId")
 values                 (1, 1);
