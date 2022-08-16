@@ -31,7 +31,7 @@ function AuthForm({ existingUsernames }) {
 
   function showDisplayMessage() {
     if (displayMessage === 'error') return <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'><i className="fa-solid fa-xmark fa-lg mr-3"></i>Username already exists.</p>;
-    if (displayMessage === 'success') return <p className='auth-success-message has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'><i className="fa-solid fa-check fa-lg mr-3"></i>Account created! <br />You are ready to STRVE!</p>;
+    if (displayMessage === 'success') return <div className='auth-success-message is-flex is-flex-direction-row has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'><i className="fa-solid fa-check fa-lg mr-4 pt-5"></i><p>Account created! <br />You are ready to STRVE!</p></div>;
   }
 
   return (
