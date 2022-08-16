@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingRing from '../components/loading-ring';
 
 function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
@@ -220,7 +221,7 @@ export default function WorkoutPage() {
         setWorkout={setWorkout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout
-          ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          ? <LoadingRing />
           : workout.exercises.map((exercise, index) =>
             <Exercise
               key={index}

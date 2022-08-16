@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingRing from '../components/loading-ring';
 
 function ExerciseTableRow({ exercise }) {
 
@@ -73,9 +74,7 @@ export default function UserProfile() {
                 <p>Total Exercises: </p>
               </div>
             </div>
-          {/* {!workouts &&
-            <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-
+          {/* {!workouts
           } */}
         </div>
       </div>
@@ -96,7 +95,7 @@ export default function UserProfile() {
 
         <h3 className='my-5 is-size-3'>Workout History</h3>
         {!workouts
-          ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          ? <LoadingRing />
           : workouts.map((workout, index) => {
             return <MobileWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
           })}

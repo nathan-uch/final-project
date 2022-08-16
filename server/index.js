@@ -44,7 +44,11 @@ app.get('/api/all-usernames', (req, res, next) => {
   `;
   db.query(sql)
     .then(result => {
-      res.status(200).json(result.rows);
+      const users = [];
+      result.rows.forEach(user =>
+        users.push(user.username)
+      );
+      res.status(200).json(users);
     })
     .catch(err => next(err));
 });

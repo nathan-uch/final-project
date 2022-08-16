@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingRing from '../components/loading-ring';
 
 function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
@@ -94,7 +95,7 @@ export default function Exercises(props) {
         <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercises</h3>
         <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
             {isLoading
-              ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+              ? <LoadingRing />
               : exercises.map(exercise =>
                 <ExerciseCard
                   key={exercise.exerciseId}
