@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import LoadingRing from '../components/loading-ring';
 
 function ExerciseTableRow({ exercise }) {
 
   return (
     <tr>
-      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment ? exercise.equipment : ''}`}</td>
+      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment && exercise.equipment}`}</td>
       <td className="py-0">{`${exercise.reps} x ${exercise.weight}`}</td>
     </tr>
   );
 }
 
-function DesktopWorkoutCard({ index, workout, workoutId }) {
+function MobileWorkoutCard({ index, workout, workoutId }) {
   const [wId] = useState(workoutId[0]);
 
   return (
@@ -40,37 +41,49 @@ export default function UserProfile() {
   const userId = 1;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(`/api/user/${userId}/workouts`)
-        .then(response => response.json())
-        .then(data => {
-          const final = [];
-          const splitByWorkout = {};
-          data.forEach(set => {
-            const wId = set.workoutId;
-            if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
-            splitByWorkout[wId].push(set);
-          });
-          for (const key of Object.keys(splitByWorkout)) {
-            final.push({ [key]: splitByWorkout[key] });
-          }
-          setWorkouts(final);
-        })
-        .catch(err => console.error('ERROR:', err));
-    }, 500);
-    return () => clearInterval(interval);
-  }, [workouts]);
+    fetch(`/api/user/${userId}/workouts`)
+      .then(response => response.json())
+      .then(data => {
+        const final = [];
+        const splitByWorkout = {};
+        data.forEach(set => {
+          const wId = set.workoutId;
+          if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
+          splitByWorkout[wId].push(set);
+        });
+        for (const key of Object.keys(splitByWorkout)) {
+          final.push({ [key]: splitByWorkout[key] });
+        }
+        setWorkouts(final);
+      })
+      .catch(err => console.error('ERROR:', err));
+  }, []);
 
   return (
-    <div className='body-container has-text-centered'>
-      <div className='is-hidden-touch'>
+    <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>
+      <div className='is-hidden-touch columns m-0 profile-desktop-body'>
+        <div className="column is-4 has-text-centered profile-desktop-left-col">
+          <h3 className="my-3 is-size-3">arnold123</h3>
+          <p className="is-size-5">Total Workouts: {workouts && workouts.length}</p>
+        </div>
+        <div className="column is-8 px-4 is-flex is-flex-direction-column is-align-items-center">
+          <h3 className="my-3 is-size-3">Workout History</h3>
+            <div className="card">
+              <div className="card-content px-0">
+                <h4>Workout {}</h4>
+                <p>Total Exercises: </p>
+              </div>
+            </div>
+          {/* {!workouts
+          } */}
+        </div>
       </div>
 
-      <div className="is-hidden-dekstop">
+      <div className="is-hidden-desktop mx-4 pt-6 profile-mobile-body">
         <div className="card center">
           <div className="card-content">
             <h3 className="is-size-3">arnold123</h3>
-            <p>Total Workouts: {!workouts ? '' : workouts.length}</p>
+            <p>Total Workouts: {workouts && workouts.length}</p>
             {workouts !== null && workouts.length === 0
               ? <>
                   <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
@@ -82,13 +95,9 @@ export default function UserProfile() {
 
         <h3 className='my-5 is-size-3'>Workout History</h3>
         {!workouts
-          ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          ? <LoadingRing />
           : workouts.map((workout, index) => {
-            return <DesktopWorkoutCard
-                    key={index}
-                    index={index}
-                    workout={workout}
-                    workoutId={Object.keys(workout)} />;
+            return <MobileWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
           })}
       </div>
     </div>

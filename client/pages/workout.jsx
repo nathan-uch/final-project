@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingRing from '../components/loading-ring';
 
 function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
@@ -36,7 +37,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
       <p className="mx-3 is-size-4 set-num">{setOrder}</p>
       {!isDone
         ? <input
-            required
+            required={true}
             type="number"
             min="1"
             value={reps}
@@ -102,7 +103,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
         <button type="button" className="delete-exercise-btn button is-large has-background-black"
           onClick={openDelete}>...</button>
         <button type="button"
-          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${deleteIsOpen ? '' : 'hidden'}`}
+          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!deleteIsOpen && 'hidden'}`}
           onClick={confirmDelete}>Delete</button>
       </div>
       <div className="card-content pt-3 pb-0">
@@ -176,7 +177,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       <button type="button"
         className="primary-button save-workout-btn button is-medium mt-3 px-6"
         onClick={toggleModal} >Save Workout</button>
-      <div className={`modal ${!isOpen ? '' : 'is-active'}`} >
+      <div className={`modal ${isOpen && 'is-active'}`} >
         <form onSubmit={saveWorkout}>
           <div className="modal-background" onClick={toggleModal}></div>
           <div className='save-workout-modal modal-content has-background-white p-3'>
@@ -220,7 +221,7 @@ export default function WorkoutPage() {
         setWorkout={setWorkout} />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout
-          ? <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          ? <LoadingRing />
           : workout.exercises.map((exercise, index) =>
             <Exercise
               key={index}

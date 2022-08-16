@@ -2,6 +2,7 @@ require('dotenv/config');
 const path = require('path');
 const express = require('express');
 const pg = require('pg');
+const argon2 = require('argon2');
 const errorMiddleware = require('./error-middleware');
 const ClientError = require('./client-error');
 
@@ -32,6 +33,22 @@ app.get('/api/all-exercises', (req, res, next) => {
   db.query(sql)
     .then(result => {
       res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/all-usernames', (req, res, next) => {
+  const sql = `
+  select "username"
+  from "users";
+  `;
+  db.query(sql)
+    .then(result => {
+      const users = [];
+      result.rows.forEach(user =>
+        users.push(user.username)
+      );
+      res.status(200).json(users);
     })
     .catch(err => next(err));
 });
@@ -133,6 +150,27 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .then(result => {
       const userWorkouts = result.rows;
       res.status(200).json(userWorkouts);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const params = [username, hashedPassword];
+      const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values              ($1, $2)
+      returning "userId", "username", "createdAt";
+      `;
+      return db.query(sql, params);
+    })
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
     })
     .catch(err => next(err));
 });
