@@ -65,37 +65,20 @@ export default function UserProfile() {
   }, [user]);
 
   return (
-    <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>
-      <div className='is-hidden-touch columns m-0 profile-desktop-body'>
-        <div className="column is-4 has-text-centered profile-desktop-left-col">
-          <h3 className="my-3 is-size-3">arnold123</h3>
-          <p className="is-size-5">Total Workouts: {workouts && workouts.length}</p>
-        </div>
-        <div className="column is-8 px-4 is-flex is-flex-direction-column is-align-items-center">
-          <h3 className="my-3 is-size-3">Workout History</h3>
-            <div className="card">
-              <div className="card-content px-0">
-                <h4>Workout {}</h4>
-                <p>Total Exercises: </p>
-              </div>
-            </div>
+    <div className='has-text-centered is-flex is-flex-direction-column user-profile'>
+      <div className="card center user-info">
+        <div className="card-content">
+          <h3 className="is-size-3 profile-username">arnold123</h3>
+          <p>Total Workouts: {workouts && workouts.length}</p>
+          {workouts !== null && workouts.length === 0
+            ? <>
+              <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
+            </>
+            : false
+          }
         </div>
       </div>
-
-      <div className="is-hidden-desktop mx-4 pt-6 profile-mobile-body">
-        <div className="card center">
-          <div className="card-content">
-            <h3 className="is-size-3">arnold123</h3>
-            <p>Total Workouts: {workouts && workouts.length}</p>
-            {workouts !== null && workouts.length === 0
-              ? <>
-                  <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
-                </>
-              : false
-            }
-          </div>
-        </div>
-
+      <div className="mx-4 pt-6 profile-body">
         <h3 className='my-5 is-size-3'>Workout History</h3>
         {!workouts
           ? <LoadingRing />
