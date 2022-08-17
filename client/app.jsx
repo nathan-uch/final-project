@@ -12,7 +12,8 @@ import AppContext from '../client/lib/app-context';
 
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
-  const contextValue = { curRoute };
+  const [user, setUser] = useState(null);
+  const contextValue = { curRoute, user, handleSignIn, handleSignOut };
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {
@@ -20,6 +21,17 @@ export default function App() {
       setRoute(newRoute);
     });
   }, []);
+
+  function handleSignIn(result) {
+    const { user, token } = result;
+    window.localStorage.setItem('strive-user-info', token);
+    setUser(user);
+  }
+
+  function handleSignOut() {
+    window.localStorage.removeItem('strive-user-info');
+    setUser(null);
+  }
 
   function renderRoute() {
     const { path } = curRoute;

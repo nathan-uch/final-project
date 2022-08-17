@@ -1,12 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
-function AuthForm({ existingUsernames }) {
+function AuthForm({ existingUsernames, path }) {
   const [userInfo, setUserInfo] = useState({
     username: '',
     password: ''
   });
-  const [displayMessage, setDisplayMessage] = useState(null);
+  const [action, setAction] = useState({
+    type: null,
+    message: null
+  });
+  const { handleSignIn } = useContext(AppContext);
+
+  useEffect(() => {
+    setAction({
+      message: null,
+      type: path
+    });
+  }, [path]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -16,21 +28,43 @@ function AuthForm({ existingUsernames }) {
   function handleSubmit(e) {
     e.preventDefault();
     const { username } = userInfo;
-    if (existingUsernames.includes(username)) setDisplayMessage('error');
-    fetch('/api/auth/sign-up', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userInfo)
-    })
-      .catch(err => console.error('ERROR:', err));
-    setDisplayMessage('success');
-    setTimeout(() => {
-      window.location.hash = 'sign-in';
-    }, 4000);
+    if (action.type === 'sign-up') {
+      if (existingUsernames.includes(username)) setAction({ ...action, message: 'error' });
+      fetch('/api/auth/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInfo)
+      })
+        .catch(err => console.error('ERROR:', err));
+      setAction({ ...action, message: 'success' });
+      setTimeout(() => {
+        window.location.hash = 'sign-in';
+      }, 4000);
+    } else if (action.type === 'sign-in') {
+      handleSignIn();
+    }
+  }
+
+  function displayAlternative() {
+    if (action.type === 'sign-in') {
+      return (
+        <div>
+          <p>Don&apos;t have an account?</p>
+          <a href="#sign-up">Click here to sign up.</a>
+        </div>
+      );
+    } else if (action.type === 'sign-up') {
+      return (
+        <div>
+          <p>or</p>
+          <a href="#sign-in">Sign in</a>
+        </div>
+      );
+    }
   }
 
   function showDisplayMessage() {
-    if (displayMessage === 'error') {
+    if (action.message === 'error') {
       return (
         <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'>
           <i className="fa-solid fa-xmark fa-lg mr-3"></i>
@@ -38,7 +72,7 @@ function AuthForm({ existingUsernames }) {
         </p>
       );
     }
-    if (displayMessage === 'success') {
+    if (action.message === 'success') {
       return (
         <div className='auth-success-message is-flex is-flex-direction-row has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'>
           <i className="fa-solid fa-check fa-lg mr-4 pt-5"></i>
@@ -75,15 +109,18 @@ function AuthForm({ existingUsernames }) {
         id="password" />
       <button
         type="submit"
-        className="mt-3 py-3 px-4 primary-button is-size-5">Sign Up
+        className="mt-3 py-3 px-4 primary-button is-size-5">
+        {action.type === 'sign-up' ? 'Sign Up' : 'Sign In'}
       </button>
-      {displayMessage && showDisplayMessage()}
+      {displayAlternative()}
+      {action.message && showDisplayMessage()}
     </form>
   );
 }
 
 export default function AuthPage() {
   const [existingUsernames, setExistingUsernames] = useState(null);
+  const { curRoute } = useContext(AppContext);
 
   useEffect(() => {
     fetch('/api/all-usernames')
@@ -102,9 +139,9 @@ export default function AuthPage() {
         </figure>
         <h1 className="auth-logo-text">Strive</h1>
       </div>
-      <h3 className="is-size-3 my-5">Sign Up</h3>
+      <h3 className="is-size-3 my-5">{curRoute.path === 'sign-in' ? 'Sign In' : 'Sign Up'}</h3>
       {existingUsernames
-        ? <AuthForm existingUsernames={existingUsernames} />
+        ? <AuthForm existingUsernames={existingUsernames} path={curRoute.path} />
         : <LoadingRing />
       }
     </div>
