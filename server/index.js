@@ -5,6 +5,7 @@ const pg = require('pg');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const errorMiddleware = require('./error-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 const ClientError = require('./client-error');
 
 const app = express();
@@ -92,6 +93,8 @@ app.get('/api/all-usernames', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(authorizationMiddleware);
 
 app.get('/api/all-exercises', (req, res, next) => {
   const sql = `
