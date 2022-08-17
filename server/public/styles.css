@@ -48,6 +48,15 @@ body {
   width: 250px;
 }
 
+.alt-anchor {
+  color: #ffe247;
+  text-decoration: underline;
+}
+
+.alt-anchor:hover {
+  color: #dc2626;
+}
+
 .auth-error-message,
 .auth-success-message {
   position: relative;

@@ -48,16 +48,28 @@ function AuthForm({ existingUsernames, path }) {
   function displayAlternative() {
     if (action.type === 'sign-in') {
       return (
-        <div>
-          <p>Don&apos;t have an account?</p>
-          <a href="#sign-up">Click here to sign up.</a>
-        </div>
+        <>
+          <button
+              type="submit"
+              className="mt-3 py-3 px-4 primary-button is-size-5">
+              Sign In
+            </button>
+          <div>
+            <p className='is-size-5 mt-4'>Don&apos;t have an account?</p>
+            <a href="#sign-up" className='alt-anchor is-size-5'>Click here to sign up.</a>
+          </div>
+        </>
       );
     } else if (action.type === 'sign-up') {
       return (
         <div>
-          <p>or</p>
-          <a href="#sign-in">Sign in</a>
+          <button
+            type="submit"
+            className="mt-3 py-3 px-4 primary-button is-size-5">
+            Sign Up
+          </button>
+          <p className="is-inline is-size-5 mx-5">or </p>
+          <a href="#sign-in" className='alt-anchor is-size-5'>Sign in</a>
         </div>
       );
     }
@@ -107,11 +119,6 @@ function AuthForm({ existingUsernames, path }) {
         name="password"
         className="py-2 px-3 mb-4 is-size-5"
         id="password" />
-      <button
-        type="submit"
-        className="mt-3 py-3 px-4 primary-button is-size-5">
-        {action.type === 'sign-up' ? 'Sign Up' : 'Sign In'}
-      </button>
       {displayAlternative()}
       {action.message && showDisplayMessage()}
     </form>
