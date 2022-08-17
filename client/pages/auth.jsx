@@ -27,6 +27,8 @@ function AuthForm({ existingUsernames, path }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const authForm = document.querySelector('.auth-form');
+    authForm.reset();
     const { username } = userInfo;
     if (action.type === 'sign-up') {
       if (existingUsernames.includes(username)) setAction({ ...action, message: 'error' });
@@ -40,7 +42,7 @@ function AuthForm({ existingUsernames, path }) {
         .catch(err => console.error('ERROR:', err));
       setTimeout(() => {
         window.location.hash = 'sign-in';
-      }, 4000);
+      }, 2000);
     } else if (action.type === 'sign-in') {
       fetch('/api/auth/sign-in', {
         method: 'POST',
@@ -49,10 +51,15 @@ function AuthForm({ existingUsernames, path }) {
       })
         .then(response => response.json())
         .then(result => {
-          setAction({ ...action, message: 'success' });
-          handleSignIn(result);
+          if (!result.user || !result.token) {
+            setAction({ ...action, message: 'error' });
+          } else if (result.user && result.token) {
+            handleSignIn(result);
+          }
         })
-        .catch(err => console.error('ERROR:', err));
+        .catch(err => {
+          console.error('ERROR:', err);
+        });
     }
   }
 
@@ -87,20 +94,26 @@ function AuthForm({ existingUsernames, path }) {
   }
 
   function showDisplayMessage() {
-    if (action.message === 'error') {
+    if (action.type === 'sign-up' && action.message === 'error') {
       return (
         <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'>
           <i className="fa-solid fa-xmark fa-lg mr-3"></i>
           Username already exists.
         </p>
       );
-    }
-    if (action.message === 'success') {
+    } else if (action.type === 'sign-up' && action.message === 'success') {
       return (
         <div className='auth-success-message is-flex is-flex-direction-row has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'>
           <i className="fa-solid fa-check fa-lg mr-4 pt-5"></i>
           <p>Account created! <br />You are ready to STRVE!</p>
         </div>
+      );
+    } else if (action.type === 'sign-in' && action.message === 'error') {
+      return (
+        <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'>
+          <i className="fa-solid fa-xmark fa-lg mr-3"></i>
+          Invalid username or password.
+        </p>
       );
     }
   }
@@ -113,7 +126,7 @@ function AuthForm({ existingUsernames, path }) {
       <input
         onChange={handleChange}
         required={true}
-        minLength={6}
+        minLength={5}
         type="text"
         name="username"
         className="py-2 px-3 mb-4 is-size-5"
@@ -124,8 +137,7 @@ function AuthForm({ existingUsernames, path }) {
       <input
         onChange={handleChange}
         required={true}
-        minLength={8}
-        maxLength={16}
+        minLength={6}
         type="password"
         name="password"
         className="py-2 px-3 mb-4 is-size-5"
@@ -155,7 +167,7 @@ export default function AuthPage() {
         </figure>
         <h1 className="auth-logo-text">Strive</h1>
       </div>
-      <h3 className="is-size-3 my-5">{curRoute.path === 'sign-in' ? 'Sign In' : 'Sign Up'}</h3>
+      <h3 className="is-size-3 my-5">{curRoute.path === 'sign-up' ? 'Sign Up' : 'Sign In'}</h3>
       {existingUsernames
         ? <AuthForm existingUsernames={existingUsernames} path={curRoute.path} />
         : <LoadingRing />

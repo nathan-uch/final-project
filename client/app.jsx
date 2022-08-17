@@ -36,9 +36,9 @@ export default function App() {
   function renderRoute() {
     const { path } = curRoute;
     let page = null;
-    if (path === 'sign-up' || path === 'sign-in') {
-      return <AuthPage />;
-    } else {
+    if (!user) {
+      if (path === 'sign-up' || path === 'sign-in') return <AuthPage />;
+    } else if (user) {
       if (path === 'user-profile' || path === '') {
         page = <UserProfile />;
       } else if (path === 'new-workout') {

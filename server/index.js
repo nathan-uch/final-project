@@ -25,15 +25,54 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
-app.get('/api/all-exercises', (req, res, next) => {
-  const sql = `
-    select *
-    from "exercises"
-    order by "name" asc;
-  `;
-  db.query(sql)
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const params = [username, hashedPassword];
+      const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values              ($1, $2)
+      returning "userId", "username", "createdAt";
+      `;
+      return db.query(sql, params);
+    })
     .then(result => {
-      res.status(200).json(result.rows);
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(401, 'Invalid login.');
+  const params = [username];
+  const sql = `
+  select "userId", "hashedPassword", "username"
+  from "users"
+  where "username" = $1
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const username = result.rows[0].username;
+      const hashedPassword = result.rows[0].hashedPassword;
+      if (!username) throw new ClientError(401, 'Username does not exist.');
+      argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) throw new ClientError(401, 'Invalid login.');
+          const payload = {
+            userId: result.rows[0].userId,
+            username
+          };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          const responseObj = { token, user: payload };
+          res.status(200).json(responseObj);
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
@@ -50,6 +89,19 @@ app.get('/api/all-usernames', (req, res, next) => {
         users.push(user.username)
       );
       res.status(200).json(users);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/all-exercises', (req, res, next) => {
+  const sql = `
+    select *
+    from "exercises"
+    order by "name" asc;
+  `;
+  db.query(sql)
+    .then(result => {
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -151,58 +203,6 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .then(result => {
       const userWorkouts = result.rows;
       res.status(200).json(userWorkouts);
-    })
-    .catch(err => next(err));
-});
-
-app.post('/api/auth/sign-up', (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
-  argon2
-    .hash(password)
-    .then(hashedPassword => {
-      const params = [username, hashedPassword];
-      const sql = `
-      insert into "users" ("username", "hashedPassword")
-      values              ($1, $2)
-      returning "userId", "username", "createdAt";
-      `;
-      return db.query(sql, params);
-    })
-    .then(result => {
-      const [user] = result.rows;
-      res.status(201).json(user);
-    })
-    .catch(err => next(err));
-});
-
-app.post('/api/auth/sign-in', (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) throw new ClientError(401, 'Invalid login.');
-  const params = [username];
-  const sql = `
-  select "userId", "hashedPassword", "username"
-  from "users"
-  where "username" = $1
-  `;
-  db.query(sql, params)
-    .then(result => {
-      const username = result.rows[0].username;
-      const hashedPassword = result.rows[0].hashedPassword;
-      if (!username) throw new ClientError(401, 'Username does not exist.');
-      argon2
-        .verify(hashedPassword, password)
-        .then(isMatching => {
-          if (!isMatching) throw new ClientError(401, 'Invalid login.');
-          const payload = {
-            userId: result.rows[0].userId,
-            username
-          };
-          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          const responseObj = { token, user: payload };
-          res.status(200).json(responseObj);
-        })
-        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
