@@ -43,10 +43,10 @@ export default function UserProfile() {
   useEffect(() => {
     fetch(`/api/user/${userId}/workouts`)
       .then(response => response.json())
-      .then(data => {
+      .then(result => {
         const final = [];
         const splitByWorkout = {};
-        data.forEach(set => {
+        result.forEach(set => {
           const wId = set.workoutId;
           if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
           splitByWorkout[wId].push(set);

@@ -199,8 +199,8 @@ export default function WorkoutPage() {
   useEffect(() => {
     fetch(`/api/workout/${workoutId}`)
       .then(response => response.json())
-      .then(data => {
-        setWorkout(data);
+      .then(result => {
+        setWorkout(result);
       })
       .catch(err => console.error('ERROR:', err));
   }, []);

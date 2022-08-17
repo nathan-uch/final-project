@@ -35,13 +35,24 @@ function AuthForm({ existingUsernames, path }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userInfo)
       })
+        .then(response => response.json())
+        .then(result => setAction({ ...action, message: 'success' }))
         .catch(err => console.error('ERROR:', err));
-      setAction({ ...action, message: 'success' });
       setTimeout(() => {
         window.location.hash = 'sign-in';
       }, 4000);
     } else if (action.type === 'sign-in') {
-      handleSignIn();
+      fetch('/api/auth/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInfo)
+      })
+        .then(response => response.json())
+        .then(result => {
+          setAction({ ...action, message: 'success' });
+          handleSignIn(result);
+        })
+        .catch(err => console.error('ERROR:', err));
     }
   }
 
@@ -132,9 +143,7 @@ export default function AuthPage() {
   useEffect(() => {
     fetch('/api/all-usernames')
       .then(response => response.json())
-      .then(data => {
-        setExistingUsernames(data);
-      })
+      .then(result => setExistingUsernames(result))
       .catch(err => console.error('ERROR:', err));
   }, []);
 

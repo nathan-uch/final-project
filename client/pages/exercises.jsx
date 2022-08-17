@@ -43,8 +43,8 @@ export default function Exercises(props) {
   useEffect(() => {
     fetch('/api/all-exercises')
       .then(response => response.json())
-      .then(data => {
-        setExercises(data);
+      .then(result => {
+        setExercises(result);
         setLoading(false);
       })
       .catch(err => console.error('ERROR:', err));
@@ -72,10 +72,8 @@ export default function Exercises(props) {
       },
       body: JSON.stringify(body)
     })
-      .then(response => {
-        response.json();
-      })
-      .then(data => clearExercises())
+      .then(response => response.json())
+      .then(result => clearExercises())
       .catch(err => console.error('ERROR:', err));
     window.location.hash = 'workout';
   }
