@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
 function ExerciseTableRow({ exercise }) {
 
@@ -38,10 +39,11 @@ function MobileWorkoutCard({ index, workout, workoutId }) {
 
 export default function UserProfile() {
   const [workouts, setWorkouts] = useState(null);
-  const userId = 1;
+  const { user } = useContext(AppContext);
 
   useEffect(() => {
-    fetch(`/api/user/${userId}/workouts`)
+    if (!user) return;
+    fetch(`/api/user/${user.userId}/workouts`)
       .then(response => response.json())
       .then(result => {
         const final = [];
@@ -57,7 +59,7 @@ export default function UserProfile() {
         setWorkouts(final);
       })
       .catch(err => console.error('ERROR:', err));
-  }, []);
+  }, [user]);
 
   return (
     <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>

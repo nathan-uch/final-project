@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
+import Redirect from '../components/redirect';
 
 function AuthForm({ existingUsernames, path }) {
   const [userInfo, setUserInfo] = useState({
@@ -11,7 +12,7 @@ function AuthForm({ existingUsernames, path }) {
     type: null,
     message: null
   });
-  const { handleSignIn } = useContext(AppContext);
+  const { handleSignIn, curRoute, user } = useContext(AppContext);
 
   useEffect(() => {
     setAction({
@@ -19,6 +20,8 @@ function AuthForm({ existingUsernames, path }) {
       type: path
     });
   }, [path]);
+
+  if (curRoute.path === '' && !user) return <Redirect to='sign-in' />;
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -150,7 +153,7 @@ function AuthForm({ existingUsernames, path }) {
 
 export default function AuthPage() {
   const [existingUsernames, setExistingUsernames] = useState(null);
-  const { curRoute } = useContext(AppContext);
+  const { user, curRoute } = useContext(AppContext);
 
   useEffect(() => {
     fetch('/api/all-usernames')
@@ -158,6 +161,8 @@ export default function AuthPage() {
       .then(result => setExistingUsernames(result))
       .catch(err => console.error('ERROR:', err));
   }, []);
+
+  if (user) return <Redirect to='' />;
 
   return (
     <div className="auth-body has-background-black has-text-centered is-flex is-flex-direction-column is-align-items-center">

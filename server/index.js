@@ -58,8 +58,7 @@ app.post('/api/auth/sign-in', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const username = result.rows[0].username;
-      const hashedPassword = result.rows[0].hashedPassword;
+      const { username, hashedPassword } = result.rows[0];
       if (!username) throw new ClientError(401, 'Username does not exist.');
       argon2
         .verify(hashedPassword, password)

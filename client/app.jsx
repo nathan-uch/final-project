@@ -9,6 +9,7 @@ import BotNavbar from '../client/components/bot-navbar';
 import ErrorPage from '../client/pages/error';
 import AuthPage from '../client/pages/auth';
 import AppContext from '../client/lib/app-context';
+import Redirect from '../client/components/redirect';
 
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
@@ -26,6 +27,7 @@ export default function App() {
     const { user, token } = result;
     window.localStorage.setItem('strive-user-info', token);
     setUser(user);
+    return <Redirect to='user-profile' />;
   }
 
   function handleSignOut() {
@@ -36,10 +38,10 @@ export default function App() {
   function renderRoute() {
     const { path } = curRoute;
     let page = null;
-    if (!user) {
-      if (path === 'sign-up' || path === 'sign-in') return <AuthPage />;
-    } else if (user) {
-      if (path === 'user-profile' || path === '') {
+    if (path === '' && user) page = <UserProfile />;
+    if ((path === '' && !user) || path === 'sign-up' || path === 'sign-in') return <AuthPage />;
+    if (user) {
+      if (path === 'user-profile') {
         page = <UserProfile />;
       } else if (path === 'new-workout') {
         page = <NewWorkout />;
