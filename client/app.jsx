@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 import parseRoute from './lib/parse-route';
 import TopNavbar from '../client/components/top-navbar';
 import NewWorkout from '../client/pages/new-workout';
@@ -21,6 +22,9 @@ export default function App() {
       const newRoute = parseRoute(window.location.hash);
       setRoute(newRoute);
     });
+    const token = window.localStorage.getItem('strive-user-info');
+    const user = token ? jwtDecode(token) : null;
+    setUser(user);
   }, []);
 
   function handleSignIn(result) {
@@ -38,10 +42,9 @@ export default function App() {
   function renderRoute() {
     const { path } = curRoute;
     let page = null;
-    if (path === '' && user) page = <UserProfile />;
     if ((path === '' && !user) || path === 'sign-up' || path === 'sign-in') return <AuthPage />;
     if (user) {
-      if (path === 'user-profile') {
+      if (path === 'user-profile' || path === '') {
         page = <UserProfile />;
       } else if (path === 'new-workout') {
         page = <NewWorkout />;

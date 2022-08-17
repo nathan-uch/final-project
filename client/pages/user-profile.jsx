@@ -43,7 +43,10 @@ export default function UserProfile() {
 
   useEffect(() => {
     if (!user) return;
-    fetch(`/api/user/${user.userId}/workouts`)
+    const accessToken = window.localStorage.getItem('strive-user-info');
+    fetch(`/api/user/${user.userId}/workouts`, {
+      headers: { 'X-Access-Token': accessToken }
+    })
       .then(response => response.json())
       .then(result => {
         const final = [];
@@ -76,8 +79,6 @@ export default function UserProfile() {
                 <p>Total Exercises: </p>
               </div>
             </div>
-          {/* {!workouts
-          } */}
         </div>
       </div>
 

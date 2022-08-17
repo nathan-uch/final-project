@@ -58,19 +58,16 @@ app.post('/api/auth/sign-in', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const { username, hashedPassword } = result.rows[0];
-      if (!username) throw new ClientError(401, 'Username does not exist.');
+      const [user] = result.rows;
+      if (!user) throw new ClientError(401, 'Invalid login.');
+      const { userId, hashedPassword } = user;
       argon2
         .verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) throw new ClientError(401, 'Invalid login.');
-          const payload = {
-            userId: result.rows[0].userId,
-            username
-          };
+          const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          const responseObj = { token, user: payload };
-          res.status(200).json(responseObj);
+          res.status(200).json({ token, user: payload });
         })
         .catch(err => next(err));
     })
