@@ -15,7 +15,8 @@ import Redirect from '../client/components/redirect';
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
   const [user, setUser] = useState(null);
-  const contextValue = { curRoute, user, handleSignIn, handleSignOut };
+  const [curWorkout, setCurWorkout] = useState(null);
+  const contextValue = { curRoute, user, curWorkout, setCurWorkout, handleSignIn, handleSignOut };
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {

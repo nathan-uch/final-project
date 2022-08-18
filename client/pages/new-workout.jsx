@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AppContext from '../lib/app-context';
 
 export default function NewWorkout() {
+  const { user, setCurWorkout } = useContext(AppContext);
 
   function handleSubmit(e) {
     e.preventDefault();
+    const accessToken = window.localStorage.getItem('strive-user-info');
+    fetch(`/api/new-workout/user/${user.userId}`, {
+      method: 'POST',
+      headers: { 'X-Access-Token': accessToken }
+    })
+      .then(response => response.json())
+      .then(result => {
+        const { workoutId } = result;
+        setCurWorkout(workoutId);
+      })
+      .catch(err => console.error('ERROR:', err));
     window.location.hash = 'exercise-list';
   }
 
