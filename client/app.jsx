@@ -38,6 +38,8 @@ export default function App() {
   function handleSignOut() {
     window.localStorage.removeItem('strive-user-info');
     setUser(null);
+    window.location.hash = 'sign-in';
+    return <Redirect to='sign-in' />;
   }
 
   function renderRoute() {

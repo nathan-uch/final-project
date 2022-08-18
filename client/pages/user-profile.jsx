@@ -43,25 +43,28 @@ export default function UserProfile() {
 
   useEffect(() => {
     if (!user) return;
-    const accessToken = window.localStorage.getItem('strive-user-info');
-    fetch(`/api/user/${user.userId}/workouts`, {
-      headers: { 'X-Access-Token': accessToken }
-    })
-      .then(response => response.json())
-      .then(result => {
-        const final = [];
-        const splitByWorkout = {};
-        result.forEach(set => {
-          const wId = set.workoutId;
-          if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
-          splitByWorkout[wId].push(set);
-        });
-        for (const key of Object.keys(splitByWorkout)) {
-          final.push({ [key]: splitByWorkout[key] });
-        }
-        setWorkouts(final);
+    const interval = setTimeout(() => {
+      const accessToken = window.localStorage.getItem('strive-user-info');
+      fetch(`/api/user/${user.userId}/workouts`, {
+        headers: { 'X-Access-Token': accessToken }
       })
-      .catch(err => console.error('ERROR:', err));
+        .then(response => response.json())
+        .then(result => {
+          const final = [];
+          const splitByWorkout = {};
+          result.forEach(set => {
+            const wId = set.workoutId;
+            if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
+            splitByWorkout[wId].push(set);
+          });
+          for (const key of Object.keys(splitByWorkout)) {
+            final.push({ [key]: splitByWorkout[key] });
+          }
+          setWorkouts(final);
+        })
+        .catch(err => console.error('ERROR:', err));
+    }, 1750);
+    return () => clearInterval(interval);
   }, [user]);
 
   return (

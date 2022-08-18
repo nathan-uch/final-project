@@ -212,7 +212,7 @@ export default function WorkoutPage() {
           setWorkout(result);
         })
         .catch(err => console.error('ERROR:', err));
-    }, 2000);
+    }, 1750);
     return () => clearInterval(interval);
   }, [workoutId]);
 
