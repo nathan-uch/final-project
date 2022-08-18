@@ -149,6 +149,12 @@ a.navbar-item:hover {
   height: auto !important;
 }
 
+.signout-btn {
+  background-color: black;
+  border: none;
+  cursor: pointer;
+}
+
 /* BODY CONTAINER */
 
 a {

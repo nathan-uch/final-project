@@ -82,7 +82,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   function openDelete() {
-    deleteIsOpen ? setDeleteOpen(false) : setDeleteOpen(true);
+    setDeleteOpen(currDeleteIsOpen => !currDeleteIsOpen);
   }
 
   function confirmDelete() {
