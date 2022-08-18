@@ -20,11 +20,11 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   }
 
   function repsChange(e) {
-    setReps(+e.target.value);
+    setReps(Math.round(e.target.value));
   }
 
   function weightChange(e) {
-    setWeight(+e.target.value);
+    setWeight(Math.round(e.target.value * 10) / 10);
   }
 
   function handleSubmit(e) {

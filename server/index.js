@@ -168,8 +168,7 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
                 "workouts"."userId",
                 "exercises"."name",
                 "exercises"."muscleGroup",
-                "exercises"."equipment",
-                "exercises"."notes"
+                "exercises"."equipment"
     ),
     "totalSetsCTE" as (
       select      count("sets".*) as "totalSets",
