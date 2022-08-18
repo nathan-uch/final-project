@@ -146,7 +146,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
 });
 
 app.get('/api/user/:userId/workouts', (req, res, next) => {
-  const userId = 1;
+  const userId = Number(req.params.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
