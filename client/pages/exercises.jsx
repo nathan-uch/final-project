@@ -40,7 +40,7 @@ export default function Exercises(props) {
   const [allSelected, setAllSelected] = useState([]);
   const [clearAll, setClearAll] = useState(false);
   const [expandExercisesDisplay, setDisplay] = useState(true);
-  const { user } = useContext(AppContext);
+  const { user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
     if (!user) return;
@@ -70,7 +70,7 @@ export default function Exercises(props) {
         }
       }
     });
-    const body = { workoutId: 1, exerciseIds: savedExercises, userId: user.userId };
+    const body = { workoutId, exerciseIds: savedExercises, userId: user.userId };
     const accessToken = window.localStorage.getItem('strive-user-info');
     fetch('/api/workout/new-exercises', {
       method: 'POST',

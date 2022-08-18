@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
 function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
@@ -163,9 +164,13 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     finalWorkout.exercises = finalExercises;
     deleteExercise(deleteExercises);
 
+    const accessToken = window.localStorage.getItem('strive-user-info');
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      },
       body: JSON.stringify(finalWorkout)
     })
       .catch(err => console.error('ERROR:', err));
@@ -194,20 +199,30 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-  const workoutId = 1;
+  const { curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    fetch(`/api/workout/${workoutId}`)
-      .then(response => response.json())
-      .then(result => {
-        setWorkout(result);
+    const interval = setTimeout(() => {
+      const accessToken = window.localStorage.getItem('strive-user-info');
+      fetch(`/api/workout/${workoutId}`, {
+        headers: { 'X-Access-Token': accessToken }
       })
-      .catch(err => console.error('ERROR:', err));
-  }, []);
+        .then(response => response.json())
+        .then(result => {
+          setWorkout(result);
+        })
+        .catch(err => console.error('ERROR:', err));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [workoutId]);
 
   function deleteExercise(exerciseIds) {
+    const accessToken = window.localStorage.getItem('strive-user-info');
     exerciseIds.forEach(exerciseId =>
-      fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
+      fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, {
+        method: 'delete',
+        headers: { 'X-Access-Token': accessToken }
+      })
         .catch(err => console.error('ERROR:', err))
     );
   }
