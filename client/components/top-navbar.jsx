@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import AppContext from '../lib/app-context';
 
 export default function TopNavbar() {
   const [signOutIsOpen, setSignOutOpen] = useState(false);
+  const { handleSignOut } = useContext(AppContext);
 
   function toggleSignOut() {
     setSignOutOpen(curSignoutIsOpen => !curSignoutIsOpen);
@@ -27,7 +29,10 @@ export default function TopNavbar() {
           <button className="signout-btn" onClick={toggleSignOut}>
             <i className="fa-solid fa-arrow-right-from-bracket fa-xl"></i>
           </button>
-          <button className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
+          <button
+            onClick={handleSignOut}
+            type="button"
+            className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
             Sign Out
           </button>
         </div>
