@@ -136,6 +136,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
 
 function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
   const [isOpen, setOpenClose] = useState(false);
+  const { accessToken } = useContext(AppContext);
 
   function toggleModal() {
     !isOpen ? setOpenClose(true) : setOpenClose(false);
@@ -164,7 +165,6 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
     finalWorkout.exercises = finalExercises;
     deleteExercise(deleteExercises);
 
-    const accessToken = window.localStorage.getItem('strive-user-info');
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
       headers: {
@@ -199,25 +199,21 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-  const { curWorkout: workoutId } = useContext(AppContext);
+  const { accessToken, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    const interval = setTimeout(() => {
-      const accessToken = window.localStorage.getItem('strive-user-info');
-      fetch(`/api/workout/${workoutId}`, {
-        headers: { 'X-Access-Token': accessToken }
+    fetch(`/api/workout/${workoutId}`, {
+      headers: { 'X-Access-Token': accessToken }
+    })
+      .then(response => response.json())
+      .then(result => {
+        setWorkout(result);
       })
-        .then(response => response.json())
-        .then(result => {
-          setWorkout(result);
-        })
-        .catch(err => console.error('ERROR:', err));
-    }, 1750);
-    return () => clearInterval(interval);
-  }, [workoutId]);
+      .catch(err => console.error('ERROR:', err));
+    return () => setWorkout(null);
+  }, [workoutId, accessToken]);
 
   function deleteExercise(exerciseIds) {
-    const accessToken = window.localStorage.getItem('strive-user-info');
     exerciseIds.forEach(exerciseId =>
       fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, {
         method: 'delete',

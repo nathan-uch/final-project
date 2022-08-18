@@ -40,11 +40,9 @@ export default function Exercises(props) {
   const [allSelected, setAllSelected] = useState([]);
   const [clearAll, setClearAll] = useState(false);
   const [expandExercisesDisplay, setDisplay] = useState(true);
-  const { user, curWorkout: workoutId } = useContext(AppContext);
+  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    if (!user) return;
-    const accessToken = window.localStorage.getItem('strive-user-info');
     fetch('/api/all-exercises', {
       headers: { 'X-Access-Token': accessToken }
     })
@@ -54,7 +52,7 @@ export default function Exercises(props) {
         setLoading(false);
       })
       .catch(err => console.error('ERROR:', err));
-  }, [user]);
+  }, [accessToken]);
 
   useEffect(() => {
     setClearAll(false);
@@ -71,7 +69,6 @@ export default function Exercises(props) {
       }
     });
     const body = { workoutId, exerciseIds: savedExercises, userId: user.userId };
-    const accessToken = window.localStorage.getItem('strive-user-info');
     fetch('/api/workout/new-exercises', {
       method: 'POST',
       headers: {
@@ -81,9 +78,11 @@ export default function Exercises(props) {
       body: JSON.stringify(body)
     })
       .then(response => response.json())
-      .then(result => clearExercises())
+      .then(result => {
+        clearExercises();
+        window.location.hash = 'workout';
+      })
       .catch(err => console.error('ERROR:', err));
-    window.location.hash = 'workout';
   }
 
   function clearExercises() {

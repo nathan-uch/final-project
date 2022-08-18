@@ -145,8 +145,8 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/user/:userId/workouts', (req, res, next) => {
-  const userId = Number(req.params.userId);
+app.get('/api/user/workouts', (req, res, next) => {
+  const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
@@ -205,8 +205,8 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/new-workout/user/:userId', (req, res, next) => {
-  const userId = Number(req.params.userId);
+app.post('/api/new-workout', (req, res, next) => {
+  const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `

@@ -16,7 +16,8 @@ export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));
   const [user, setUser] = useState(null);
   const [curWorkout, setCurWorkout] = useState(null);
-  const contextValue = { curRoute, user, curWorkout, setCurWorkout, handleSignIn, handleSignOut };
+  const accessToken = window.localStorage.getItem('strive-user-info');
+  const contextValue = { curRoute, user, accessToken, curWorkout, setCurWorkout, handleSignIn, handleSignOut };
 
   useEffect(() => {
     window.addEventListener('hashchange', () => {

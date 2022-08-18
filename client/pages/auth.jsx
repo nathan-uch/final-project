@@ -41,11 +41,11 @@ function AuthForm({ existingUsernames, path }) {
         body: JSON.stringify(userInfo)
       })
         .then(response => response.json())
-        .then(result => setAction({ ...action, message: 'success' }))
+        .then(result => {
+          setAction({ ...action, message: 'success' });
+          window.location.hash = 'sign-in';
+        })
         .catch(err => console.error('ERROR:', err));
-      setTimeout(() => {
-        window.location.hash = 'sign-in';
-      }, 2000);
     } else if (action.type === 'sign-in') {
       fetch('/api/auth/sign-in', {
         method: 'POST',
