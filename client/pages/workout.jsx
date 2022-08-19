@@ -173,8 +173,9 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       },
       body: JSON.stringify(finalWorkout)
     })
+      .then(response => response.json())
+      .then(result => { window.location.hash = 'user-profile'; })
       .catch(err => console.error('ERROR:', err));
-    window.location.hash = 'user-profile';
   }
 
   return (
