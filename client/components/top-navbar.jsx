@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import AppContext from '../lib/app-context';
 
 export default function TopNavbar() {
+  const [signOutIsOpen, setSignOutOpen] = useState(false);
+  const { handleSignOut } = useContext(AppContext);
+
+  function toggleSignOut() {
+    setSignOutOpen(curSignoutIsOpen => !curSignoutIsOpen);
+  }
 
   return (
     <nav className="navbar px-5 is-flex is-align-items-center is-fixed-top is-flex-direction-row is-flex-wrap-nowrap
@@ -15,6 +22,19 @@ export default function TopNavbar() {
         <div className="navbar-menu is-hidden-touch desktop-links">
           <a href="#new-workout" className="navbar-item top-links is-size-5 has-text-weight-semibold">Workouts</a>
           <a href="#user-profile" className="navbar-item top-links is-size-5 has-text-weight-semibold mx-4">Profile</a>
+        </div>
+      </div>
+      <div className="navbar-end">
+        <div className="navbar-item">
+          <button className="signout-btn" onClick={toggleSignOut}>
+            <i className="fa-solid fa-arrow-right-from-bracket fa-xl"></i>
+          </button>
+          <button
+            onClick={handleSignOut}
+            type="button"
+            className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
+            Sign Out
+          </button>
         </div>
       </div>
     </nav>

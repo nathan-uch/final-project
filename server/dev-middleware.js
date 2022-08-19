@@ -1,4 +1,4 @@
-module.exports = function devMiddleware(publicPath) {
+function devMiddleware(publicPath) {
   const livereload = require('livereload').createServer();
   livereload.server.once('connection', () => {
     setTimeout(() => livereload.sendAllClients(JSON.stringify({
@@ -14,4 +14,6 @@ module.exports = function devMiddleware(publicPath) {
     require('webpack-hot-middleware')(webpack),
     require('express').static(publicPath)
   ];
-};
+}
+
+module.exports = devMiddleware;

@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AppContext from '../lib/app-context';
 
 export default function NewWorkout() {
+  const { setCurWorkout, accessToken } = useContext(AppContext);
 
   function handleSubmit(e) {
     e.preventDefault();
-    window.location.hash = 'exercise-list';
+    fetch('/api/new-workout', {
+      method: 'POST',
+      headers: { 'X-Access-Token': accessToken }
+    })
+      .then(response => response.json())
+      .then(result => {
+        const { workoutId } = result;
+        setCurWorkout(workoutId);
+        window.location.hash = 'exercise-list';
+      })
+      .catch(err => console.error('ERROR:', err));
   }
 
   return (

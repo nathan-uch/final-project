@@ -3,7 +3,9 @@ const path = require('path');
 const express = require('express');
 const pg = require('pg');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 const errorMiddleware = require('./error-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 const ClientError = require('./client-error');
 
 const app = express();
@@ -24,15 +26,50 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(publicPath));
 }
 
-app.get('/api/all-exercises', (req, res, next) => {
-  const sql = `
-    select *
-    from "exercises"
-    order by "name" asc;
-  `;
-  db.query(sql)
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const params = [username, hashedPassword];
+      const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values              ($1, $2)
+      returning "userId", "username", "createdAt";
+      `;
+      return db.query(sql, params);
+    })
     .then(result => {
-      res.status(200).json(result.rows);
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) throw new ClientError(401, 'Invalid login.');
+  const params = [username];
+  const sql = `
+  select "userId", "hashedPassword", "username"
+  from "users"
+  where "username" = $1
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      if (!user) throw new ClientError(401, 'Invalid login.');
+      const { userId, hashedPassword } = user;
+      argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) throw new ClientError(401, 'Invalid login.');
+          const payload = { userId, username };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.status(200).json({ token, user: payload });
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
@@ -49,6 +86,21 @@ app.get('/api/all-usernames', (req, res, next) => {
         users.push(user.username)
       );
       res.status(200).json(users);
+    })
+    .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
+
+app.get('/api/all-exercises', (req, res, next) => {
+  const sql = `
+    select *
+    from "exercises"
+    order by "name" asc;
+  `;
+  db.query(sql)
+    .then(result => {
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -93,8 +145,8 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/user/:userId/workouts', (req, res, next) => {
-  const userId = 1;
+app.get('/api/user/workouts', (req, res, next) => {
+  const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
@@ -116,8 +168,7 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
                 "workouts"."userId",
                 "exercises"."name",
                 "exercises"."muscleGroup",
-                "exercises"."equipment",
-                "exercises"."notes"
+                "exercises"."equipment"
     ),
     "totalSetsCTE" as (
       select      count("sets".*) as "totalSets",
@@ -154,29 +205,8 @@ app.get('/api/user/:userId/workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/sign-up', (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) throw new ClientError(400, 'ERROR: Username and password are required fields.');
-  argon2
-    .hash(password)
-    .then(hashedPassword => {
-      const params = [username, hashedPassword];
-      const sql = `
-      insert into "users" ("username", "hashedPassword")
-      values              ($1, $2)
-      returning "userId", "username", "createdAt";
-      `;
-      return db.query(sql, params);
-    })
-    .then(result => {
-      const [user] = result.rows;
-      res.status(201).json(user);
-    })
-    .catch(err => next(err));
-});
-
 app.post('/api/new-workout', (req, res, next) => {
-  const userId = 1;
+  const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
   const sql = `
@@ -186,7 +216,7 @@ app.post('/api/new-workout', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const newWorkout = res.rows;
+      const newWorkout = result.rows[0];
       res.status(201).json(newWorkout);
     })
     .catch(err => next(err));

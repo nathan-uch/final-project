@@ -48,6 +48,15 @@ body {
   width: 250px;
 }
 
+.alt-anchor {
+  color: #ffe247;
+  text-decoration: underline;
+}
+
+.alt-anchor:hover {
+  color: #dc2626;
+}
+
 .auth-error-message,
 .auth-success-message {
   position: relative;
@@ -138,6 +147,12 @@ a.navbar-item:hover {
 .nav-user-icon {
   width: 35px !important;
   height: auto !important;
+}
+
+.signout-btn {
+  background-color: black;
+  border: none;
+  cursor: pointer;
 }
 
 /* BODY CONTAINER */
@@ -371,8 +386,15 @@ a {
 }
 
 /* USER PROFILE */
-.profile-mobile-body {
-  margin-bottom: 65px;
+
+.user-profile {
+  margin: 75px 0;
+}
+
+.user-info {
+  margin: 0 auto;
+  width: 60%;
+  min-width: 290px;
 }
 
 .exercise-col {
@@ -387,13 +409,21 @@ a.no-workout-msg:hover {
   color: #4a4a4a;
 }
 
-.profile-desktop-body {
-  height: 100%;
-  min-height: 100vh;
-}
-
 .profile-desktop-left-col {
   border-right: 2px solid #7c7c7c;
+}
+
+/* ERROR PAGE */
+
+.error-page {
+  color: #ffe247;
+  min-height: 100vh;
+  padding: 4rem 0;
+  margin: 0 !important;
+}
+
+.error-go-back-anchor {
+  color: inherit;
 }
 
 /* LOADING SPINNER */
@@ -503,8 +533,34 @@ a.no-workout-msg:hover {
   }
 }
 
-@media screen and (min-width: 769px) {
-  .desktop-body-container {
+@media screen and (min-width: 1024px) {
+  .user-profile {
+    flex-direction: row !important;
+    margin-top: 65px;
+    margin-bottom: 0;
+  }
+
+  .user-info {
+    flex-basis: 30%;
     height: 100%;
+    min-height: 100vh;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow:
+      0 0.5em 1em -0.125em rgb(10 10 10 / 30%),
+      0 0 0 1px rgb(10 10 10 / 10%);
+  }
+
+  .profile-body {
+    flex-basis: 70%;
+  }
+
+  .card-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .profile-username {
+    margin-top: 2rem;
   }
 }

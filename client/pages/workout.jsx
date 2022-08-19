@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
 function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
@@ -19,11 +20,11 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   }
 
   function repsChange(e) {
-    setReps(+e.target.value);
+    setReps(Math.round(e.target.value));
   }
 
   function weightChange(e) {
-    setWeight(+e.target.value);
+    setWeight(Math.round(e.target.value * 10) / 10);
   }
 
   function handleSubmit(e) {
@@ -81,7 +82,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   function openDelete() {
-    deleteIsOpen ? setDeleteOpen(false) : setDeleteOpen(true);
+    setDeleteOpen(currDeleteIsOpen => !currDeleteIsOpen);
   }
 
   function confirmDelete() {
@@ -135,6 +136,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
 
 function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
   const [isOpen, setOpenClose] = useState(false);
+  const { accessToken } = useContext(AppContext);
 
   function toggleModal() {
     !isOpen ? setOpenClose(true) : setOpenClose(false);
@@ -165,11 +167,14 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      },
       body: JSON.stringify(finalWorkout)
     })
+      .then(result => { window.location.hash = 'user-profile'; })
       .catch(err => console.error('ERROR:', err));
-    window.location.hash = 'user-profile';
   }
 
   return (
@@ -194,20 +199,26 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-  const workoutId = 1;
+  const { accessToken, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    fetch(`/api/workout/${workoutId}`)
+    fetch(`/api/workout/${workoutId}`, {
+      headers: { 'X-Access-Token': accessToken }
+    })
       .then(response => response.json())
-      .then(data => {
-        setWorkout(data);
+      .then(result => {
+        setWorkout(result);
       })
       .catch(err => console.error('ERROR:', err));
-  }, []);
+    return () => setWorkout(null);
+  }, [workoutId, accessToken]);
 
   function deleteExercise(exerciseIds) {
     exerciseIds.forEach(exerciseId =>
-      fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, { method: 'delete' })
+      fetch(`/api/workout/${workoutId}/exercise/${exerciseId}`, {
+        method: 'delete',
+        headers: { 'X-Access-Token': accessToken }
+      })
         .catch(err => console.error('ERROR:', err))
     );
   }

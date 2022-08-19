@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
 function ExerciseTableRow({ exercise }) {
 
@@ -38,15 +39,17 @@ function MobileWorkoutCard({ index, workout, workoutId }) {
 
 export default function UserProfile() {
   const [workouts, setWorkouts] = useState(null);
-  const userId = 1;
+  const { user, accessToken } = useContext(AppContext);
 
   useEffect(() => {
-    fetch(`/api/user/${userId}/workouts`)
+    fetch('/api/user/workouts', {
+      headers: { 'X-Access-Token': accessToken }
+    })
       .then(response => response.json())
-      .then(data => {
+      .then(result => {
         const final = [];
         const splitByWorkout = {};
-        data.forEach(set => {
+        result.forEach(set => {
           const wId = set.workoutId;
           if (!splitByWorkout[wId]) splitByWorkout[wId] = [];
           splitByWorkout[wId].push(set);
@@ -57,42 +60,23 @@ export default function UserProfile() {
         setWorkouts(final);
       })
       .catch(err => console.error('ERROR:', err));
-  }, []);
+  }, [accessToken]);
 
   return (
-    <div className='body-container has-text-centered p-0 mb-0 desktop-body-container'>
-      <div className='is-hidden-touch columns m-0 profile-desktop-body'>
-        <div className="column is-4 has-text-centered profile-desktop-left-col">
-          <h3 className="my-3 is-size-3">arnold123</h3>
-          <p className="is-size-5">Total Workouts: {workouts && workouts.length}</p>
-        </div>
-        <div className="column is-8 px-4 is-flex is-flex-direction-column is-align-items-center">
-          <h3 className="my-3 is-size-3">Workout History</h3>
-            <div className="card">
-              <div className="card-content px-0">
-                <h4>Workout {}</h4>
-                <p>Total Exercises: </p>
-              </div>
-            </div>
-          {/* {!workouts
-          } */}
+    <div className='has-text-centered is-flex is-flex-direction-column user-profile'>
+      <div className="card center user-info">
+        <div className="card-content">
+          <h3 className="is-size-3 profile-username">{user.username}</h3>
+          <p>Total Workouts: {workouts && workouts.length}</p>
+          {workouts !== null && workouts.length === 0
+            ? <>
+              <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
+            </>
+            : false
+          }
         </div>
       </div>
-
-      <div className="is-hidden-desktop mx-4 pt-6 profile-mobile-body">
-        <div className="card center">
-          <div className="card-content">
-            <h3 className="is-size-3">arnold123</h3>
-            <p>Total Workouts: {workouts && workouts.length}</p>
-            {workouts !== null && workouts.length === 0
-              ? <>
-                  <p className="no-workout-msg mt-5 is-size-6 ">Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.</p>
-                </>
-              : false
-            }
-          </div>
-        </div>
-
+      <div className="mx-4 pt-6 profile-body">
         <h3 className='my-5 is-size-3'>Workout History</h3>
         {!workouts
           ? <LoadingRing />

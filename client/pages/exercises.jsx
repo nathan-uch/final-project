@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 
 function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
@@ -39,16 +40,19 @@ export default function Exercises(props) {
   const [allSelected, setAllSelected] = useState([]);
   const [clearAll, setClearAll] = useState(false);
   const [expandExercisesDisplay, setDisplay] = useState(true);
+  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    fetch('/api/all-exercises')
+    fetch('/api/all-exercises', {
+      headers: { 'X-Access-Token': accessToken }
+    })
       .then(response => response.json())
-      .then(data => {
-        setExercises(data);
+      .then(result => {
+        setExercises(result);
         setLoading(false);
       })
       .catch(err => console.error('ERROR:', err));
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     setClearAll(false);
@@ -64,20 +68,21 @@ export default function Exercises(props) {
         }
       }
     });
-    const body = { workoutId: 1, exerciseIds: savedExercises, userId: 1 };
+    const body = { workoutId, exerciseIds: savedExercises, userId: user.userId };
     fetch('/api/workout/new-exercises', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
       },
       body: JSON.stringify(body)
     })
-      .then(response => {
-        response.json();
+      .then(response => response.json())
+      .then(result => {
+        clearExercises();
+        window.location.hash = 'workout';
       })
-      .then(data => clearExercises())
       .catch(err => console.error('ERROR:', err));
-    window.location.hash = 'workout';
   }
 
   function clearExercises() {
@@ -112,18 +117,43 @@ export default function Exercises(props) {
         <>
           <form onSubmit={handleSaveExercises} className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
           is-justify-content-space-evenly has-background-grey-lighter">
-            <button type="submit" className='primary-button add-exercises-btn button is-size-5 my-3'>Add all</button>
-            <button onClick={clearExercises} type="button" className='clear-btn button is-white is-size-5 my-3'>Clear</button>
+            <button
+              type="submit"
+              className='primary-button add-exercises-btn button is-size-5 my-3'>
+              Add all
+            </button>
+            <button
+              onClick={clearExercises}
+              type="button"
+              className='clear-btn button is-white is-size-5 my-3'>
+              Clear
+            </button>
           </form>
           <div className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
-            <button onClick={toggleExerciseDisplay} className='toggle-show-exercises-desktop is-size-4 p-3'>Selected Exercises<i className={`exer-chevron mr-2 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i></button>
-            <form onSubmit={handleSaveExercises} className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
+            <button
+              onClick={toggleExerciseDisplay}
+              className='toggle-show-exercises-desktop is-size-4 p-3'>
+                Selected Exercises
+                <i className={`exer-chevron mr-2 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
+            </button>
+            <form
+              onSubmit={handleSaveExercises}
+              className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
               <p className="my-2">Total Exercises: {allSelected.length}</p>
-            <ul className="exercise-list m-4 is-size-5">
-              {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
-            </ul>
-              <button type="submit" className='primary-button add-exercises-btn button m-2 is-size-5'>Add all</button>
-              <button onClick={clearExercises} type="button" className='clear-btn button is-white m-2 is-size-5'>Clear</button>
+              <ul className="exercise-list m-4 is-size-5">
+                {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
+              </ul>
+                <button
+                  type="submit"
+                  className='primary-button add-exercises-btn button m-2 is-size-5'>
+                  Add all
+                </button>
+                <button
+                  onClick={clearExercises}
+                  type="button"
+                  className='clear-btn button is-white m-2 is-size-5'>
+                  Clear
+                </button>
             </form>
           </div>
         </>

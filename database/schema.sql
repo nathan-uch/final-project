@@ -33,7 +33,6 @@ CREATE TABLE "public"."exercises" (
 	"name" TEXT NOT NULL,
 	"muscleGroup" TEXT NOT NULL,
 	"equipment" TEXT,
-	"notes" TEXT,
 	CONSTRAINT "exercises_pk" PRIMARY KEY ("exerciseId")
 ) WITH (
   OIDS=FALSE
@@ -46,7 +45,7 @@ CREATE TABLE "public"."sets" (
 	"exerciseId" serial NOT NULL,
 	"setOrder" int NOT NULL,
 	"reps" int,
-	"weight" int
+	"weight" numeric
 ) WITH (
   OIDS=FALSE
 );
