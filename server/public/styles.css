@@ -173,8 +173,9 @@ a {
 }
 
 .exercise-card {
-  height: 70px;
+  height: 35px;
   border: 2px solid #dbdbdb;
+  box-shadow: none;
 }
 
 .exercise-card:last-child {
@@ -205,7 +206,7 @@ a {
 
 .selected-check {
   position: absolute;
-  top: 15px;
+  top: 8px;
   right: 5px;
   color: #ffe247;
 }

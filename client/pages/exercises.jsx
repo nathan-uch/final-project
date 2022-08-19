@@ -22,14 +22,12 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
 
   return (
     !isSelected
-      ? <a onClick={handleClick} className="exercise-card has-background-grey-lighter column mx-5 is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card box has-text-centered p-2">
-        <p className="title is-inline is-size-6">{`${name}`}</p>
-        <p className="title is-size-6">{!equipment ? '-' : `(${equipment})`}</p>
+      ? <a onClick={handleClick} className="exercise-card box has-background-grey-lighter column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+        <p className="title is-inline is-size-6">{`${name} ${equipment && ` (${equipment}`})`}</p>
     </a>
-      : <a onClick={handleClick} className="selected-exercise-card has-background-white column mx-5 is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card box has-text-centered p-2">
-        <p className="title is-inline is-size-6">{`${name}`}</p>
-        <p className="title is-size-6">{!equipment ? '-' : `(${equipment})`}</p>
-        <i className='fa-solid fa-check fa-2x mr-4 selected-check'></i>
+      : <a onClick={handleClick} className="selected-exercise-card box has-background-white column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+        <p className="title is-inline is-size-6">{`${name} ${equipment && ` (${equipment}`})`}</p>
+        <i className='fa-solid fa-check fa mr-4 selected-check'></i>
     </a>
   );
 }
