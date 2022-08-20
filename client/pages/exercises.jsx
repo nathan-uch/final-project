@@ -2,6 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 
+function AlphabetButtons({ letter }) {
+
+  return (
+    <a href="#" className="letter-anchors has-background-black mx-1 py-1 px-2 is-size-5">{letter}</a>
+  );
+}
+
 function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
 
@@ -35,12 +42,23 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
 export default function Exercises(props) {
   const [exercises, setExercises] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [letters, setLetters] = useState(null);
   const [allSelected, setAllSelected] = useState([]);
   const [clearAll, setClearAll] = useState(false);
   const [expandExercisesDisplay, setDisplay] = useState(true);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
+    function getFirstLetters() {
+      const letters = [];
+      exercises.forEach(exercise => {
+        if (!letters.includes(exercise.name[0])) {
+          letters.push(exercise.name[0]);
+        }
+      });
+      setLetters(letters);
+    }
+
     fetch('/api/all-exercises', {
       headers: { 'X-Access-Token': accessToken }
     })
@@ -48,9 +66,10 @@ export default function Exercises(props) {
       .then(result => {
         setExercises(result);
         setLoading(false);
+        getFirstLetters();
       })
       .catch(err => console.error('ERROR:', err));
-  }, [accessToken]);
+  }, [accessToken, exercises]);
 
   useEffect(() => {
     setClearAll(false);
@@ -95,8 +114,13 @@ export default function Exercises(props) {
   return (
     <>
       <div className="body-container has-text-centered">
-        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercises</h3>
-        <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
+        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-5">Add Exercises</h3>
+        <div className="alphabet-container mb-5 columns is-flex-wrap-wrap is-justify-content-center">
+          {letters && letters.map(letter =>
+            <AlphabetButtons key={letter} letter={letter} />
+          )}
+        </div>
+        <div className='exercise-container columns is-flex-wrap-wrap is-justify-content-center'>
             {isLoading
               ? <LoadingRing />
               : exercises.map(exercise =>

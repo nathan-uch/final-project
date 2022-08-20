@@ -168,6 +168,15 @@ a {
 
 /* EXERCISES PAGE */
 
+.letter-anchors {
+  color: #ffe247;
+  border-radius: 6px;
+}
+
+.letter-anchors:hover {
+  color: #dc2626;
+}
+
 .box:last-child {
   margin-bottom: 1.5rem;
 }
