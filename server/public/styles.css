@@ -168,6 +168,12 @@ a {
 
 /* EXERCISES PAGE */
 
+.alphabet-container {
+  min-width: 270px;
+  height: auto;
+  gap: 0.3rem;
+}
+
 .letter-anchors {
   color: #ffe247;
   border-radius: 6px;
