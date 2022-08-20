@@ -183,6 +183,12 @@ a {
   color: #dc2626;
 }
 
+.letter-section {
+  width: 98%;
+  color: #ffe247;
+  border-radius: 6px;
+}
+
 .box:last-child {
   margin-bottom: 1.5rem;
 }

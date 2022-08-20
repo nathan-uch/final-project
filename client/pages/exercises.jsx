@@ -9,6 +9,15 @@ function AlphabetButtons({ letter }) {
   );
 }
 
+function LetterSection({ letter }) {
+
+  return (
+    <p className="letter-section py-2 my-1 mx-auto is-size-5 has-background-black has-text-weight-bold">
+      {letter}
+    </p>
+  );
+}
+
 function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
 
@@ -121,18 +130,20 @@ export default function Exercises(props) {
           )}
         </div>
         <div className='exercise-container columns is-flex-wrap-wrap is-justify-content-center'>
-            {isLoading
-              ? <LoadingRing />
-              : exercises.map(exercise =>
-                <ExerciseCard
-                  key={exercise.exerciseId}
-                  exerciseId={exercise.exerciseId}
-                  name={exercise.name}
-                  setAllSelected={setAllSelected}
-                  allSelected={allSelected}
-                  clearAll={clearAll}
-                  equipment={exercise.equipment} />
-              )}
+          {letters && letters.map(letter =>
+            <LetterSection key={letter} letter={letter} />)}
+          {isLoading
+            ? <LoadingRing />
+            : exercises.map(exercise =>
+              <ExerciseCard
+                key={exercise.exerciseId}
+                exerciseId={exercise.exerciseId}
+                name={exercise.name}
+                setAllSelected={setAllSelected}
+                allSelected={allSelected}
+                clearAll={clearAll}
+                equipment={exercise.equipment} />
+            )}
         </div>
       </div>
       {allSelected.length !== 0 &&
