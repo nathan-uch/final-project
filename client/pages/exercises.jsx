@@ -5,16 +5,39 @@ import AppContext from '../lib/app-context';
 function AlphabetButtons({ letter }) {
 
   return (
-    <a href="#" className="letter-anchors has-background-black py-1 px-2 is-size-5">{letter}</a>
+    <a className="letter-anchors has-background-black py-1 px-2 is-size-5">{letter}</a>
   );
 }
 
-function LetterSection({ letter }) {
+function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAll }) {
+  const [filteredExer, setFilteredExer] = useState(null);
+
+  useEffect(() => {
+    if (!exercises) return;
+    const filtered = exercises.filter(exercise =>
+      exercise.name[0] === letter
+    );
+
+    setFilteredExer(filtered);
+
+  }, [exercises, letter]);
 
   return (
-    <p className="letter-section py-2 my-1 mx-auto is-size-5 has-background-black has-text-weight-bold">
-      {letter}
-    </p>
+    <>
+      <p className="letter-section py-1 my-1 mx-auto is-size-5 has-background-black has-text-weight-bold">
+        {letter}
+      </p>
+      {filteredExer && filteredExer.map(exer =>
+        <ExerciseCard
+          key={exer.exerciseId}
+          exerciseId={exer.exerciseId}
+          name={exer.name}
+          setAllSelected={setAllSelected}
+          allSelected={allSelected}
+          clearAll={clearAll}
+          equipment={exer.equipment} />
+      )}
+    </>
   );
 }
 
@@ -24,6 +47,14 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
   useEffect(() => {
     if (clearAll) setSelected(false);
   }, [clearAll]);
+
+  function getEquipment() {
+    if (equipment === null) {
+      return '';
+    } else {
+      return ' (' + equipment + ')';
+    }
+  }
 
   function handleClick() {
     if (!isSelected) {
@@ -39,10 +70,10 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
   return (
     !isSelected
       ? <a onClick={handleClick} className="exercise-card box has-background-grey-lighter column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
-        <p className="title is-inline is-size-6">{`${name} ${equipment && ` (${equipment}`})`}</p>
+        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
     </a>
       : <a onClick={handleClick} className="selected-exercise-card box has-background-white column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
-        <p className="title is-inline is-size-6">{`${name} ${equipment && ` (${equipment}`})`}</p>
+        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
         <i className='fa-solid fa-check fa mr-4 selected-check'></i>
     </a>
   );
@@ -130,20 +161,16 @@ export default function Exercises(props) {
           )}
         </div>
         <div className='exercise-container columns is-flex-wrap-wrap is-justify-content-center'>
+          {isLoading && <LoadingRing />}
           {letters && letters.map(letter =>
-            <LetterSection key={letter} letter={letter} />)}
-          {isLoading
-            ? <LoadingRing />
-            : exercises.map(exercise =>
-              <ExerciseCard
-                key={exercise.exerciseId}
-                exerciseId={exercise.exerciseId}
-                name={exercise.name}
-                setAllSelected={setAllSelected}
-                allSelected={allSelected}
-                clearAll={clearAll}
-                equipment={exercise.equipment} />
-            )}
+            <LetterSection
+              key={letter}
+              letter={letter}
+              exercises={exercises}
+              setAllSelected={setAllSelected}
+              allSelected={allSelected}
+              clearAll={clearAll}
+              />)}
         </div>
       </div>
       {allSelected.length !== 0 &&
