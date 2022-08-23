@@ -175,6 +175,7 @@ a {
 }
 
 .letter-anchors {
+  width: 35px;
   color: #ffe247;
   border-radius: 6px;
 }
