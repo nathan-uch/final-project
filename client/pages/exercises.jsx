@@ -23,7 +23,7 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
   }, [exercises, letter]);
 
   return (
-    <>
+    <div className="is-flex is-flex-direction-column">
       <p className="letter-section py-1 my-1 mx-auto is-size-5 has-background-black has-text-weight-bold">
         {letter}
       </p>
@@ -37,7 +37,7 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
           clearAll={clearAll}
           equipment={exer.equipment} />
       )}
-    </>
+    </div>
   );
 }
 
@@ -69,10 +69,10 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
 
   return (
     !isSelected
-      ? <a onClick={handleClick} className="exercise-card box has-background-grey-lighter column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+      ? <a onClick={handleClick} className="exercise-card box has-background-grey-lighter column is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
         <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
     </a>
-      : <a onClick={handleClick} className="selected-exercise-card box has-background-white column is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+      : <a onClick={handleClick} className="selected-exercise-card box has-background-white column is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
         <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
         <i className='fa-solid fa-check fa mr-4 selected-check'></i>
     </a>

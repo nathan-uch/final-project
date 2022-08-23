@@ -194,7 +194,7 @@ a {
 }
 
 .exercise-card {
-  height: 35px;
+  max-height: 35px;
   border: 2px solid #dbdbdb;
   box-shadow: none;
 }
@@ -584,5 +584,9 @@ a.no-workout-msg:hover {
 
   .profile-username {
     margin-top: 2rem;
+  }
+
+  .exercise-container {
+    flex-direction: column;
   }
 }
