@@ -183,8 +183,11 @@ a {
   color: #dc2626;
 }
 
-.letter-section {
-  width: 98%;
+.letter-container {
+  width: 95%;
+}
+
+.letter-title {
   color: #ffe247;
   border-radius: 6px;
 }
@@ -584,6 +587,10 @@ a.no-workout-msg:hover {
 
   .profile-username {
     margin-top: 2rem;
+  }
+
+  .letter-container {
+    width: 40%;
   }
 
   .exercise-container {

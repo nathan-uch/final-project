@@ -23,8 +23,8 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
   }, [exercises, letter]);
 
   return (
-    <div className="is-flex is-flex-direction-column">
-      <p className="letter-section py-1 my-1 mx-auto is-size-5 has-background-black has-text-weight-bold">
+    <div className="letter-container is-flex is-flex-direction-column">
+      <p className="letter-title py-1 my-1 mx-4 is-size-5 has-background-black has-text-weight-bold">
         {letter}
       </p>
       {filteredExer && filteredExer.map(exer =>
