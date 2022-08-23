@@ -558,6 +558,12 @@ a.no-workout-msg:hover {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .letter-container {
+    width: 100%;
+  }
+}
+
 @media screen and (min-width: 1024px) {
   .user-profile {
     flex-direction: row !important;
