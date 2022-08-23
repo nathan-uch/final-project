@@ -92,17 +92,6 @@ export default function Exercises(props) {
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
-    function getFirstLetters() {
-      const letters = [];
-      if (!exercises) return;
-      exercises.forEach(exercise => {
-        if (!letters.includes(exercise.name[0])) {
-          letters.push(exercise.name[0]);
-        }
-      });
-      setLetters(letters);
-    }
-
     fetch('/api/all-exercises', {
       headers: { 'X-Access-Token': accessToken }
     })
@@ -110,10 +99,20 @@ export default function Exercises(props) {
       .then(result => {
         setExercises(result);
         setLoading(false);
-        getFirstLetters();
       })
       .catch(err => console.error('ERROR:', err));
-  }, [accessToken, exercises]);
+  }, [accessToken]);
+
+  useEffect(() => {
+    const letters = [];
+    if (!exercises) return;
+    exercises.forEach(exercise => {
+      if (!letters.includes(exercise.name[0])) {
+        letters.push(exercise.name[0]);
+      }
+    });
+    setLetters(letters);
+  }, [exercises]);
 
   useEffect(() => {
     setClearAll(false);
