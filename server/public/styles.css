@@ -168,13 +168,40 @@ a {
 
 /* EXERCISES PAGE */
 
+.alphabet-container {
+  min-width: 270px;
+  height: auto;
+  gap: 0.3rem;
+}
+
+.letter-anchors {
+  width: 35px;
+  color: #ffe247;
+  border-radius: 6px;
+}
+
+.letter-anchors:hover {
+  color: #dc2626;
+}
+
+.letter-container {
+  width: 95%;
+}
+
+.letter-title {
+  color: #ffe247;
+  border-radius: 6px;
+  scroll-margin-top: 65px;
+}
+
 .box:last-child {
   margin-bottom: 1.5rem;
 }
 
 .exercise-card {
-  height: 70px;
+  max-height: 35px;
   border: 2px solid #dbdbdb;
+  box-shadow: none;
 }
 
 .exercise-card:last-child {
@@ -205,18 +232,17 @@ a {
 
 .selected-check {
   position: absolute;
-  top: 15px;
+  top: 8px;
   right: 5px;
   color: #ffe247;
 }
 
 .exercises-container-desktop {
   position: fixed;
-  width: 30%;
+  width: 25%;
   bottom: 0;
   right: 0;
   z-index: 30;
-  border: 1px solid #ababab;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
@@ -224,6 +250,8 @@ a {
 .exercise-form-desktop {
   max-height: 350px;
   transition: max-height 0.5s;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .collapse {
@@ -271,6 +299,26 @@ a {
 
 .exer-chevron {
   float: right;
+}
+
+.top-btn {
+  height: 49px;
+  position: fixed;
+  color: #ffe247;
+  bottom: 70px;
+  right: 5px;
+  z-index: 30;
+  border: 2px solid white;
+  border-radius: 6px;
+}
+
+.top-btn:hover {
+  color: #dc2626;
+  border: 2px solid white;
+}
+
+.push-up {
+  bottom: 130px;
 }
 
 /* WORKOUT PAGE */
@@ -533,6 +581,12 @@ a.no-workout-msg:hover {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .letter-container {
+    width: 100%;
+  }
+}
+
 @media screen and (min-width: 1024px) {
   .user-profile {
     flex-direction: row !important;
@@ -562,5 +616,33 @@ a.no-workout-msg:hover {
 
   .profile-username {
     margin-top: 2rem;
+  }
+
+  .letter-container {
+    width: 40%;
+  }
+
+  .exercise-container {
+    flex-direction: column;
+  }
+
+  .top-btn {
+    bottom: 0;
+    right: 25.1%;
+    border: none;
+    margin: 0 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .false {
+    right: 1px;
+  }
+
+  .top-btn:hover {
+    border: none;
+    margin: 0 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }

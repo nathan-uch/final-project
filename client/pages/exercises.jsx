@@ -2,12 +2,62 @@ import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 
+function AlphabetButtons({ letter }) {
+
+  function handleScroll() {
+    const section = document.getElementById(`${letter.toLowerCase()}`);
+    section.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  return (
+    <a onClick={handleScroll} className="letter-anchors has-background-black py-1 px-2 is-size-5">{letter}</a>
+  );
+}
+
+function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAll }) {
+  const [filteredExer, setFilteredExer] = useState(null);
+
+  useEffect(() => {
+    if (!exercises) return;
+    const filtered = exercises.filter(exercise =>
+      exercise.name[0] === letter
+    );
+    setFilteredExer(filtered);
+  }, [exercises, letter]);
+
+  return (
+    <div className="letter-container is-flex is-flex-direction-column">
+      <p id={`${letter.toLowerCase()}`} className="letter-title py-1 my-1 mx-4 is-size-5 has-background-black has-text-weight-bold">
+        {letter}
+      </p>
+      {filteredExer && filteredExer.map(exer =>
+        <ExerciseCard
+          key={exer.exerciseId}
+          exerciseId={exer.exerciseId}
+          name={exer.name}
+          setAllSelected={setAllSelected}
+          allSelected={allSelected}
+          clearAll={clearAll}
+          equipment={exer.equipment} />
+      )}
+    </div>
+  );
+}
+
 function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
     if (clearAll) setSelected(false);
   }, [clearAll]);
+
+  function getEquipment() {
+    if (equipment === null) {
+      return '';
+    } else {
+      return ' (' + equipment + ')';
+    }
+  }
 
   function handleClick() {
     if (!isSelected) {
@@ -22,14 +72,12 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
 
   return (
     !isSelected
-      ? <a onClick={handleClick} className="exercise-card has-background-grey-lighter column mx-5 is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card box has-text-centered p-2">
-        <p className="title is-inline is-size-6">{`${name}`}</p>
-        <p className="title is-size-6">{!equipment ? '-' : `(${equipment})`}</p>
+      ? <a onClick={handleClick} className="exercise-card box has-background-grey-lighter column is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
     </a>
-      : <a onClick={handleClick} className="selected-exercise-card has-background-white column mx-5 is-two-fifths is-flex-direction-row is-flex-wrap-wrap exercise-card box has-text-centered p-2">
-        <p className="title is-inline is-size-6">{`${name}`}</p>
-        <p className="title is-size-6">{!equipment ? '-' : `(${equipment})`}</p>
-        <i className='fa-solid fa-check fa-2x mr-4 selected-check'></i>
+      : <a onClick={handleClick} className="selected-exercise-card box has-background-white column is-flex-direction-row is-flex-wrap-wrap exercise-card has-text-centered p-1 mx-4 my-1">
+        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
+        <i className='fa-solid fa-check fa mr-4 selected-check'></i>
     </a>
   );
 }
@@ -37,6 +85,7 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
 export default function Exercises(props) {
   const [exercises, setExercises] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [letters, setLetters] = useState(null);
   const [allSelected, setAllSelected] = useState([]);
   const [clearAll, setClearAll] = useState(false);
   const [expandExercisesDisplay, setDisplay] = useState(true);
@@ -53,6 +102,17 @@ export default function Exercises(props) {
       })
       .catch(err => console.error('ERROR:', err));
   }, [accessToken]);
+
+  useEffect(() => {
+    const letters = [];
+    if (!exercises) return;
+    exercises.forEach(exercise => {
+      if (!letters.includes(exercise.name[0])) {
+        letters.push(exercise.name[0]);
+      }
+    });
+    setLetters(letters);
+  }, [exercises]);
 
   useEffect(() => {
     setClearAll(false);
@@ -94,64 +154,74 @@ export default function Exercises(props) {
     expandExercisesDisplay ? setDisplay(false) : setDisplay(true);
   }
 
+  function scrollToTop() {
+    window.scroll({ top: 0, behavior: 'smooth' });
+  }
+
   return (
     <>
       <div className="body-container has-text-centered">
-        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-6">Add Exercises</h3>
-        <div className='columns is-flex-wrap-wrap exercise-container is-justify-content-center'>
-            {isLoading
-              ? <LoadingRing />
-              : exercises.map(exercise =>
-                <ExerciseCard
-                  key={exercise.exerciseId}
-                  exerciseId={exercise.exerciseId}
-                  name={exercise.name}
-                  setAllSelected={setAllSelected}
-                  allSelected={allSelected}
-                  clearAll={clearAll}
-                  equipment={exercise.equipment} />
-              )}
+        <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-5">Add Exercises</h3>
+        <div className="alphabet-container mb-5 columns is-flex is-flex-wrap-wrap is-justify-content-center">
+          {letters && letters.map(letter =>
+            <AlphabetButtons key={letter} letter={letter} />
+          )}
+        </div>
+        <div className='exercise-container columns is-flex-direction-row is-flex-wrap-wrap is-justify-content-center'>
+          {isLoading && <LoadingRing />}
+          {letters && letters.map(letter =>
+            <LetterSection
+              key={letter}
+              letter={letter}
+              exercises={exercises}
+              setAllSelected={setAllSelected}
+              allSelected={allSelected}
+              clearAll={clearAll}
+              />)}
         </div>
       </div>
+      <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${allSelected.length !== 0 && 'push-up'}`}>
+        <i className="fa-solid fa-arrow-up fa-2x"></i>
+      </a>
       {allSelected.length !== 0 &&
         <>
           <form onSubmit={handleSaveExercises} className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
           is-justify-content-space-evenly has-background-grey-lighter">
             <button
               type="submit"
-              className='primary-button add-exercises-btn button is-size-5 my-3'>
+              className='primary-button add-exercises-btn button is-size-6 my-3'>
               Add all
             </button>
             <button
               onClick={clearExercises}
               type="button"
-              className='clear-btn button is-white is-size-5 my-3'>
+              className='clear-btn button is-white is-size-6 my-3'>
               Clear
             </button>
           </form>
           <div className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
             <button
               onClick={toggleExerciseDisplay}
-              className='toggle-show-exercises-desktop is-size-4 p-3'>
+              className='toggle-show-exercises-desktop is-size-5 px-2 py-3'>
                 Selected Exercises
-                <i className={`exer-chevron mr-2 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
+                <i className={`exer-chevron mr-2 mt-1 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
             </button>
             <form
               onSubmit={handleSaveExercises}
               className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
               <p className="my-2">Total Exercises: {allSelected.length}</p>
-              <ul className="exercise-list m-4 is-size-5">
+              <ul className="exercise-list mx-4 is-size-6">
                 {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
               </ul>
                 <button
                   type="submit"
-                  className='primary-button add-exercises-btn button m-2 is-size-5'>
+                  className='primary-button add-exercises-btn button m-2 is-size-6'>
                   Add all
                 </button>
                 <button
                   onClick={clearExercises}
                   type="button"
-                  className='clear-btn button is-white m-2 is-size-5'>
+                  className='clear-btn button is-white m-2 is-size-6'>
                   Clear
                 </button>
             </form>
