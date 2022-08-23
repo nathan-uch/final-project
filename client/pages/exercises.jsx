@@ -154,6 +154,10 @@ export default function Exercises(props) {
     expandExercisesDisplay ? setDisplay(false) : setDisplay(true);
   }
 
+  function scrollToTop() {
+    window.scroll({ top: 0, behavior: 'smooth' });
+  }
+
   return (
     <>
       <div className="body-container has-text-centered">
@@ -176,7 +180,7 @@ export default function Exercises(props) {
               />)}
         </div>
       </div>
-      <a className={`top-btn has-background-black py-1 px-3 ${allSelected.length !== 0 && 'push-up'}`}>
+      <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${allSelected.length !== 0 && 'push-up'}`}>
         <i className="fa-solid fa-arrow-up fa-2x"></i>
       </a>
       {allSelected.length !== 0 &&
@@ -198,7 +202,7 @@ export default function Exercises(props) {
           <div className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
             <button
               onClick={toggleExerciseDisplay}
-              className='toggle-show-exercises-desktop is-size-5 p-2'>
+              className='toggle-show-exercises-desktop is-size-5 px-2 py-3'>
                 Selected Exercises
                 <i className={`exer-chevron mr-2 mt-1 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
             </button>

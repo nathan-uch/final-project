@@ -243,7 +243,6 @@ a {
   bottom: 0;
   right: 0;
   z-index: 30;
-  border: 1px solid #ababab;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
@@ -251,6 +250,8 @@ a {
 .exercise-form-desktop {
   max-height: 350px;
   transition: max-height 0.5s;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .collapse {
@@ -301,6 +302,7 @@ a {
 }
 
 .top-btn {
+  height: 49px;
   position: fixed;
   color: #ffe247;
   bottom: 70px;
@@ -622,5 +624,25 @@ a.no-workout-msg:hover {
 
   .exercise-container {
     flex-direction: column;
+  }
+
+  .top-btn {
+    bottom: 0;
+    right: 25.1%;
+    border: none;
+    margin: 0 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .false {
+    right: 1px;
+  }
+
+  .top-btn:hover {
+    border: none;
+    margin: 0 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
