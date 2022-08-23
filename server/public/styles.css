@@ -300,6 +300,25 @@ a {
   float: right;
 }
 
+.top-btn {
+  position: fixed;
+  color: #ffe247;
+  bottom: 70px;
+  right: 5px;
+  z-index: 30;
+  border: 2px solid white;
+  border-radius: 6px;
+}
+
+.top-btn:hover {
+  color: #dc2626;
+  border: 2px solid white;
+}
+
+.push-up {
+  bottom: 130px;
+}
+
 /* WORKOUT PAGE */
 
 .card {

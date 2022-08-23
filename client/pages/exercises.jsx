@@ -177,6 +177,9 @@ export default function Exercises(props) {
               />)}
         </div>
       </div>
+      <a className={`top-btn has-background-black py-1 px-3 ${allSelected.length !== 0 && 'push-up'}`}>
+        <i className="fa-solid fa-arrow-up fa-2x"></i>
+      </a>
       {allSelected.length !== 0 &&
         <>
           <form onSubmit={handleSaveExercises} className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
