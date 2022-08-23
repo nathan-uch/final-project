@@ -191,6 +191,7 @@ a {
 .letter-title {
   color: #ffe247;
   border-radius: 6px;
+  scroll-margin-top: 65px;
 }
 
 .box:last-child {

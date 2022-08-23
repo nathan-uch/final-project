@@ -4,8 +4,13 @@ import AppContext from '../lib/app-context';
 
 function AlphabetButtons({ letter }) {
 
+  function handleScroll() {
+    const section = document.getElementById(`${letter.toLowerCase()}`);
+    section.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
   return (
-    <a className="letter-anchors has-background-black py-1 px-2 is-size-5">{letter}</a>
+    <a onClick={handleScroll} className="letter-anchors has-background-black py-1 px-2 is-size-5">{letter}</a>
   );
 }
 
@@ -17,14 +22,12 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
     const filtered = exercises.filter(exercise =>
       exercise.name[0] === letter
     );
-
     setFilteredExer(filtered);
-
   }, [exercises, letter]);
 
   return (
     <div className="letter-container is-flex is-flex-direction-column">
-      <p className="letter-title py-1 my-1 mx-4 is-size-5 has-background-black has-text-weight-bold">
+      <p id={`${letter.toLowerCase()}`} className="letter-title py-1 my-1 mx-4 is-size-5 has-background-black has-text-weight-bold">
         {letter}
       </p>
       {filteredExer && filteredExer.map(exer =>
@@ -91,6 +94,7 @@ export default function Exercises(props) {
   useEffect(() => {
     function getFirstLetters() {
       const letters = [];
+      if (!exercises) return;
       exercises.forEach(exercise => {
         if (!letters.includes(exercise.name[0])) {
           letters.push(exercise.name[0]);
@@ -160,7 +164,7 @@ export default function Exercises(props) {
             <AlphabetButtons key={letter} letter={letter} />
           )}
         </div>
-        <div className='exercise-container columns is-flex-wrap-wrap is-justify-content-center'>
+        <div className='exercise-container columns is-flex-direction-row is-flex-wrap-wrap is-justify-content-center'>
           {isLoading && <LoadingRing />}
           {letters && letters.map(letter =>
             <LetterSection
