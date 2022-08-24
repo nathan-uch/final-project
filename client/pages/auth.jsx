@@ -34,7 +34,10 @@ function AuthForm({ existingUsernames, path }) {
     authForm.reset();
     const { username } = userInfo;
     if (action.type === 'sign-up') {
-      if (existingUsernames.includes(username)) setAction({ ...action, message: 'error' });
+      if (existingUsernames.includes(username)) {
+        setAction({ ...action, message: 'error' });
+        return;
+      }
       fetch('/api/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

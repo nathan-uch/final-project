@@ -187,40 +187,32 @@ export default function Exercises(props) {
         <>
           <form onSubmit={handleSaveExercises} className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap
           is-justify-content-space-evenly has-background-grey-lighter">
-            <button
-              type="submit"
+            <button type="submit"
               className='primary-button add-exercises-btn button is-size-6 my-3'>
               Add all
             </button>
-            <button
-              onClick={clearExercises}
-              type="button"
+            <button onClick={clearExercises} type="button"
               className='clear-btn button is-white is-size-6 my-3'>
               Clear
             </button>
           </form>
           <div className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
-            <button
-              onClick={toggleExerciseDisplay}
+            <button onClick={toggleExerciseDisplay}
               className='toggle-show-exercises-desktop is-size-5 px-2 py-3'>
                 Selected Exercises
                 <i className={`exer-chevron mr-2 mt-1 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
             </button>
-            <form
-              onSubmit={handleSaveExercises}
+            <form onSubmit={handleSaveExercises}
               className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
               <p className="my-2">Total Exercises: {allSelected.length}</p>
               <ul className="exercise-list mx-4 is-size-6">
                 {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
               </ul>
-                <button
-                  type="submit"
+                <button type="submit"
                   className='primary-button add-exercises-btn button m-2 is-size-6'>
                   Add all
                 </button>
-                <button
-                  onClick={clearExercises}
-                  type="button"
+                <button onClick={clearExercises} type="button"
                   className='clear-btn button is-white m-2 is-size-6'>
                   Clear
                 </button>
