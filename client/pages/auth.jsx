@@ -171,7 +171,9 @@ export default function AuthPage() {
     <div className="auth-body has-background-black has-text-centered is-flex is-flex-direction-column is-align-items-center">
       <div className="is-relative auth-logo mx-auto">
         <figure className="is-absolute auth-logo-img image is-64x64">
-          <img className="" src="images/flame-red.png" alt="logo icon" />
+          <img
+            src="images/flame-red.png"
+            alt="logo icon" />
         </figure>
         <h1 className="auth-logo-text">Strive</h1>
       </div>

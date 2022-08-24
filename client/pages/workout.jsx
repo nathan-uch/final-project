@@ -179,17 +179,28 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
   return (
     <>
-      <button type="button"
+      <button
+        type="button"
         className="primary-button save-workout-btn button is-medium mt-3 px-6"
-        onClick={toggleModal} >Save Workout</button>
+        onClick={toggleModal}>Save Workout</button>
       <div className={`modal ${isOpen && 'is-active'}`} >
         <form onSubmit={saveWorkout}>
-          <div className="modal-background" onClick={toggleModal}></div>
+          <div
+            className="modal-background"
+            onClick={toggleModal}>
+          </div>
           <div className='save-workout-modal modal-content has-background-white p-3'>
             <p className="is-size-3">Do you want to save this workout?</p>
-            <p className='is-size-5 has-text-danger my-3'>Sets that are not marked &apos;done&apos; won&apos;t be saved</p>
-            <button type="submit" className="primary-button confirm-save-workout-btn button is-large m-3">Save</button>
-            <button type="button" className="cancel-save-workout-btn button is-large m-3" onClick={toggleModal}>Cancel</button>
+            <p className='is-size-5 has-text-danger my-3'>
+              Sets that are not marked &apos;done&apos; won&apos;t be saved
+            </p>
+            <button
+              type="submit"
+              className="primary-button confirm-save-workout-btn button is-large m-3">Save</button>
+            <button
+              type="button"
+              className="cancel-save-workout-btn button is-large m-3"
+              onClick={toggleModal}>Cancel</button>
           </div>
         </form>
       </div>
