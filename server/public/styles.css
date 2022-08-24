@@ -168,6 +168,13 @@ a {
 
 /* EXERCISES PAGE */
 
+.exercise-searchbox {
+  width: 70%;
+  background-color: #dbdbdb;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
 .alphabet-container {
   min-width: 270px;
   height: auto;
@@ -620,6 +627,10 @@ a.no-workout-msg:hover {
 
   .letter-container {
     width: 40%;
+  }
+
+  .exercise-searchbox {
+    width: 50%;
   }
 
   .exercise-container {

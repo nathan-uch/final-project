@@ -162,6 +162,7 @@ export default function Exercises(props) {
     <>
       <div className="body-container has-text-centered">
         <h3 className="is-inline-block is-size-3-mobile is-size-2 mx-auto mb-5">Add Exercises</h3>
+        <input type="search" className="exercise-searchbox is-block mx-auto mb-6 py-2 px-4 is-size-5" placeholder="Search exercises" />
         <div className="alphabet-container mb-5 columns is-flex is-flex-wrap-wrap is-justify-content-center">
           {letters && letters.map(letter =>
             <AlphabetButtons key={letter} letter={letter} />
