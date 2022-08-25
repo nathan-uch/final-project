@@ -166,6 +166,7 @@ app.get('/api/user/workouts', (req, res, next) => {
                 "sets"."reps",
                 "sets"."weight",
                 "workouts"."userId",
+                "workouts"."completedAt",
                 "exercises"."name",
                 "exercises"."muscleGroup",
                 "exercises"."equipment"
@@ -173,7 +174,8 @@ app.get('/api/user/workouts', (req, res, next) => {
     "totalSetsCTE" as (
       select      count("sets".*) as "totalSets",
                   "exerciseId",
-                  "workouts"."workoutId"
+                  "workouts"."workoutId",
+                  "workouts"."completedAt"
       from        "sets"
       join        "workouts" using ("workoutId")
       join        "exercises" using ("exerciseId")
