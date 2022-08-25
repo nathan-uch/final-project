@@ -34,7 +34,10 @@ function AuthForm({ existingUsernames, path }) {
     authForm.reset();
     const { username } = userInfo;
     if (action.type === 'sign-up') {
-      if (existingUsernames.includes(username)) setAction({ ...action, message: 'error' });
+      if (existingUsernames.includes(username)) {
+        setAction({ ...action, message: 'error' });
+        return;
+      }
       fetch('/api/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -168,7 +171,9 @@ export default function AuthPage() {
     <div className="auth-body has-background-black has-text-centered is-flex is-flex-direction-column is-align-items-center">
       <div className="is-relative auth-logo mx-auto">
         <figure className="is-absolute auth-logo-img image is-64x64">
-          <img className="" src="images/flame-red.png" alt="logo icon" />
+          <img
+            src="images/flame-red.png"
+            alt="logo icon" />
         </figure>
         <h1 className="auth-logo-text">Strive</h1>
       </div>

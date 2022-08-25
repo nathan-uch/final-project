@@ -162,16 +162,27 @@ a {
 }
 
 .body-container {
-  margin: 65px 0;
+  margin: 65px 0 95px;
   padding: 1.2rem;
 }
 
 /* EXERCISES PAGE */
 
+.exercise-searchbox {
+  width: 70%;
+  background-color: #dbdbdb;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
 .alphabet-container {
   min-width: 270px;
   height: auto;
   gap: 0.3rem;
+}
+
+.letter-container {
+  width: 100%;
 }
 
 .letter-anchors {
@@ -184,11 +195,8 @@ a {
   color: #dc2626;
 }
 
-.letter-container {
-  width: 95%;
-}
-
 .letter-title {
+  width: 95%;
   color: #ffe247;
   border-radius: 6px;
   scroll-margin-top: 65px;
@@ -199,6 +207,7 @@ a {
 }
 
 .exercise-card {
+  width: 95%;
   max-height: 35px;
   border: 2px solid #dbdbdb;
   box-shadow: none;
@@ -280,6 +289,7 @@ a {
   width: 100%;
   min-height: 50px;
   position: fixed;
+  left: 0;
   bottom: 36px;
   z-index: 30;
   border-top: 2px solid white;
@@ -581,12 +591,6 @@ a.no-workout-msg:hover {
   }
 }
 
-@media screen and (max-width: 768px) {
-  .letter-container {
-    width: 100%;
-  }
-}
-
 @media screen and (min-width: 1024px) {
   .user-profile {
     flex-direction: row !important;
@@ -619,6 +623,14 @@ a.no-workout-msg:hover {
   }
 
   .letter-container {
+    width: 40%;
+  }
+
+  .exercise-searchbox {
+    width: 50%;
+  }
+
+  .search-results-container {
     width: 40%;
   }
 
