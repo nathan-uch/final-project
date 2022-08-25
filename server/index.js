@@ -193,7 +193,8 @@ app.get('/api/user/workouts', (req, res, next) => {
               "reps",
               "totalSets",
               "weight",
-              "workoutId"
+              "workoutId",
+              "totalSetsCTE"."completedAt"
     from      "bestSetCTE"
     join      "totalSetsCTE" using ("workoutId", "exerciseId")
     where     "row_number" = 1

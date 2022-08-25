@@ -3,7 +3,6 @@ import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 
 function ExerciseTableRow({ exercise }) {
-
   return (
     <tr>
       <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} ${exercise.equipment === null ? '' : ` - ${exercise.equipment}`}`}</td>
@@ -12,13 +11,15 @@ function ExerciseTableRow({ exercise }) {
   );
 }
 
-function MobileWorkoutCard({ index, workout, workoutId }) {
+function WorkoutCard({ index, workout, workoutId }) {
   const [wId] = useState(workoutId[0]);
+  const date = new Date(workout[wId][0].completedAt);
 
   return (
-    <div className="card has-background-grey-lighter center mb-5 py-3">
-      <div className="card-content px-0">
-        <h4>Workout {index + 1}</h4>
+    <div className="card has-background-grey-lighter center mb-5 py-2">
+      <div className="card-content py-1 px-0">
+        <h4 className="has-text-weight-bold">Workout {index + 1}</h4>
+        <p>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
         <table className="table has-text-left is-fullwidth has-background-grey-lighter">
           <thead>
             <tr>
@@ -83,7 +84,7 @@ export default function UserProfile() {
         {!workouts
           ? <LoadingRing />
           : workouts.map((workout, index) => {
-            return <MobileWorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
+            return <WorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
           })}
       </div>
     </div>
