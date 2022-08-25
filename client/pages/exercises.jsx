@@ -214,7 +214,7 @@ export default function Exercises(props) {
                     )}
                   </div>
                 </>
-              : <div className="search-results-container mx-auto">
+              : <div className="search-results-container mx-auto mb-3">
                   {searchResults.length !== 0 && searchResults.map(exer =>
                     <ExerciseCard
                       key={exer.exerciseId}
