@@ -6,7 +6,7 @@ function ExerciseTableRow({ exercise }) {
 
   return (
     <tr>
-      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} - ${exercise.equipment && exercise.equipment}`}</td>
+      <td className="py-0 exercise-col">{`${exercise.totalSets} x ${exercise.name} ${exercise.equipment === null ? '' : ` - ${exercise.equipment}`}`}</td>
       <td className="py-0">{`${exercise.reps} x ${exercise.weight}`}</td>
     </tr>
   );
@@ -16,7 +16,7 @@ function MobileWorkoutCard({ index, workout, workoutId }) {
   const [wId] = useState(workoutId[0]);
 
   return (
-    <div className="card has-background-grey-lighter center mb-5">
+    <div className="card has-background-grey-lighter center mb-5 py-3">
       <div className="card-content px-0">
         <h4>Workout {index + 1}</h4>
         <table className="table has-text-left is-fullwidth has-background-grey-lighter">
@@ -71,11 +71,7 @@ export default function UserProfile() {
           {workouts !== null && workouts.length === 0
             ? <>
               <p className="no-workout-msg mt-5 is-size-6 ">
-                Click
-                <a href="#new-workout" className="is-underlined no-workout-msg">
-                  here
-                </a>
-                to begin workout.
+                Click <a href="#new-workout" className="is-underlined no-workout-msg">here</a> to begin workout.
               </p>
             </>
             : false
