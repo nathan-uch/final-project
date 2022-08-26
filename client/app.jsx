@@ -9,6 +9,7 @@ import UserProfile from '../client/pages/user-profile';
 import BotNavbar from '../client/components/bot-navbar';
 import ErrorPage from '../client/pages/error';
 import AuthPage from '../client/pages/auth';
+import FrequencyChart from '../client/pages/charts';
 import AppContext from '../client/lib/app-context';
 import Redirect from '../client/components/redirect';
 
@@ -56,6 +57,8 @@ export default function App() {
         page = <Exercises />;
       } else if (path === 'workout') {
         page = <Workout />;
+      } else if (path === 'charts') {
+        page = <FrequencyChart />;
       } else {
         return <ErrorPage />;
       }

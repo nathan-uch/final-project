@@ -472,6 +472,14 @@ a.no-workout-msg:hover {
   border-right: 2px solid #7c7c7c;
 }
 
+/* CHARTS */
+
+.chart-container {
+  width: 65%;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
 /* ERROR PAGE */
 
 .error-page {
