@@ -18,7 +18,7 @@ function WorkoutCard({ index, workout, workoutId }) {
   return (
     <div className="card has-background-grey-lighter center mb-5 py-2">
       <div className="card-content py-1 px-0">
-        <h4 className="has-text-weight-bold">Workout {index + 1}</h4>
+        <h4 className="has-text-weight-bold">Workout {wId}</h4>
         <p>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
         <table className="table has-text-left is-fullwidth has-background-grey-lighter">
           <thead>
@@ -58,6 +58,7 @@ export default function UserProfile() {
         for (const key of Object.keys(splitByWorkout)) {
           final.push({ [key]: splitByWorkout[key] });
         }
+        final.reverse();
         setWorkouts(final);
       })
       .catch(err => console.error('ERROR:', err));
