@@ -145,6 +145,23 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/user/all-workouts', (req, res, next) => {
+  const userId = Number(req.user.userId);
+  if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
+  const params = [userId];
+  const sql = `
+  select *
+  from "workouts"
+  where "userId" = $1
+  and "completedAt" IS NOT NULL;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/user/workout-sets', (req, res, next) => {
   const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');

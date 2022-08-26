@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
+import AppContext from '../lib/app-context';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,10 +24,15 @@ ChartJS.register(
 export default function FrequencyChart() {
   const [labels, setLabels] = useState(null);
   const [data] = useState(null);
+  const { accessToken } = useContext(AppContext);
 
   useEffect(() => {
-
-  }, []);
+    fetch('/api/user/all-workouts', { headers: { 'X-Access-Token': accessToken } })
+      .then(response => response.json())
+      .then(result => {
+      })
+      .catch(err => console.error('ERROR:', err));
+  }, [accessToken]);
 
   useEffect(() => {
     const date = new Date();
