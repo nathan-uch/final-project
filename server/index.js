@@ -145,7 +145,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/user/workouts', (req, res, next) => {
+app.get('/api/user/workout-sets', (req, res, next) => {
   const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];

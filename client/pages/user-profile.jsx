@@ -43,7 +43,7 @@ export default function UserProfile() {
   const { user, accessToken } = useContext(AppContext);
 
   useEffect(() => {
-    fetch('/api/user/workouts', {
+    fetch('/api/user/workout-sets', {
       headers: { 'X-Access-Token': accessToken }
     })
       .then(response => response.json())

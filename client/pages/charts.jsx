@@ -22,6 +22,11 @@ ChartJS.register(
 
 export default function FrequencyChart() {
   const [labels, setLabels] = useState(null);
+  const [data] = useState(null);
+
+  useEffect(() => {
+
+  }, []);
 
   useEffect(() => {
     const date = new Date();
@@ -33,9 +38,11 @@ export default function FrequencyChart() {
     }
     const result = [];
     weeks.forEach(week => {
+      const a = ['Week'];
       const cur = new Date(week);
       const d = cur.toLocaleString('default', { day: 'numeric', month: 'short' });
-      result.push(d);
+      a.push(d);
+      result.push(a);
     });
     setLabels(result);
   }, []);
@@ -47,15 +54,22 @@ export default function FrequencyChart() {
         display: true,
         text: 'Workouts Per Week'
       }
+    },
+    scales: {
+      y: {
+        suggestedMax: 5,
+        ticks: { stepSize: 1 }
+      }
     }
   };
 
-  const data = {
+  const chartData = {
     labels,
     datasets: [{
       label: 'Total Number of Workouts',
       backgroundColor: 'rgba(255, 226, 71, 0.75)',
-      data: [4, 3, 4, 3, 2, 1, 4, 5]
+      data
+      // data: [4, 3, 4, 3, 2, 1, 4, 5]
     }]
   };
 
@@ -66,7 +80,7 @@ export default function FrequencyChart() {
         : <div className="chart-container mx-auto p-2">
           <Bar
             options={options}
-            data={data}
+            data={chartData}
           />
         </div>
       }
