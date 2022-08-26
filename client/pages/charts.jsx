@@ -49,32 +49,34 @@ export default function FrequencyChart() {
     fetch('/api/user/all-workouts', { headers: { 'X-Access-Token': accessToken } })
       .then(response => response.json())
       .then(result => {
-        const r = [0, 0, 0, 0, 0, 0, 0, 0];
-        const oldest = new Date(labels[0][1]);
-        result.forEach(workout => {
-          const completeDate = new Date(workout.completedAt);
-          const year = completeDate.getFullYear();
-          if (year !== new Date().getFullYear()) return;
-          if (completeDate < oldest) return;
-          if (completeDate > new Date(labels[0][1] && completeDate < new Date(labels[1][1]))) {
-            r[7]++;
-          } else if (completeDate > new Date(labels[1][1] && completeDate < new Date(labels[2][1]))) {
-            r[6]++;
-          } else if (completeDate > new Date(labels[2][1] && completeDate < new Date(labels[3][1]))) {
-            r[5]++;
-          } else if (completeDate > new Date(labels[3][1] && completeDate < new Date(labels[4][1]))) {
-            r[4]++;
-          } else if (completeDate > new Date(labels[4][1] && completeDate < new Date(labels[5][1]))) {
-            r[3]++;
-          } else if (completeDate > new Date(labels[5][1] && completeDate < new Date(labels[6][1]))) {
-            r[2]++;
-          } else if (completeDate > new Date(labels[6][1] && completeDate < new Date(labels[7][1]))) {
-            r[1]++;
-          } else if (completeDate > new Date(labels[7][1])) {
-            r[0]++;
-          }
-        });
-        setData(r);
+        if (labels) {
+          const r = [0, 0, 0, 0, 0, 0, 0, 0];
+          const oldest = new Date(labels[0][1]);
+          result.forEach(workout => {
+            const completeDate = new Date(workout.completedAt);
+            const year = completeDate.getFullYear();
+            if (year !== new Date().getFullYear()) return;
+            if (completeDate < oldest) return;
+            if (completeDate > new Date(labels[0][1] && completeDate < new Date(labels[1][1]))) {
+              r[7]++;
+            } else if (completeDate > new Date(labels[1][1] && completeDate < new Date(labels[2][1]))) {
+              r[6]++;
+            } else if (completeDate > new Date(labels[2][1] && completeDate < new Date(labels[3][1]))) {
+              r[5]++;
+            } else if (completeDate > new Date(labels[3][1] && completeDate < new Date(labels[4][1]))) {
+              r[4]++;
+            } else if (completeDate > new Date(labels[4][1] && completeDate < new Date(labels[5][1]))) {
+              r[3]++;
+            } else if (completeDate > new Date(labels[5][1] && completeDate < new Date(labels[6][1]))) {
+              r[2]++;
+            } else if (completeDate > new Date(labels[6][1] && completeDate < new Date(labels[7][1]))) {
+              r[1]++;
+            } else if (completeDate > new Date(labels[7][1])) {
+              r[0]++;
+            }
+          });
+          setData(r);
+        }
       })
       .catch(err => console.error('ERROR:', err));
   }, [accessToken, labels]);

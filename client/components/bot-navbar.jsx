@@ -15,6 +15,11 @@ export default function BotNavbar() {
             <img src="images/db-yellow.png" className="bot-navbar-icon my-2" />
           </figure>
         </a>
+        <a href="#charts" className="navbar-item p-0">
+          <figure className="navbar-icon">
+            <img src="images/chart-yellow.png" className="bot-navbar-icon chart-icon my-2" />
+          </figure>
+        </a>
       </div>
     </nav>
   );

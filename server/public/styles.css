@@ -144,6 +144,10 @@ a.navbar-item:hover {
   object-fit: contain;
 }
 
+.chart-icon {
+  width: 35px;
+}
+
 .nav-user-icon {
   width: 35px !important;
   height: auto !important;
@@ -609,8 +613,6 @@ a.no-workout-msg:hover {
 
   .user-info {
     flex-basis: 30%;
-    height: 100%;
-    min-height: 100vh;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     box-shadow:
