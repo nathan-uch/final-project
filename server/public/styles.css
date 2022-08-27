@@ -144,6 +144,10 @@ a.navbar-item:hover {
   object-fit: contain;
 }
 
+.chart-icon {
+  width: 35px;
+}
+
 .nav-user-icon {
   width: 35px !important;
   height: auto !important;
@@ -422,6 +426,7 @@ a {
 
 .add-set-btn {
   width: 90%;
+  height: 35px;
   margin: 0 auto;
 }
 
@@ -469,6 +474,15 @@ a.no-workout-msg:hover {
 
 .profile-desktop-left-col {
   border-right: 2px solid #7c7c7c;
+}
+
+/* CHARTS */
+
+.chart-container {
+  width: 95%;
+  min-height: 300px;
+  border: 1px solid black;
+  border-radius: 6px;
 }
 
 /* ERROR PAGE */
@@ -593,6 +607,7 @@ a.no-workout-msg:hover {
 
 @media screen and (min-width: 1024px) {
   .user-profile {
+    min-height: 100vh;
     flex-direction: row !important;
     margin-top: 65px;
     margin-bottom: 0;
@@ -600,8 +615,6 @@ a.no-workout-msg:hover {
 
   .user-info {
     flex-basis: 30%;
-    height: 100%;
-    min-height: 100vh;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     box-shadow:
@@ -656,5 +669,10 @@ a.no-workout-msg:hover {
     margin: 0 2px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+  }
+
+  .chart-container {
+    width: 70%;
+    min-height: 400px;
   }
 }

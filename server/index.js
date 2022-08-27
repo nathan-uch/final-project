@@ -145,7 +145,24 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/user/workouts', (req, res, next) => {
+app.get('/api/user/all-workouts', (req, res, next) => {
+  const userId = Number(req.user.userId);
+  if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
+  const params = [userId];
+  const sql = `
+  select *
+  from "workouts"
+  where "userId" = $1
+  and "completedAt" IS NOT NULL;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/user/workout-sets', (req, res, next) => {
   const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId];
@@ -166,6 +183,7 @@ app.get('/api/user/workouts', (req, res, next) => {
                 "sets"."reps",
                 "sets"."weight",
                 "workouts"."userId",
+                "workouts"."completedAt",
                 "exercises"."name",
                 "exercises"."muscleGroup",
                 "exercises"."equipment"
@@ -173,7 +191,8 @@ app.get('/api/user/workouts', (req, res, next) => {
     "totalSetsCTE" as (
       select      count("sets".*) as "totalSets",
                   "exerciseId",
-                  "workouts"."workoutId"
+                  "workouts"."workoutId",
+                  "workouts"."completedAt"
       from        "sets"
       join        "workouts" using ("workoutId")
       join        "exercises" using ("exerciseId")
@@ -191,7 +210,8 @@ app.get('/api/user/workouts', (req, res, next) => {
               "reps",
               "totalSets",
               "weight",
-              "workoutId"
+              "workoutId",
+              "totalSetsCTE"."completedAt"
     from      "bestSetCTE"
     join      "totalSetsCTE" using ("workoutId", "exerciseId")
     where     "row_number" = 1
@@ -283,6 +303,21 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
       const resultSets = result.rows;
       res.status(204).json(resultSets);
     })
+    .catch(err => next(err));
+});
+
+app.patch('/api/workout/:workoutId/completed-time', (req, res, next) => {
+  const workoutId = Number(req.params.workoutId);
+  if (!workoutId) throw new ClientError(400, 'ERROR: Existing workoutId is required');
+  const date = new Date();
+  const params = [workoutId, date];
+  const sql = `
+  update "workouts"
+  set    "completedAt" = $2
+  where  "workoutId" = $1;
+  `;
+  db.query(sql, params)
+    .then(result => res.status(204).json())
     .catch(err => next(err));
 });
 

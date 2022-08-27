@@ -173,6 +173,15 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
       },
       body: JSON.stringify(finalWorkout)
     })
+      .catch(err => console.error('ERROR:', err));
+
+    fetch(`/api/workout/${workout.workoutId}/completed-time`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      }
+    })
       .then(result => { window.location.hash = 'user-profile'; })
       .catch(err => console.error('ERROR:', err));
   }

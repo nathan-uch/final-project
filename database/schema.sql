@@ -21,6 +21,7 @@ CREATE TABLE "public"."users" (
 CREATE TABLE "public"."workouts" (
 	"workoutId" serial NOT NULL UNIQUE,
 	"userId" serial NOT NULL,
+  "completedAt" timestamptz(6) DEFAULT NULL,
 	CONSTRAINT "workouts_pk" PRIMARY KEY ("workoutId")
 ) WITH (
   OIDS=FALSE
