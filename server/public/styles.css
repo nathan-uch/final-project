@@ -479,7 +479,8 @@ a.no-workout-msg:hover {
 /* CHARTS */
 
 .chart-container {
-  width: 65%;
+  width: 95%;
+  min-height: 300px;
   border: 1px solid black;
   border-radius: 6px;
 }
@@ -606,6 +607,7 @@ a.no-workout-msg:hover {
 
 @media screen and (min-width: 1024px) {
   .user-profile {
+    min-height: 100vh;
     flex-direction: row !important;
     margin-top: 65px;
     margin-bottom: 0;
@@ -667,5 +669,10 @@ a.no-workout-msg:hover {
     margin: 0 2px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+  }
+
+  .chart-container {
+    width: 70%;
+    min-height: 400px;
   }
 }

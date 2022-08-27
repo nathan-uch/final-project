@@ -82,6 +82,7 @@ export default function FrequencyChart() {
   }, [accessToken, labels]);
 
   const options = {
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       title: {
@@ -108,6 +109,7 @@ export default function FrequencyChart() {
 
   return (
     <div className="body-container has-text-centered">
+      <h4 className="is-size-2 my-4 center">Progress</h4>
       {!labels
         ? <LoadingRing />
         : <div className="chart-container mx-auto p-2">
