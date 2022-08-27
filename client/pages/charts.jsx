@@ -36,11 +36,11 @@ export default function FrequencyChart() {
     }
     const result = [];
     weeks.forEach(week => {
-      const a = ['Week'];
+      const yLabel = ['Week'];
       const cur = new Date(week);
-      const d = cur.toLocaleString('default', { day: 'numeric', month: 'short' });
-      a.push(d);
-      result.unshift(a);
+      const curWeek = cur.toLocaleString('default', { day: 'numeric', month: 'short' });
+      yLabel.push(curWeek);
+      result.unshift(yLabel);
     });
     setLabels(result);
   }, []);
@@ -55,24 +55,26 @@ export default function FrequencyChart() {
           result.forEach(workout => {
             const completeDate = new Date(workout.completedAt);
             const year = completeDate.getFullYear();
-            if (year !== new Date().getFullYear()) return;
-            if (completeDate < oldest) return;
-            if (completeDate > new Date(labels[0][1] && completeDate < new Date(labels[1][1]))) {
-              r[7]++;
-            } else if (completeDate > new Date(labels[1][1] && completeDate < new Date(labels[2][1]))) {
-              r[6]++;
-            } else if (completeDate > new Date(labels[2][1] && completeDate < new Date(labels[3][1]))) {
-              r[5]++;
-            } else if (completeDate > new Date(labels[3][1] && completeDate < new Date(labels[4][1]))) {
-              r[4]++;
-            } else if (completeDate > new Date(labels[4][1] && completeDate < new Date(labels[5][1]))) {
-              r[3]++;
-            } else if (completeDate > new Date(labels[5][1] && completeDate < new Date(labels[6][1]))) {
-              r[2]++;
-            } else if (completeDate > new Date(labels[6][1] && completeDate < new Date(labels[7][1]))) {
-              r[1]++;
-            } else if (completeDate > new Date(labels[7][1])) {
+            const curYear = new Date().getFullYear();
+            if (year !== curYear) return;
+            const completeTime = completeDate.getTime();
+            if (completeTime < oldest.getTime()) return;
+            if ((completeTime >= new Date(labels[0][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[1][1] + ' ' + curYear).getTime())) {
               r[0]++;
+            } else if ((completeTime >= new Date(labels[1][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[2][1] + ' ' + curYear).getTime())) {
+              r[1]++;
+            } else if ((completeTime >= new Date(labels[2][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[3][1] + ' ' + curYear).getTime())) {
+              r[2]++;
+            } else if ((completeTime >= new Date(labels[3][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[4][1] + ' ' + curYear).getTime())) {
+              r[3]++;
+            } else if ((completeTime >= new Date(labels[4][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[5][1] + ' ' + curYear).getTime())) {
+              r[4]++;
+            } else if ((completeTime >= new Date(labels[5][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[6][1] + ' ' + curYear).getTime())) {
+              r[5]++;
+            } else if ((completeTime >= new Date(labels[6][1] + ' ' + curYear).getTime()) && (completeTime <= new Date(labels[7][1] + ' ' + curYear).getTime())) {
+              r[6]++;
+            } else if ((completeTime >= new Date(labels[7][1] + ' ' + curYear).getTime())) {
+              r[7]++;
             }
           });
           setData(r);
@@ -92,7 +94,7 @@ export default function FrequencyChart() {
     },
     scales: {
       y: {
-        suggestedMax: 5,
+        suggestedMax: 4,
         ticks: { stepSize: 1 }
       }
     }

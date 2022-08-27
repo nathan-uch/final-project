@@ -1,3 +1,6 @@
+insert into "users" ("userId", "username", "hashedPassword", "createdAt")
+values              (1, 'nate123', '$argon2id$v=19$m=4096,t=3,p=1$KCk8BNqd1VHMbBiUYehv1Q$8tpPzp0rhN51jO1Xcq1dfEgyk3uDqr71miaLAgxL1pk', '2022-08-25T19:56:10.739934Z');
+
 insert into "exercises" ("exerciseId", "name", "muscleGroup", "equipment")
 values                  (1, 'Bench Press', 'Chest', 'Barbell'),
                         (2, 'Bench Press', 'Chest', 'Dumbbell'),
