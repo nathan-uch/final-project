@@ -8,7 +8,7 @@ Strive is a full stack web-application for workout enthusiasts who want to track
 As a regular gym goer, I found myself regularly forgetting previous workout volumes and reach the inevitable plateau making improvement altogether more difficult. The idea of creating a workout tracker was actually in my mind as soon as I started learning the basics of HTML, CSS and JavaScript but after learning back-end technologies, the project became closer to fruition.
 
 ### Live Demo:
-Try the live app at [https://strive-workout-tracker.herokuapp.com/](https://strive-workout-tracker.herokuapp.com/)
+Try the live app at [https://striveworkout.app/](https://striveworkout.app/)
 
 ## Technologies Used:
 * React.js
