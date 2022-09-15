@@ -169,13 +169,14 @@ export default function AuthPage() {
 
   return (
     <div className="auth-body has-background-black has-text-centered is-flex is-flex-direction-column is-align-items-center">
-      <div className="is-relative auth-logo mx-auto">
+      <div className="is-relative auth-logo mx-auto mb-2">
         <figure className="is-absolute auth-logo-img image is-64x64">
           <img
             src="images/flame-red.png"
             alt="logo icon" />
         </figure>
         <h1 className="auth-logo-text">Strive</h1>
+        <h2 className="auth-logo-subtext is-size-5">Workout Tracker</h2>
       </div>
       <h3 className="is-size-3 my-5">{curRoute.path === 'sign-up' ? 'Sign Up' : 'Sign In'}</h3>
       {existingUsernames
