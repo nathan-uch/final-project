@@ -169,6 +169,16 @@ a.navbar-item:hover {
   cursor: pointer;
 }
 
+.signout-pop-btn {
+  position: absolute;
+  top: 40px;
+}
+
+.signout-pop-btn:hover {
+  color: white !important;
+  background-color: #ff3860 !important;
+}
+
 /* BODY CONTAINER */
 
 a {
@@ -389,13 +399,24 @@ a {
   box-shadow: none;
 }
 
-.pop-delete-btn {
+.pop-exer-options {
   position: absolute;
   right: 0;
-  bottom: -40px;
+  bottom: -82px;
+  border: 2px solid black;
+  border-radius: 6px;
+}
+
+.replace-exer-btn:hover {
+  background-color: #c6c6c6 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
 .pop-delete-btn:hover {
+  color: white !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
   background-color: #f14668 !important;
 }
 

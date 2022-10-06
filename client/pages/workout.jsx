@@ -67,7 +67,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
 function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
-  const [deleteIsOpen, setDeleteOpen] = useState(false);
+  const [exerOptionsIsOpen, setExerOptionsIsOpen] = useState(false);
   const exerciseId = exercise.exerciseId;
 
   function updateWorkout() {
@@ -82,7 +82,12 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   function openDelete() {
-    setDeleteOpen(currDeleteIsOpen => !currDeleteIsOpen);
+    setExerOptionsIsOpen(curExerOptionsIsOpen => !curExerOptionsIsOpen);
+  }
+
+  function replaceExercise() {
+
+    setExerOptionsIsOpen(false);
   }
 
   function confirmDelete() {
@@ -93,7 +98,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
     finalWorkout.exercises = updatedWorkoutExercises;
     deleteExercise([exerciseId]);
     setWorkout(finalWorkout);
-    setDeleteOpen(false);
+    setExerOptionsIsOpen(false);
   }
 
   return (
@@ -103,9 +108,16 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
           {exercise.name}</h3>
         <button type="button" className="delete-exercise-btn button is-large has-background-black"
           onClick={openDelete}>...</button>
-        <button type="button"
-          className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!deleteIsOpen && 'hidden'}`}
-          onClick={confirmDelete}>Delete</button>
+        <div className={`is-flex-direction-column ${!exerOptionsIsOpen ? 'hidden' : 'is-flex'} pop-exer-options`}>
+          <button type="button"
+            className='replace-exer-btn button is-white has-text-weight-bold'
+            onClick={replaceExercise}>
+            Replace
+          </button>
+          <button type="button"
+            className='pop-delete-btn button is-white has-text-danger has-text-weight-bold'
+            onClick={confirmDelete}>Delete</button>
+        </div>
       </div>
       <div className="card-content pt-3 pb-0">
         <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
