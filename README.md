@@ -1,6 +1,6 @@
 # STRIVE - Workout Tracker
 
-A full stack JavaScript solo project.
+A solo full-stack React project.
 
 ### What is STRIVE?
 Strive is a full stack web-application for workout enthusiasts who want to track workouts and progress in the gym.
