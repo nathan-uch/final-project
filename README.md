@@ -51,8 +51,8 @@ Try the live app at [https://striveworkout.app/](https://striveworkout.app/)
 1. Clone repository
 
 ```shell
-git clone git@github.com:nathan-uch/final-project.git
-cd final-project
+git clone git@github.com:nathan-uch/strive-workout-tracker.git
+cd project_name
 ```
 
 2. Install [PostgreSQL](https://www.postgresql.org/download/)
