@@ -64,7 +64,27 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   );
 }
 
-function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) {
+function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal }) {
+
+  return (
+    <>
+      {replaceModalIsOpen &&
+        <div className={`modal ${replaceModalIsOpen && 'is-active'}`} >
+          HI
+          <div
+            className="modal-background"
+            onClick={toggleReplaceModal}>
+          </div>
+          <div className='modal-content has-background-white p-3'>
+
+          </div>
+        </div>
+      }
+    </>
+  );
+}
+
+function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, setExerToReplace, toggleReplaceModal }) {
   const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
   const [setCount, changeSetCount] = useState(1);
   const [exerOptionsIsOpen, setExerOptionsIsOpen] = useState(false);
@@ -86,8 +106,9 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise }) 
   }
 
   function replaceExercise() {
-
     setExerOptionsIsOpen(false);
+    setExerToReplace(exerciseId);
+    toggleReplaceModal();
   }
 
   function confirmDelete() {
@@ -231,6 +252,8 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
+  const [exerToReplace, setExerToReplace] = useState(null);
+  const [replaceModalIsOpen, setReplaceModalOpenClose] = useState(false);
   const { accessToken, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
@@ -255,6 +278,10 @@ export default function WorkoutPage() {
     );
   }
 
+  function toggleReplaceModal() {
+    !replaceModalIsOpen ? setReplaceModalOpenClose(true) : setReplaceModalOpenClose(false);
+  }
+
   return (
     <div className='body-container has-text-centered'>
       <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
@@ -262,6 +289,13 @@ export default function WorkoutPage() {
         workout={workout}
         deleteExercise={deleteExercise}
         setWorkout={setWorkout} />
+      <ReplaceExerciseModal
+          exerToReplace={exerToReplace}
+          replaceModalIsOpen={replaceModalIsOpen}
+          setExerToReplace={setExerToReplace}
+          setWorkout={setWorkout}
+          toggleReplaceModal={toggleReplaceModal}
+          />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout
           ? <LoadingRing />
@@ -272,7 +306,9 @@ export default function WorkoutPage() {
               exercise={exercise}
               workout={workout}
               setWorkout={setWorkout}
-              deleteExercise={deleteExercise}/>
+              deleteExercise={deleteExercise}
+              setExerToReplace={setExerToReplace}
+              toggleReplaceModal={toggleReplaceModal} />
           )}
       </div>
     </div>

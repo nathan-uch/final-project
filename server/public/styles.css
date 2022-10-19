@@ -302,8 +302,16 @@ a {
   cursor: pointer;
 }
 
-.exercise-list {
+.exercise-list-mobile {
+  max-height: 150px;
+}
+
+.exercise-list-desktop {
   max-height: 200px;
+}
+
+.exercise-list-mobile,
+.exercise-list-desktop {
   overflow: scroll;
   width: 100%;
   overflow-x: hidden;
