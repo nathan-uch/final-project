@@ -65,18 +65,19 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   );
 }
 
-function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace }) {
+function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace, setExerToReplace, setWorkout, workout }) {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
   const modalRef = useRef();
 
   function handleReplaceExercise(e) {
     e.preventDefault();
-    const savedExercises = [selectedExercise]; // add sets, reps, weight
 
-    const body = { workoutId, exerciseId: savedExercises, userId: user.userId };
-
-    fetch('/api/workout/', {
+    const body = {
+      userId: user.userId,
+      newExerciseId: selectedExercise.exerciseId
+    };
+    fetch(`/api/workout/${workoutId}/exercise/${exerToReplace.exerciseId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -84,9 +85,27 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
       },
       body: JSON.stringify(body)
     })
-      .then(response => response.json())
       .then(result => {
+        const updatedWorkout = workout.exercises.map(exer => {
+          if (exer.exerciseId === exerToReplace.exerciseId) {
+            if (!selectedExercise.equipment) selectedExercise.equipment = null;
+            return {
+              ...exer,
+              exerciseId: selectedExercise.exerciseId,
+              name: selectedExercise.name,
+              equipment: selectedExercise.equipment
+            };
+          } else {
+            return exer;
+          }
+        });
+        setWorkout({
+          ...workout,
+          exercises: updatedWorkout
+        });
+        setExerToReplace({ exerciseId: null, name: null });
         setSelectedExercise(null);
+        toggleReplaceModal();
       })
       .catch(err => console.error('ERROR:', err));
   }
@@ -117,10 +136,8 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
             {selectedExercise &&
               <form
                 onSubmit={handleReplaceExercise}
-                className="replace-exercise-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
-                <ul>
-                  <li className="has-text-weight-bold is-size-4 mt-2">{selectedExercise.name}</li>
-                </ul>
+                className="replace-exercise-mobile message is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
+                <p className="has-text-weight-bold is-size-4 mt-2">{selectedExercise.name}</p>
                 <div className='is-fullwidth'>
                   <button
                     type="submit"
@@ -168,7 +185,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
 
   function replaceExercise() {
     setExerOptionsIsOpen(false);
-    setExerToReplace({ id: exerciseId, name: exercise.name });
+    setExerToReplace({ exerciseId, name: exercise.name });
     toggleReplaceModal();
   }
 
@@ -313,7 +330,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-  const [exerToReplace, setExerToReplace] = useState({ id: null, name: null });
+  const [exerToReplace, setExerToReplace] = useState({ exerciseId: null, name: null });
   const [replaceModalIsOpen, setReplaceModalOpenClose] = useState(false);
   const { accessToken, curWorkout: workoutId } = useContext(AppContext);
 
@@ -341,7 +358,7 @@ export default function WorkoutPage() {
 
   function toggleReplaceModal() {
     setReplaceModalOpenClose(!replaceModalIsOpen);
-    if (replaceModalIsOpen) setExerToReplace({ id: null, name: null });
+    if (replaceModalIsOpen) setExerToReplace({ exerciseId: null, name: null });
   }
 
   return (
@@ -357,6 +374,7 @@ export default function WorkoutPage() {
           setExerToReplace={setExerToReplace}
           setWorkout={setWorkout}
           toggleReplaceModal={toggleReplaceModal}
+          workout={workout}
           />
       <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
         {!workout

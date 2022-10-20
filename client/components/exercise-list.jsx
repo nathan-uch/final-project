@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 
@@ -66,7 +66,7 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   function handleClick() {
     if (!isSelected) {
       setSelected(true);
-      setSelectedExercise({ exerciseId, name });
+      setSelectedExercise({ exerciseId, name, equipment });
     } else {
       setSelected(false);
       setSelectedExercise(null);
@@ -96,7 +96,6 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
   const [searchResults, setSearchResult] = useState([]);
   const [letters, setLetters] = useState(null);
   const { accessToken } = useContext(AppContext);
-  const modalRef = useRef();
 
   useEffect(() => {
     fetch('/api/all-exercises', {
@@ -131,13 +130,8 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
     setSearchResult(filteredExercises);
   }
 
-  function scrollToTop() {
-
-    modalRef.current.scrollTo(0, 0);
-  }
-
   return (
-    <div ref={modalRef} className="is-relative has-text-centered">
+    <div className="is-relative has-text-centered">
       {isLoading
         ? <LoadingRing />
         : <>
@@ -180,9 +174,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
           }
         </>
       }
-      <a onClick={scrollToTop} className={`top-btn-replace has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
-        <i className="fa-solid fa-arrow-up fa-2x"></i>
-      </a>
+
     </div>
   );
 }
