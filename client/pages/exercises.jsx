@@ -260,21 +260,23 @@ export default function Exercises(props) {
                 </button>
                 <form
                   onSubmit={handleSaveExercises}
-                  className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
+                  className={`exercise-form-desktop is-flex is-flex-direction-column is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
                   <p className="my-2">Total Exercises: {allSelected.length}</p>
                   <ul className="exercise-list mx-4 is-size-6">
                     {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
                   </ul>
-                  <button type="submit"
-                    className='primary-button add-exercises-btn button m-2 is-size-6'>
-                    Add all
-                  </button>
-                  <button
-                    onClick={clearExercises}
-                    type="button"
-                    className='clear-btn button is-white m-2 is-size-6'>
-                    Clear
-                  </button>
+                  <div>
+                    <button type="submit"
+                      className='primary-button add-exercises-btn button m-2 is-size-6'>
+                      Add all
+                    </button>
+                    <button
+                      onClick={clearExercises}
+                      type="button"
+                      className='clear-btn button is-white m-2 is-size-6'>
+                      Clear
+                    </button>
+                  </div>
                 </form>
               </div>
             </>

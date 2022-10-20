@@ -306,6 +306,27 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.patch('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
+  const workoutId = Number(req.params.workoutId);
+  const exerciseId = Number(req.params.exerciseId);
+  const { newExerciseId } = req.body;
+  if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
+  const params = [workoutId, exerciseId, newExerciseId];
+  const sql = `
+  update        "sets"
+  set           "exerciseId" = $3
+  where         "workoutId" = $1
+  and           "exerciseId" = $2
+  returning *;
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const replacedExerciseSets = result.rows;
+      res.status(204).json(replacedExerciseSets);
+    })
+    .catch(err => next(err));
+});
+
 app.patch('/api/workout/:workoutId/completed-time', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
   if (!workoutId) throw new ClientError(400, 'ERROR: Existing workoutId is required');

@@ -33,7 +33,7 @@ export default function TopNavbar() {
           <button
             onClick={handleSignOut}
             type="button"
-            className={`pop-delete-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
+            className={`signout-pop-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
             Sign Out
           </button>
         </div>
