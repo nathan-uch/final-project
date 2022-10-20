@@ -192,6 +192,11 @@ a {
 
 /* EXERCISES PAGE */
 
+.modal-content {
+  width: 70% !important;
+  max-width: 900px !important;
+}
+
 .exercise-searchbox {
   width: 70%;
   background-color: #dbdbdb;
@@ -289,6 +294,7 @@ a {
 
 .collapse {
   max-height: 0;
+  overflow: hidden;
 }
 
 .toggle-show-exercises-desktop {
@@ -317,16 +323,27 @@ a {
   overflow-x: hidden;
 }
 
-.add-clear-exercises-mobile {
-  width: 100%;
-  min-height: 50px;
+.add-clear-exercises-mobile,
+.replace-exercise-mobile {
+  min-height: 45px;
   position: fixed;
-  left: 0;
-  bottom: 36px;
   z-index: 30;
   border-top: 2px solid white;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+}
+
+.add-clear-exercises-mobile {
+  width: 100%;
+  left: 0;
+  bottom: 36px;
+}
+
+.replace-exercise-mobile {
+  width: 70%;
+  max-width: 900px;
+  bottom: 0;
+  left: 15%;
 }
 
 .add-exercises-btn,

@@ -66,6 +66,29 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
 }
 
 function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace }) {
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
+
+  function handleReplaceExercise(e) {
+    e.preventDefault();
+    const savedExercises = [selectedExercise]; // add sets, reps, weight
+
+    const body = { workoutId, exerciseId: savedExercises, userId: user.userId };
+
+    fetch('/api/workout/', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .then(result => {
+        setSelectedExercise(null);
+      })
+      .catch(err => console.error('ERROR:', err));
+  }
 
   return (
     <>
@@ -76,8 +99,37 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
             onClick={toggleReplaceModal}>
           </div>
           <div className='modal-content has-background-white p-3'>
-            {`Replace: ${exerToReplace.name}`}
-            <ExerciseList />
+            <div className='is-size-3 has-text-weight-bold mb-4'>
+              {`Replace: ${exerToReplace.name}`}
+            </div>
+            <ExerciseList
+              selectedExercise={selectedExercise}
+              setSelectedExercise={setSelectedExercise}
+            />
+            {selectedExercise &&
+              <form
+                onSubmit={handleReplaceExercise}
+                className="replace-exercise-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
+                <ul>
+                  <li>{selectedExercise.name}</li>
+                </ul>
+                <div className='is-fullwidth'>
+                  <button
+                    type="submit"
+                    className='primary-button add-exercises-btn button is-size-6 my-3'>
+                    Replace
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedExercise(null);
+                      toggleReplaceModal();
+                    }}
+                    className='clear-btn button is-white m-3 is-size-6 is-relative' >
+                    Cancel</button>
+                </div>
+              </form>
+            }
           </div>
         </div>
       }

@@ -89,14 +89,13 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   );
 }
 
-export default function ExerciseList(props) {
+export default function ExerciseList({ selectedExercise, setSelectedExercise }) {
   const [exercises, setExercises] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResult] = useState([]);
   const [letters, setLetters] = useState(null);
-  const [selectedExercise, setSelectedExercise] = useState(null);
-  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
+  const { accessToken } = useContext(AppContext);
 
   useEffect(() => {
     fetch('/api/all-exercises', {
@@ -121,27 +120,6 @@ export default function ExerciseList(props) {
     setLetters(letters);
   }, [exercises]);
 
-  function handleReplaceExercise(e) {
-    e.preventDefault();
-    const savedExercises = [];
-
-    const body = { workoutId, exerciseIds: savedExercises, userId: user.userId };
-
-    fetch('/api/workout/new-exercises', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Token': accessToken
-      },
-      body: JSON.stringify(body)
-    })
-      .then(response => response.json())
-      .then(result => {
-        setSelectedExercise(null);
-      })
-      .catch(err => console.error('ERROR:', err));
-  }
-
   function handleSearch(e) {
     const val = e.target.value.toLowerCase();
     setSearchResult([]);
@@ -157,7 +135,7 @@ export default function ExerciseList(props) {
   }
 
   return (
-    <div className="body-container has-text-centered">
+    <div className="is-relative has-text-centered">
       {isLoading
         ? <LoadingRing />
         : <>
@@ -200,27 +178,9 @@ export default function ExerciseList(props) {
           }
         </>
       }
-      <>
-        <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
-          <i className="fa-solid fa-arrow-up fa-2x"></i>
-        </a>
-        {selectedExercise &&
-          <>
-            <form
-              onSubmit={handleReplaceExercise}
-              className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
-              <ul>
-                <li>{selectedExercise.name}</li>
-              </ul>
-              <button
-                type="submit"
-                className='primary-button add-exercises-btn button is-size-6 my-3'>
-                Replace
-              </button>
-            </form>
-          </>
-        }
-      </>
+      <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
+        <i className="fa-solid fa-arrow-up fa-2x"></i>
+      </a>
     </div>
   );
 }
