@@ -360,20 +360,29 @@ a {
   float: right;
 }
 
-.top-btn {
+.top-btn,
+.top-btn-replace {
   height: 49px;
   position: fixed;
   color: #ffe247;
-  bottom: 70px;
-  right: 5px;
   z-index: 30;
   border: 2px solid white;
   border-radius: 6px;
 }
 
-.top-btn:hover {
+.top-btn-replace {
+  right: 17%;
+  bottom: 0;
+}
+
+.top-btn {
+  bottom: 70px;
+  right: 5px;
+}
+
+.top-btn:hover,
+.top-btn-replace:hover {
   color: #dc2626;
-  border: 2px solid white;
 }
 
 .push-up {
@@ -422,6 +431,10 @@ a {
   border: none;
   color: #ffe247;
   box-shadow: none;
+}
+
+.replace-modal {
+  padding-bottom: 6rem !important;
 }
 
 .pop-exer-options {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 import ExerciseList from '../components/exercise-list';
@@ -68,6 +68,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
 function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace }) {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
+  const modalRef = useRef();
 
   function handleReplaceExercise(e) {
     e.preventDefault();
@@ -90,6 +91,10 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
       .catch(err => console.error('ERROR:', err));
   }
 
+  function scrollToTop() {
+    modalRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }
+
   return (
     <>
       {replaceModalIsOpen &&
@@ -98,7 +103,7 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
             className="modal-background"
             onClick={toggleReplaceModal}>
           </div>
-          <div className='modal-content has-background-white p-3'>
+          <div ref={modalRef} className='modal-content has-background-white p-3 replace-modal'>
             <div className='is-size-3 has-text-weight-bold mb-4'>
               {`Replace: ${exerToReplace.name}`}
             </div>
@@ -106,12 +111,15 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
               selectedExercise={selectedExercise}
               setSelectedExercise={setSelectedExercise}
             />
+            <a onClick={scrollToTop} className={`top-btn-replace has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
+              <i className="fa-solid fa-arrow-up fa-2x"></i>
+            </a>
             {selectedExercise &&
               <form
                 onSubmit={handleReplaceExercise}
                 className="replace-exercise-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
                 <ul>
-                  <li>{selectedExercise.name}</li>
+                  <li className="has-text-weight-bold is-size-4 mt-2">{selectedExercise.name}</li>
                 </ul>
                 <div className='is-fullwidth'>
                   <button

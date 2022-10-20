@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 
@@ -96,6 +96,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
   const [searchResults, setSearchResult] = useState([]);
   const [letters, setLetters] = useState(null);
   const { accessToken } = useContext(AppContext);
+  const modalRef = useRef();
 
   useEffect(() => {
     fetch('/api/all-exercises', {
@@ -131,11 +132,12 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
   }
 
   function scrollToTop() {
-    window.scroll({ top: 0, behavior: 'smooth' });
+
+    modalRef.current.scrollTo(0, 0);
   }
 
   return (
-    <div className="is-relative has-text-centered">
+    <div ref={modalRef} className="is-relative has-text-centered">
       {isLoading
         ? <LoadingRing />
         : <>
@@ -178,7 +180,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
           }
         </>
       }
-      <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
+      <a onClick={scrollToTop} className={`top-btn-replace has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
         <i className="fa-solid fa-arrow-up fa-2x"></i>
       </a>
     </div>
