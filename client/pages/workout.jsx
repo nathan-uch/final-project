@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
+import ExerciseList from '../components/exercise-list';
 
 function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
   const [reps, setReps] = useState(0);
@@ -64,19 +65,19 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   );
 }
 
-function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal }) {
+function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace }) {
 
   return (
     <>
       {replaceModalIsOpen &&
         <div className={`modal ${replaceModalIsOpen && 'is-active'}`} >
-          HI
           <div
             className="modal-background"
             onClick={toggleReplaceModal}>
           </div>
           <div className='modal-content has-background-white p-3'>
-
+            {`Replace: ${exerToReplace.name}`}
+            <ExerciseList />
           </div>
         </div>
       }
@@ -107,7 +108,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
 
   function replaceExercise() {
     setExerOptionsIsOpen(false);
-    setExerToReplace(exerciseId);
+    setExerToReplace({ id: exerciseId, name: exercise.name });
     toggleReplaceModal();
   }
 
@@ -172,7 +173,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
   const { accessToken } = useContext(AppContext);
 
   function toggleModal() {
-    !isOpen ? setOpenClose(true) : setOpenClose(false);
+    setOpenClose(!isOpen);
   }
 
   function saveWorkout(e) {
@@ -252,7 +253,7 @@ function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
 
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
-  const [exerToReplace, setExerToReplace] = useState(null);
+  const [exerToReplace, setExerToReplace] = useState({ id: null, name: null });
   const [replaceModalIsOpen, setReplaceModalOpenClose] = useState(false);
   const { accessToken, curWorkout: workoutId } = useContext(AppContext);
 
@@ -279,7 +280,8 @@ export default function WorkoutPage() {
   }
 
   function toggleReplaceModal() {
-    !replaceModalIsOpen ? setReplaceModalOpenClose(true) : setReplaceModalOpenClose(false);
+    setReplaceModalOpenClose(!replaceModalIsOpen);
+    if (replaceModalIsOpen) setExerToReplace({ id: null, name: null });
   }
 
   return (

@@ -321,8 +321,8 @@ app.patch('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      const deletedSets = result.rows;
-      res.status(204).json(deletedSets);
+      const replacedExerciseSets = result.rows;
+      res.status(204).json(replacedExerciseSets);
     })
     .catch(err => next(err));
 });

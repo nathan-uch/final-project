@@ -14,7 +14,7 @@ function AlphabetButtons({ letter }) {
   );
 }
 
-function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAll }) {
+function LetterSection({ letter, exercises, setSelectedExercise, selectedExercise }) {
   const [filteredExer, setFilteredExer] = useState(null);
 
   useEffect(() => {
@@ -36,28 +36,21 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
           key={exer.exerciseId}
           exerciseId={exer.exerciseId}
           name={exer.name}
-          setAllSelected={setAllSelected}
-          allSelected={allSelected}
-          clearAll={clearAll}
+          setSelectedExercise={setSelectedExercise}
+          selectedExercise={selectedExercise}
           equipment={exer.equipment} />
       )}
     </div>
   );
 }
 
-function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
+function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
-    if (allSelected.length === 0) return;
-    allSelected.forEach(exer => {
-      if (exer.exerciseId === exerciseId) setSelected(true);
-    });
-  });
-
-  useEffect(() => {
-    if (clearAll) setSelected(false);
-  }, [clearAll]);
+    if (!selectedExercise) return;
+    if (selectedExercise === null) setSelected(false);
+  }, [setSelected, exerciseId, selectedExercise]);
 
   function getEquipment() {
     if (equipment === null) {
@@ -68,13 +61,13 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
   }
 
   function handleClick() {
+    // case 1: clicked new exercise
     if (!isSelected) {
       setSelected(true);
-      setAllSelected([...allSelected, { name, exerciseId }]);
+      setSelectedExercise({ exerciseId, name }); // EXERCISE OBJ
     } else {
       setSelected(false);
-      const updatedSelected = allSelected.filter(exer => exer.exerciseId !== exerciseId);
-      setAllSelected(updatedSelected);
+      setSelectedExercise(null);
     }
   }
 
@@ -100,9 +93,7 @@ export default function ExerciseList(props) {
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResult] = useState([]);
   const [letters, setLetters] = useState(null);
-  const [allSelected, setAllSelected] = useState([]);
-  const [clearAll, setClearAll] = useState(false);
-  const [expandExercisesDisplay, setDisplay] = useState(true);
+  const [selectedExercise, setSelectedExercise] = useState(null);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
@@ -128,21 +119,12 @@ export default function ExerciseList(props) {
     setLetters(letters);
   }, [exercises]);
 
-  useEffect(() => {
-    setClearAll(false);
-  }, [clearAll]);
-
-  function handleSaveExercises(e) {
+  function handleReplaceExercise(e) {
     e.preventDefault();
     const savedExercises = [];
-    allSelected.forEach(exer => {
-      for (let e = 0; e < exercises.length; e++) {
-        if (exer.exerciseId === exercises[e].exerciseId) {
-          savedExercises.push(exercises[e].exerciseId);
-        }
-      }
-    });
+
     const body = { workoutId, exerciseIds: savedExercises, userId: user.userId };
+
     fetch('/api/workout/new-exercises', {
       method: 'POST',
       headers: {
@@ -153,8 +135,7 @@ export default function ExerciseList(props) {
     })
       .then(response => response.json())
       .then(result => {
-        clearExercises();
-        window.location.hash = 'workout';
+        setSelectedExercise(null);
       })
       .catch(err => console.error('ERROR:', err));
   }
@@ -169,22 +150,12 @@ export default function ExerciseList(props) {
     setSearchResult(filteredExercises);
   }
 
-  function clearExercises() {
-    setClearAll(true);
-    setAllSelected([]);
-  }
-
-  function toggleExerciseDisplay() {
-    expandExercisesDisplay ? setDisplay(false) : setDisplay(true);
-  }
-
   function scrollToTop() {
     window.scroll({ top: 0, behavior: 'smooth' });
   }
 
   return (
     <div className="body-container has-text-centered">
-      <h3 className="is-block is-size-3-mobile is-size-2 mx-auto mb-5">Add Exercises</h3>
       {isLoading
         ? <LoadingRing />
         : <>
@@ -207,9 +178,8 @@ export default function ExerciseList(props) {
                     key={letter}
                     letter={letter}
                     exercises={exercises}
-                    setAllSelected={setAllSelected}
-                    allSelected={allSelected}
-                    clearAll={clearAll}
+                    setSelectedExercise={setSelectedExercise}
+                    selectedExercise={selectedExercise}
                   />
                 )}
               </div>
@@ -220,9 +190,8 @@ export default function ExerciseList(props) {
                   key={exer.exerciseId}
                   exerciseId={exer.exerciseId}
                   name={exer.name}
-                  setAllSelected={setAllSelected}
-                  allSelected={allSelected}
-                  clearAll={clearAll}
+                  setSelectedExercise={setSelectedExercise}
+                  selectedExercise={selectedExercise}
                   equipment={exer.equipment} />
               )}
             </div>
@@ -230,56 +199,23 @@ export default function ExerciseList(props) {
         </>
       }
       <>
-        <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${allSelected.length !== 0 && 'push-up'}`}>
+        <a onClick={scrollToTop} className={`top-btn has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
           <i className="fa-solid fa-arrow-up fa-2x"></i>
         </a>
-        {allSelected.length !== 0 &&
+        {selectedExercise &&
           <>
             <form
-              onSubmit={handleSaveExercises}
-              className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
+              onSubmit={handleReplaceExercise}
+              className="add-clear-exercises-mobile message is-hidden-desktop is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
               <ul>
-                {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
+                <li>{selectedExercise.name}</li>
               </ul>
               <button
                 type="submit"
                 className='primary-button add-exercises-btn button is-size-6 my-3'>
-                Add all
-              </button>
-              <button
-                onClick={clearExercises}
-                type="button"
-                className='clear-btn button is-white is-size-6 my-3'>
-                Clear
+                Replace
               </button>
             </form>
-            <div
-              className='exercises-container-desktop is-two-fifths is-hidden-touch has-background-white'>
-              <button
-                onClick={toggleExerciseDisplay}
-                className='toggle-show-exercises-desktop is-size-5 px-2 py-3'>
-                Selected Exercises
-                <i className={`exer-chevron mr-2 mt-1 fa-solid ${expandExercisesDisplay ? 'fa-chevron-left' : 'fa-chevron-down'}`}></i>
-              </button>
-              <form
-                onSubmit={handleSaveExercises}
-                className={`exercise-form-desktop is-flex is-flex-direction-row is-justify-content-space-evenly is-flex-wrap-wrap ${!expandExercisesDisplay && 'collapse'}`}>
-                <p className="my-2">Total Exercises: {allSelected.length}</p>
-                <ul className="exercise-list mx-4 is-size-6">
-                  {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
-                </ul>
-                <button type="submit"
-                  className='primary-button add-exercises-btn button m-2 is-size-6'>
-                  Add all
-                </button>
-                <button
-                  onClick={clearExercises}
-                  type="button"
-                  className='clear-btn button is-white m-2 is-size-6'>
-                  Clear
-                </button>
-              </form>
-            </div>
           </>
         }
       </>
