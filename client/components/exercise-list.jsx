@@ -48,9 +48,12 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
-    if (!selectedExercise) return;
-    if (selectedExercise === null) setSelected(false);
-  }, [setSelected, exerciseId, selectedExercise]);
+    if (selectedExercise === null || selectedExercise.exerciseId !== exerciseId) {
+      setSelected(false);
+    } else if (selectedExercise.exerciseId === exerciseId) {
+      setSelected(true);
+    }
+  }, [selectedExercise, setSelected, exerciseId]);
 
   function getEquipment() {
     if (equipment === null) {
@@ -61,10 +64,9 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   }
 
   function handleClick() {
-    // case 1: clicked new exercise
     if (!isSelected) {
       setSelected(true);
-      setSelectedExercise({ exerciseId, name }); // EXERCISE OBJ
+      setSelectedExercise({ exerciseId, name });
     } else {
       setSelected(false);
       setSelectedExercise(null);
