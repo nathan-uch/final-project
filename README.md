@@ -11,14 +11,13 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 Try the live app at [https://striveworkout.app/](https://striveworkout.app/)
 
 ## Technologies Used:
+* JavaScript
 * React.js
 * Webpack
 * Node.js
 * Express.js
 * PostgreSQL
-* JavaScript
-* HTML5
-* CSS3
+* HTML5, CSS3
 * Bulma.io
 * Dokku
 
