@@ -5,10 +5,11 @@ body {
 .primary-button {
   font-family: inherit;
   background-color: #ffe247;
+  color: black;
   border: none;
   border-radius: 6px;
   box-shadow:
-    0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+    0 0.5em 1em -0.125em rgb(10 10 10 / 30%),
     0 0 0 1px rgb(10 10 10 / 6%);
 }
 
@@ -16,80 +17,26 @@ body {
   transform: scale(0.95);
 }
 
+.primary-button:hover {
+  background-color: #ffed86;
+}
+
 /* AUTH */
 
-.auth-body {
-  height: 100%;
-  min-height: 100vh;
-  color: #ffe247;
-  padding-top: 6rem;
-}
-
-.auth-logo {
-  min-width: 240px;
-  height: 100px;
-}
-
 .auth-logo-img {
-  position: absolute;
-  top: 0;
-  left: -16px;
   z-index: 1;
   animation: auth-fire 2.5s ease-out;
 }
 
 .auth-logo-text {
-  position: absolute;
   z-index: 2;
-  font-size: 3.5rem;
-  letter-spacing: 1.2rem;
+  letter-spacing: 1rem;
   animation: auth-logo 1s ease-out;
 }
 
 .auth-logo-subtext {
-  min-width: 264.5px;
-  position: absolute;
   z-index: 2;
-  bottom: 0;
   animation: auth-logo 1s ease-out;
-}
-
-.auth-form {
-  width: 250px;
-}
-
-.alt-anchor {
-  color: #ffe247;
-  text-decoration: underline;
-}
-
-.alt-anchor:hover {
-  color: #dc2626;
-}
-
-.auth-error-message,
-.auth-success-message {
-  position: relative;
-  min-width: 300px;
-  border-radius: 6px;
-}
-
-.auth-error-message {
-  color: #dc2627;
-  border: 2px solid #dc2627;
-}
-
-.auth-success-message {
-  color: #419552;
-  border: 2px solid #419552;
-}
-
-.fa-check {
-  color: #dbdbdb;
-}
-
-.auth-success-message .fa-check {
-  color: inherit;
 }
 
 /* NAVBAR */
