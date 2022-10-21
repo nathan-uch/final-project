@@ -20,7 +20,7 @@ Try the live app at [https://striveworkout.app/](https://striveworkout.app/)
 * HTML5
 * CSS3
 * Bulma.io
-* Heroku
+* Dokku
 
 ## Features:
 * User can create workout
