@@ -36,8 +36,8 @@ Try the live app at [https://striveworkout.app/](https://striveworkout.app/)
 ![STRIVE Preview](/server/public/assets/preview.gif)
 
 ## Future Features:
+* ~~User can replace exercises in workout~~
 * User can create workout templates (presaved exercises)
-* User can replace exercises in workout
 * User can add notes to exercises
 
 # Development
