@@ -75,7 +75,7 @@ function AuthForm({ existingUsernames, path }) {
         <>
           <button
               type="submit"
-              className="mt-3 py-3 px-4 primary-button is-size-5">
+            className="mt-3 py-3 px-6 primary-button is-size-5 text-black">
               Sign In
             </button>
           <div>
@@ -89,7 +89,7 @@ function AuthForm({ existingUsernames, path }) {
         <div>
           <button
             type="submit"
-            className="mt-3 py-3 px-4 primary-button is-size-5">
+            className="mt-3 py-3 px-4 primary-button is-size-5 text-black">
             Sign Up
           </button>
           <p className="is-inline is-size-5 mx-5">or </p>
