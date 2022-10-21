@@ -67,7 +67,7 @@ export default function UserProfile() {
   return (
     <div className='has-text-centered is-flex is-flex-direction-column user-profile'>
       <div className="card center user-info">
-        <div className="card-content">
+        <div className="card-content bg-black text-yellow-400">
           <h3 className="is-size-3 profile-username">{user.username}</h3>
           <p>Total Workouts: {workouts && workouts.length}</p>
           {workouts !== null && workouts.length === 0 &&
