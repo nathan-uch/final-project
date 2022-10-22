@@ -40,61 +40,6 @@ body {
 }
 
 /* NAVBAR */
-.navbar {
-  min-height: 60px;
-}
-
-.logo-img {
-  position: absolute;
-  min-height: 40px;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  object-fit: contain;
-}
-
-.logo-text {
-  position: absolute;
-  top: 20px;
-  left: 30px;
-  color: #ffe247;
-  letter-spacing: 0.6rem;
-  text-decoration: none;
-  z-index: 2;
-}
-
-.desktop-links {
-  margin-left: 10rem;
-}
-
-.top-links {
-  z-index: 3;
-  color: #ffe247;
-  letter-spacing: 0.2rem;
-}
-
-.top-links:focus-within,
-.fa-arrow-right-from-bracket {
-  color: #ffe247 !important;
-}
-
-.top-links:hover,
-.fa-arrow-right-from-bracket:hover {
-  color: #dc2626 !important;
-}
-
-.fa-arrow-right-from-bracket:link,
-.fa-arrow-right-from-bracket:active,
-.fa-arrow-right-from-bracket:visited {
-  text-decoration: none;
-}
-
-.navbar-menu,
-.navbar-item:focus-within,
-a.navbar-item:hover {
-  background-color: hsl(0deg, 0%, 4%) !important;
-}
-
 .bot-navbar-icon {
   width: 50px;
   min-height: 45px;
@@ -108,22 +53,6 @@ a.navbar-item:hover {
 .nav-user-icon {
   width: 35px !important;
   height: auto !important;
-}
-
-.signout-btn {
-  background-color: black;
-  border: none;
-  cursor: pointer;
-}
-
-.signout-pop-btn {
-  position: absolute;
-  top: 40px;
-}
-
-.signout-pop-btn:hover {
-  color: white !important;
-  background-color: #ff3860 !important;
 }
 
 /* BODY CONTAINER */
@@ -460,9 +389,10 @@ a {
   color: #ffe247;
 }
 
+/*
 .hidden {
   display: none;
-}
+} */
 
 /* USER PROFILE */
 
