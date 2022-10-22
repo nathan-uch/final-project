@@ -39,22 +39,6 @@ body {
   animation: auth-logo 1s ease-out;
 }
 
-/* NAVBAR */
-.bot-navbar-icon {
-  width: 50px;
-  min-height: 45px;
-  object-fit: contain;
-}
-
-.chart-icon {
-  width: 35px;
-}
-
-.nav-user-icon {
-  width: 35px !important;
-  height: auto !important;
-}
-
 /* BODY CONTAINER */
 
 a {

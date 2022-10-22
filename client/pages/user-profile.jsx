@@ -18,8 +18,8 @@ function WorkoutCard({ index, workout, workoutId }) {
   return (
     <div className=" w-[95%] min-w-[290px] max-w-[500px] bg-gray-200 mx-auto py-2 rounded-md shadow-xl">
       <div className="py-1 px-0">
-        <h4 className="font-bold text-xl">Workout {wId}</h4>
-        <p className='pb-3'>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
+        <h4 className="font-bold text-xl mt-3">Workout {wId}</h4>
+        <p className='mb-5'>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
         <table className="table-fixed text-left w-full bg-gray-200">
           <thead>
             <tr>
