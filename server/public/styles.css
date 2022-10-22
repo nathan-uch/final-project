@@ -466,20 +466,6 @@ a {
 
 /* USER PROFILE */
 
-.user-profile {
-  margin: 75px 0;
-}
-
-.user-info {
-  margin: 0 auto;
-  width: 60%;
-  min-width: 290px;
-}
-
-.exercise-col {
-  max-width: 205px;
-}
-
 .no-workout-msg {
   color: #4a4a4a;
 }
@@ -650,33 +636,8 @@ a.no-workout-msg:hover {
 }
 
 @media screen and (min-width: 1024px) {
-  .user-profile {
-    min-height: 100vh;
-    flex-direction: row !important;
-    margin-top: 65px;
-    margin-bottom: 0;
-  }
-
-  .user-info {
-    flex-basis: 30%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    box-shadow:
-      0 0.5em 1em -0.125em rgb(10 10 10 / 30%),
-      0 0 0 1px rgb(10 10 10 / 10%);
-  }
-
   .profile-body {
     flex-basis: 70%;
-  }
-
-  .card-content {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .profile-username {
-    margin-top: 2rem;
   }
 
   .letter-container {

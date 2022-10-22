@@ -7,7 +7,8 @@ module.exports = {
     extend: {
       colors: {
         priYellow: '#ffe247',
-        priRed: '#dc2627'
+        priRed: '#dc2627',
+        priGrey: '#4a4a4a'
       }
     }
   },
