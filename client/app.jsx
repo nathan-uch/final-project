@@ -11,7 +11,7 @@ import ErrorPage from '../client/pages/error';
 import AuthPage from '../client/pages/auth';
 import FrequencyChart from '../client/pages/charts';
 import AppContext from '../client/lib/app-context';
-import Redirect from '../client/components/redirect';
+import Redirect from '../client/lib/redirect';
 
 export default function App() {
   const [curRoute, setRoute] = useState(parseRoute(window.location.hash));

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
-import Redirect from '../components/redirect';
+import Redirect from '../lib/redirect';
 
 function AuthForm({ existingUsernames, path }) {
   const [userInfo, setUserInfo] = useState({

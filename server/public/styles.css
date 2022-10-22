@@ -392,15 +392,6 @@ a.no-workout-msg:hover {
   border-right: 2px solid #7c7c7c;
 }
 
-/* CHARTS */
-
-.chart-container {
-  width: 95%;
-  min-height: 300px;
-  border: 1px solid black;
-  border-radius: 6px;
-}
-
 /* ERROR PAGE */
 
 .error-page {
@@ -584,10 +575,5 @@ a.no-workout-msg:hover {
     margin: 0 2px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-  }
-
-  .chart-container {
-    width: 70%;
-    min-height: 400px;
   }
 }
