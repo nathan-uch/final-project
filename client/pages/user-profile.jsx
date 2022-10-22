@@ -65,8 +65,8 @@ export default function UserProfile() {
   }, [accessToken]);
 
   return (
-    <div className='text-center flex flex-col md:flex-row md:min-h-screen py-[80px]'>
-      <div className="w-[60%] min-w-[290px] mx-auto md:w-[30%] md:min-h-screen md:h-full py-5 shadow-xl rounded-md">
+    <div className='text-center flex flex-col md:flex-row md:min-h-screen py-[80px] md:pb-0 md:pt-[64px]'>
+      <div className="w-[60%] min-w-[290px] mx-auto md:w-[30%] md:min-h-screen md:h-full py-5 shadow-xl rounded-md md:pb-[80px]">
         <h3 className="text-4xl">{user.username}</h3>
         <p className='block my-3'>Total Workouts: {workouts && workouts.length}</p>
         {workouts !== null && workouts.length === 0 &&

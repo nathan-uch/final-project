@@ -636,10 +636,6 @@ a.no-workout-msg:hover {
 }
 
 @media screen and (min-width: 1024px) {
-  .profile-body {
-    flex-basis: 70%;
-  }
-
   .letter-container {
     width: 40%;
   }
