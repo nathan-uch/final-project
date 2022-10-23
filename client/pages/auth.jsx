@@ -50,7 +50,7 @@ function AuthForm({ existingUsernames, path }) {
           setAction({ ...action, message: 'success' });
           setTimeout(() => {
             window.location.hash = 'sign-in';
-          }, 2500);
+          }, 3000);
         })
         .catch(err => console.error('ERROR:', err));
 
@@ -80,7 +80,7 @@ function AuthForm({ existingUsernames, path }) {
         <>
           <button
               type="submit"
-              className='primary-button mt-4 py-3 px-6 text font-bold text-xl'>
+              className='primary-button w-[90%] max-w-[240px] mt-4 py-2 text font-bold text-xl'>
               Sign In
             </button>
           <div>
@@ -90,17 +90,21 @@ function AuthForm({ existingUsernames, path }) {
         </>
       );
     } else if (action.type === 'sign-up') {
-      return (
-        <div>
-          <button
-            type="submit"
-            className="primary-button mt-4 py-3 px-3 text font-bold text-xl">
-            Sign Up
-          </button>
-          <p className="inline text-xl mx-5">or </p>
-          <a href="#sign-in" className='text-xl underline text-priYellow hover:text-priRed'>Sign in</a>
-        </div>
-      );
+      if (action.message === 'success') {
+        return <LoadingRing />;
+      } else {
+        return (
+          <div>
+            <button
+              type="submit"
+              className="primary-button mt-4 py-3 px-3 text font-bold text-xl">
+              Sign Up
+            </button>
+            <p className="inline text-xl mx-5">or </p>
+            <a href="#sign-in" className='text-xl underline text-priYellow hover:text-priRed'>Sign in</a>
+          </div>
+        );
+      }
     }
   }
 
@@ -115,7 +119,7 @@ function AuthForm({ existingUsernames, path }) {
     } else if (action.type === 'sign-up' && action.message === 'success') {
       return (
         <>
-          <p className="mt-3 text-red-500"> Please wait, redirecting...</p >
+          <p className="mt-3 text-green-500"> Please wait, redirecting...</p >
           <div className='flex justify-around items-center text-sm relative w-[220px] my-5 p-3 font-bold bg-green-100 text-[#419552] rounded-md border-[#419552] border-2'>
             <i className="fa-solid fa-check fa-xl mx-2 color-[#419552] "></i>
             <p>Account created!<br />Ready to STRVE!</p>
@@ -179,15 +183,14 @@ export default function AuthPage() {
   if (user) return <Redirect to='' />;
 
   return (
-    <div className="h-full min-h-screen bg-black text-center flex flex-col items-center text-priYellow pt-16">
-      <div className="auth-logo-img relative min-w-[240px] h-[100px] mx-auto mb-2">
-        <figure className="absolute -top-[9px] -left-[15px] h-[64px] w-[64px]">
+    <div className="h-full min-h-screen bg-black text-center flex flex-col items-center text-priYellow pt-14">
+      <div className="relative min-w-[340px] h-[100px] mx-auto mb-2">
+        <figure className="auth-logo-img absolute -top-[9px] left-0 right-0 mx-auto h-[65px] w-[220px]">
           <img
-            src="images/flame-red.png"
-            alt="logo icon" />
+            src="images/strive-logo.png"
+            alt="logo icon"/>
         </figure>
-        <h1 className="auth-logo-text absolute text-6xl">Strive</h1>
-        <h2 className="auth-logo-subtext absolute bottom-0 min-w-[265px] text-xl">Workout Tracker</h2>
+        <h2 className="auth-logo-subtext absolute bottom-0 min-w-[220px] text-xl left-0 right-0 mx-auto">Workout Tracker</h2>
       </div>
       <h3 className="text-3xl my-5">{curRoute.path === 'sign-up' ? 'Sign Up' : 'Sign In'}</h3>
       {existingUsernames

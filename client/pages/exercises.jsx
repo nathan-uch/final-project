@@ -265,7 +265,7 @@ export default function Exercises(props) {
                 </button>
                 <form
                   onSubmit={handleSaveExercises}
-                  className={`flex flex-col justify-evenly flex-wrap border border-black ${!expandExercisesDisplay && 'collapse'}`}>
+              className={`flex flex-col justify-evenly flex-nowrap border border-black overflow-hidden ease-in duration-200 ${!expandExercisesDisplay ? 'max-h-0' : 'max-h-[225px]'}`}>
                   <p className="my-2 underline">Total Exercises: {allSelected.length}</p>
                   <ul className="max-h-[100px] is-size-6 overflow-y-scroll">
                     {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}

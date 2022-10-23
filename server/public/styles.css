@@ -21,30 +21,21 @@ body {
   background-color: #ffed86;
 }
 
-/* LOGO IN AUTH PAGE AND ANIMATIONNNN */
 .auth-logo-img {
-  z-index: 1;
-  animation: auth-fire 2.5s ease-out;
-}
-
-.auth-logo-text {
-  z-index: 2;
-  letter-spacing: 1rem;
-  animation: auth-logo 1s ease-out;
+  animation: auth-fire 1s ease-out;
 }
 
 .auth-logo-subtext {
-  z-index: 2;
-  animation: auth-logo 1s ease-out;
+  animation: auth-text 2s forwards;
+  animation-delay: 1s;
+  opacity: 0;
 }
 
-.collapse {
-  max-height: 0;
-  overflow: hidden;
+.height-transition {
+  transition: max-height 1s ease-in;
 }
 
 /* LOADING SPINNER */
-
 .lds-roller {
   display: inline-block;
   position: relative;
@@ -150,9 +141,9 @@ body {
   }
 }
 
-@keyframes auth-logo {
+@keyframes auth-text {
   0% {
-    transform: translateY(-100%);
+    transform: translateY(-50%);
     opacity: 0%;
   }
 
@@ -168,7 +159,7 @@ body {
   }
 
   95% {
-    transform: scale(1.3);
+    transform: scale(1.2);
     opacity: 95%;
   }
 
