@@ -16,7 +16,7 @@ function WorkoutCard({ index, workout, workoutId }) {
   const date = new Date(workout[wId][0].completedAt);
 
   return (
-    <div className=" w-[95%] min-w-[290px] max-w-[500px] bg-gray-200 mx-auto py-2 rounded-md shadow-xl">
+    <div className=" w-[95%] min-w-[290px] max-w-[500px] bg-gray-200 mx-auto my-6 py-2 rounded-md shadow-xl">
       <div className="py-1 px-0">
         <h4 className="font-bold text-xl mt-3">Workout {wId}</h4>
         <p className='mb-5'>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>

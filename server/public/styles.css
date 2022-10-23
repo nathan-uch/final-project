@@ -21,8 +21,7 @@ body {
   background-color: #ffed86;
 }
 
-/* AUTH */
-
+/* LOGO IN AUTH PAGE AND ANIMATIONNNN */
 .auth-logo-img {
   z-index: 1;
   animation: auth-fire 2.5s ease-out;
@@ -38,8 +37,6 @@ body {
   z-index: 2;
   animation: auth-logo 1s ease-out;
 }
-
-/* EXERCISES PAGE */
 
 .collapse {
   max-height: 0;
