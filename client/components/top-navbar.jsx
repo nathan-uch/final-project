@@ -10,7 +10,7 @@ export default function TopNavbar() {
   }
 
   return (
-    <nav className="fixed z-10 top-0 min-h-[60px] w-screen px-5 flex items-center flex-row flex-nowrap justify-between bg-black"
+    <nav className="fixed z-20 top-0 min-h-[60px] w-screen px-5 flex items-center flex-row flex-nowrap justify-between bg-black"
     role="navigation" aria-label="main navigation">
       <div className='flex w-[95%] justify-between mr-6'>
         <a href="#">

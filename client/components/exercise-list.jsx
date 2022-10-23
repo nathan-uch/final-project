@@ -131,7 +131,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
   }
 
   return (
-    <div className="is-relative has-text-centered">
+    <div className="is-relative has-text-centered pb-6 px-2">
       {isLoading
         ? <LoadingRing />
         : <>
@@ -139,8 +139,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
             onChange={handleSearch}
             type="search"
             className="exercise-searchbox is-block mx-auto mb-6 py-2 px-4 is-size-5"
-            placeholder="Search exercises"
-          />
+            placeholder="Search exercises" />
           {searchValue === ''
             ? <>
               <div className="alphabet-container mb-5 columns is-flex is-flex-wrap-wrap is-justify-content-center">

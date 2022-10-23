@@ -3,65 +3,86 @@ import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 import ExerciseList from '../components/exercise-list';
 
-function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
-  const [reps, setReps] = useState(0);
-  const [weight, setWeight] = useState(0);
+function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
+  const [isOpen, setOpenClose] = useState(false);
+  const { accessToken } = useContext(AppContext);
 
-  function toggleSetDone() {
-    if (!reps) {
-      return false;
-    }
-    const updatedDoneValue = exerciseSets.map((set, index) => {
-      if (setIndex === index) {
-        return !isDone ? { ...set, isDone: true, reps, weight } : { ...set, isDone: false };
-      }
-      return set;
-    });
-    setSets(updatedDoneValue);
+  function toggleSaveModal() {
+    setOpenClose(!isOpen);
   }
 
-  function repsChange(e) {
-    setReps(Math.round(e.target.value));
-  }
-
-  function weightChange(e) {
-    setWeight(Math.round(e.target.value * 10) / 10);
-  }
-
-  function handleSubmit(e) {
+  function saveWorkout(e) {
     e.preventDefault();
-    updateWorkout();
+    toggleSaveModal();
+    const finalWorkout = workout;
+    const deleteExercises = [];
+    const finalExercises = [];
+    for (let i = 0; i < workout.exercises.length; i++) {
+      if (workout.exercises[i].sets.length === 1 && !workout.exercises[i].sets[0].isDone) {
+        deleteExercises.push(workout.exercises[i].exerciseId);
+      } else {
+        finalExercises.push(workout.exercises[i]);
+      }
+    }
+
+    finalExercises.forEach(exercise => {
+      exercise.sets.forEach((set, index) => {
+        set.setOrder = index + 1;
+      });
+    });
+
+    finalWorkout.exercises = finalExercises;
+    deleteExercise(deleteExercises);
+
+    fetch(`/api/workout/${workout.workoutId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      },
+      body: JSON.stringify(finalWorkout)
+    })
+      .catch(err => console.error('ERROR:', err));
+
+    fetch(`/api/workout/${workout.workoutId}/completed-time`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': accessToken
+      }
+    })
+      .then(result => { window.location.hash = 'user-profile'; })
+      .catch(err => console.error('ERROR:', err));
   }
 
   return (
-    <form onSubmit={handleSubmit}
-      className="set-form mb-2 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
-      <p className="mx-3 is-size-4 set-num">{setOrder}</p>
-      {!isDone
-        ? <input
-            required={true}
-            type="number"
-            min="1"
-            value={reps}
-            onChange={repsChange}
-            className="mx-2 reps-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-        : <p className="reps-value is-size-4 mr-3">{reps}</p>}
-      {!isDone
-        ? <input
-            type="number"
-            min="0"
-            value={weight}
-            onChange={weightChange}
-            className="mx-2 weight-input has-text-centered is-size-4 py-2 has-background-grey-lighter" />
-        : <p className="weight-value is-size-4 mr-3">{weight}</p>
-      }
+    <>
       <button
-        href="#"
-        className="set-done-btn has-background-white"
-        onClick={toggleSetDone}
-        type="submit">
-        <i className={`fa-solid fa-check fa-3x mx-4 ${isDone ? 'done-check' : 'unselected-check'}`}></i></button>
-    </form>
+        type="button"
+        className="primary-button h-[40px] mt-3 px-6"
+        onClick={toggleSaveModal}>Save Workout</button>
+      <div className={`z-10 h-full w-full ${isOpen ? 'fixed' : 'hidden'}`} >
+        <form onSubmit={saveWorkout}>
+          <div
+            className="absolute w-full h-full bg-modalGrey"
+            onClick={toggleSaveModal}>
+          </div>
+          <div className='relative w-[90%] max-w-[400px] bg-white p-3 mx-auto'>
+            <p className="text-2xl">Do you want to save this workout?</p>
+            <p className='text-xl text-priRed my-3'>
+              Sets that are not marked &apos;done&apos; won&apos;t be saved
+            </p>
+            <button
+              type="submit"
+              className="primary-button h-[40px] w-[40%] m-3">Save</button>
+            <button
+              type="button"
+              className="h-[40px] w-[40%] border border-gray-300 m-3 shadow-xl rounded-md"
+              onClick={toggleSaveModal}>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
 
@@ -117,31 +138,34 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
   return (
     <>
       {replaceModalIsOpen &&
-        <div className={`modal ${replaceModalIsOpen && 'is-active'}`} >
+        <div
+          className={`z-10 h-screen w-full ${replaceModalIsOpen ? 'fixed' : 'hidden'}`} >
           <div
-            className="modal-background"
-            onClick={toggleReplaceModal}>
-          </div>
-          <div ref={modalRef} className='modal-content has-background-white p-3 replace-modal'>
-            <div className='is-size-3 has-text-weight-bold mb-4'>
-              {`Replace: ${exerToReplace.name}`}
+            className="absolute w-full h-full bg-modalGrey"
+            onClick={toggleReplaceModal} />
+          <div ref={modalRef} className={`relative h-[85%] max-h-[1000px] w-[97%] max-w-[800px] pt-4 mt-4 mx-auto md:mt-6 bg-white rounded-md overflow-x-hidden overflow-y-scroll ${selectedExercise ? 'pb-[5rem]' : 'pb-[2rem]'}`}>
+            <div className='text-2xl font-bold mb-2'>
+              <p className='block mb-0 text-2xl'>Replace</p>
+              <p className='text-2xl'>{exerToReplace.name}</p>
             </div>
             <ExerciseList
               selectedExercise={selectedExercise}
               setSelectedExercise={setSelectedExercise}
             />
-            <a onClick={scrollToTop} className={`top-btn-replace has-background-black py-2 px-3 ${selectedExercise && 'push-up'}`}>
+            <a
+              onClick={scrollToTop}
+              className={`md:bottom-[120px] right-[5px] md:right-[10%] border border-white h-[50px] fixed text-priYellow active:text-priRed hover:text-priRed rounded-md bg-black py-2 px-3 ${selectedExercise ? 'bottom-[140px]' : 'bottom-[65px]'}`}>
               <i className="fa-solid fa-arrow-up fa-2x"></i>
             </a>
             {selectedExercise &&
               <form
                 onSubmit={handleReplaceExercise}
-                className="replace-exercise-mobile message is-flex is-align-items-center is-flex-direction-column is-flex-wrap-nowrap is-justify-content-space-evenly has-background-grey-lighter">
-                <p className="has-text-weight-bold is-size-4 mt-2">{selectedExercise.name}</p>
-                <div className='is-fullwidth'>
+                className="fixed w-full max-w-[800px] bottom-[50px] md:left-0 md:right-0 md:bottom-0 md:mx-auto left-0 flex items-center flex-col flex-nowrap justify-evenly bg-gray-200 border-t-2 border-white">
+                <p className="font-bold text-xl mt-1 md:py-2">{selectedExercise.name}</p>
+                <div className='w-full pb-4 flex flex-row justify-evenly'>
                   <button
                     type="submit"
-                    className='primary-button add-exercises-btn button is-size-6 my-3'>
+                    className='primary-button w-[45%] max-w-[200px] h-[35px] text-base shadow-xl'>
                     Replace
                   </button>
                   <button
@@ -150,7 +174,7 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
                       setSelectedExercise(null);
                       toggleReplaceModal();
                     }}
-                    className='clear-btn button is-white m-3 is-size-6 is-relative' >
+                    className='relative w-[40%] max-w-[200px] h-[35px] is-white bg-white rounded-md text-base shadow-xl' >
                     Cancel</button>
                 </div>
               </form>
@@ -159,6 +183,68 @@ function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToRe
         </div>
       }
     </>
+  );
+}
+
+function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout }) {
+  const [reps, setReps] = useState(0);
+  const [weight, setWeight] = useState(0);
+
+  function toggleSetDone() {
+    if (!reps) {
+      return false;
+    }
+    const updatedDoneValue = exerciseSets.map((set, index) => {
+      if (setIndex === index) {
+        return !isDone ? { ...set, isDone: true, reps, weight } : { ...set, isDone: false };
+      }
+      return set;
+    });
+    setSets(updatedDoneValue);
+  }
+
+  function repsChange(e) {
+    setReps(Math.round(e.target.value));
+  }
+
+  function weightChange(e) {
+    setWeight(Math.round(e.target.value * 10) / 10);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    updateWorkout();
+  }
+
+  return (
+    <form onSubmit={handleSubmit}
+      className="h-[45px] mb-1 text-center flex justify-between items-center content-start">
+      <p className="mx-1 text-2xl min-w-[25px] font-bold">{setOrder}</p>
+      {!isDone
+        ? <input
+            required={true}
+            type="number"
+            min="1"
+            value={reps}
+            onChange={repsChange}
+            className="w-[50px] md:w-[90px] h-[40px] rounded-md border-0 text-center text-2xl py-1 mx-2 bg-gray-100" />
+        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{reps}</p>}
+      {!isDone
+        ? <input
+            type="number"
+            min="0"
+            value={weight}
+            onChange={weightChange}
+            className="w-[50px] md:w-[90px] h-[40px] rounded-md border-0 text-center text-2xl py-1 mx-2 bg-gray-100" />
+        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{weight}</p>
+      }
+      <button
+        href="#"
+        className="cursor-pointer border-0 bg-white"
+        onClick={toggleSetDone}
+        type="submit">
+        <i className={`fa-solid fa-check fa-2x mx-4 ${isDone ? 'text-amber-400' : 'mt-[0.3rem]'}`}></i></button>
+    </form>
   );
 }
 
@@ -201,29 +287,31 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
   }
 
   return (
-    <div className="card mb-6">
-      <div className="card-header has-background-black exercise-head is-relative">
-        <h3 className="exercise-name card-header-title has-text-weight-semibold is-size-4 is-justify-content-center">
+    <div className="w-[98%] min-w-[270px] max-w-[500px] rounded-md shadow-xl mb-5 mx-auto">
+      <div className="relative bg-black rounded-t-md">
+        <h3 className="font-semibold text-2xl text-priYellow py-2 justify-center">
           {exercise.name}</h3>
-        <button type="button" className="delete-exercise-btn button is-large has-background-black"
-          onClick={openDelete}>...</button>
-        <div className={`is-flex-direction-column ${!exerOptionsIsOpen ? 'hidden' : 'is-flex'} pop-exer-options`}>
+        <button type="button" className="absolute right-0 bottom-0 py-3 px-4 border-0 is-large rounded-t-md has-background-black"
+          onClick={openDelete}>
+            <i className="fa-solid fa-ellipsis-vertical fa-xl text-priYellow" />
+          </button>
+        <div className={`absolute right-0 -bottom-[81px] border border-black rounded-b-md flex-col ${!exerOptionsIsOpen ? 'hidden' : 'flex'}`}>
           <button type="button"
-            className='replace-exer-btn button is-white has-text-weight-bold'
+            className='bg-white p-2 font-bold hover:bg-gray-200'
             onClick={replaceExercise}>
             Replace
           </button>
           <button type="button"
-            className='pop-delete-btn button is-white has-text-danger has-text-weight-bold'
+            className='p-2 text-priRed bg-white font-bold rounded-b-md hover:bg-priRed hover:text-white'
             onClick={confirmDelete}>Delete</button>
         </div>
       </div>
-      <div className="card-content pt-3 pb-0">
-        <div className="mb-4 has-text-centered is-flex is-justify-content-space-between is-align-content-flex-start">
-          <p className="mx-3 sets-title is-inline is-size-5 has-text-weight-semibold">Set</p>
-          <p className="mx-3 reps-title is-inline is-size-5 has-text-weight-semibold">Reps</p>
-          <p className="mx-3 weight-title is-inline is-size-5 has-text-weight-semibold">Weight (lb)</p>
-          <p className="mx-3 exer-done-title is-inline is-size-5 has-text-weight-semibold">Done</p>
+      <div className="px-1 pt-3 pb-0">
+        <div className="mb-4 text-center flex justify-between content-start">
+          <p className="mx-2 inline text-lg font-semibold">Set</p>
+          <p className="mx-2 inline text-lg font-semibold">Reps</p>
+          <p className="mx-2 inline text-lg font-semibold">Weight (lb)</p>
+          <p className="mx-2 inline text-lg font-semibold">Done</p>
         </div>
         {exerciseSets.map((set, index) =>
           <Set
@@ -236,95 +324,12 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
             updateWorkout={updateWorkout} />
         )}
       </div>
-      <div className="card-footer">
+      <div>
         <button type="button"
           onClick={addNewSet}
-          className="add-set-btn button is-size-5 my-2 has-background-grey-lighter">Add set</button>
+          className="w-[95%] h-[35px] mx-auto my-0 text-lg my-2 mb-2 bg-gray-200 text-black rounded-md active:scale-95">Add set</button>
       </div>
     </div>
-  );
-}
-
-function SaveWorkoutModal({ workout, deleteExercise, setWorkout }) {
-  const [isOpen, setOpenClose] = useState(false);
-  const { accessToken } = useContext(AppContext);
-
-  function toggleModal() {
-    setOpenClose(!isOpen);
-  }
-
-  function saveWorkout(e) {
-    e.preventDefault();
-    toggleModal();
-    const finalWorkout = workout;
-    const deleteExercises = [];
-    const finalExercises = [];
-    for (let i = 0; i < workout.exercises.length; i++) {
-      if (workout.exercises[i].sets.length === 1 && !workout.exercises[i].sets[0].isDone) {
-        deleteExercises.push(workout.exercises[i].exerciseId);
-      } else {
-        finalExercises.push(workout.exercises[i]);
-      }
-    }
-
-    finalExercises.forEach(exercise => {
-      exercise.sets.forEach((set, index) => {
-        set.setOrder = index + 1;
-      });
-    });
-
-    finalWorkout.exercises = finalExercises;
-    deleteExercise(deleteExercises);
-
-    fetch(`/api/workout/${workout.workoutId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Token': accessToken
-      },
-      body: JSON.stringify(finalWorkout)
-    })
-      .catch(err => console.error('ERROR:', err));
-
-    fetch(`/api/workout/${workout.workoutId}/completed-time`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Token': accessToken
-      }
-    })
-      .then(result => { window.location.hash = 'user-profile'; })
-      .catch(err => console.error('ERROR:', err));
-  }
-
-  return (
-    <>
-      <button
-        type="button"
-        className="primary-button save-workout-btn button is-medium mt-3 px-6"
-        onClick={toggleModal}>Save Workout</button>
-      <div className={`modal ${isOpen && 'is-active'}`} >
-        <form onSubmit={saveWorkout}>
-          <div
-            className="modal-background"
-            onClick={toggleModal}>
-          </div>
-          <div className='save-workout-modal modal-content has-background-white p-3'>
-            <p className="is-size-3">Do you want to save this workout?</p>
-            <p className='is-size-5 has-text-danger my-3'>
-              Sets that are not marked &apos;done&apos; won&apos;t be saved
-            </p>
-            <button
-              type="submit"
-              className="primary-button confirm-save-workout-btn button is-large m-3">Save</button>
-            <button
-              type="button"
-              className="cancel-save-workout-btn button is-large m-3"
-              onClick={toggleModal}>Cancel</button>
-          </div>
-        </form>
-      </div>
-    </>
   );
 }
 
@@ -362,35 +367,36 @@ export default function WorkoutPage() {
   }
 
   return (
-    <div className='body-container has-text-centered'>
-      <h3 className="is-size-3 has-text-weight-semibold">New Workout</h3>
-      <SaveWorkoutModal
-        workout={workout}
-        deleteExercise={deleteExercise}
-        setWorkout={setWorkout} />
-      <ReplaceExerciseModal
+    <>
+      <div className='pt-[60px] pb-[70px] text-center'>
+        <ReplaceExerciseModal
           exerToReplace={exerToReplace}
           replaceModalIsOpen={replaceModalIsOpen}
           setExerToReplace={setExerToReplace}
           setWorkout={setWorkout}
           toggleReplaceModal={toggleReplaceModal}
+          workout={workout} />
+        <h3 className="text-3xl font-semibold pt-4">New Workout</h3>
+        <SaveWorkoutModal
           workout={workout}
-          />
-      <div className='mt-5 is-flex is-align-items-center is-flex-direction-column'>
-        {!workout
-          ? <LoadingRing />
-          : workout.exercises.map((exercise, index) =>
-            <Exercise
-              key={index}
-              workoutId={workoutId}
-              exercise={exercise}
-              workout={workout}
-              setWorkout={setWorkout}
-              deleteExercise={deleteExercise}
-              setExerToReplace={setExerToReplace}
-              toggleReplaceModal={toggleReplaceModal} />
-          )}
+          deleteExercise={deleteExercise}
+          setWorkout={setWorkout} />
+        <div className='mt-5 flex items-center justify-center flex-col'>
+          {!workout
+            ? <LoadingRing />
+            : workout.exercises.map((exercise, index) =>
+              <Exercise
+                key={index}
+                workoutId={workoutId}
+                exercise={exercise}
+                workout={workout}
+                setWorkout={setWorkout}
+                deleteExercise={deleteExercise}
+                setExerToReplace={setExerToReplace}
+                toggleReplaceModal={toggleReplaceModal} />
+            )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

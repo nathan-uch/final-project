@@ -8,7 +8,8 @@ module.exports = {
       colors: {
         priYellow: '#ffe247',
         priRed: '#dc2627',
-        priGrey: '#4a4a4a'
+        priGrey: '#4a4a4a',
+        modalGrey: 'rgba(10, 10, 10, .86)'
       }
     }
   },

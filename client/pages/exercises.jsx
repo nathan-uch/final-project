@@ -26,12 +26,12 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
   }, [exercises, letter]);
 
   return (
-    <div className="w-full max-w-[900px] flex flex-col flex-nowrap items-center md:gap-x-4">
+    <div className="w-full md:w-[40%] max-w-[900px] flex flex-col flex-nowrap items-center md:gap-x-4 ">
       <p id={`${letter.toLowerCase()}`}
         className="w-full text-priYellow rounded-md scroll-mt-[65px] text-xl bg-black font-semibold py-1 mx-4 my-2">
         {letter}
       </p>
-      <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-2 justify-items-center'>
+      <div className='w-full grid grid-cols-1 gap-2 justify-items-center'>
         {filteredExer && filteredExer.map(exer =>
           <ExerciseCard
             key={exer.exerciseId}
@@ -203,7 +203,7 @@ export default function Exercises(props) {
                       <AlphabetButtons key={letter} letter={letter} />
                     )}
                   </div>
-                  <div className='max-w-[900px] flex flex-row md:flex-col flex-wrap justify-center items-center mx-auto'>
+                  <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start md:gap-x-4'>
                     {letters && letters.map(letter =>
                       <LetterSection
                         key={letter}
@@ -267,7 +267,7 @@ export default function Exercises(props) {
                   onSubmit={handleSaveExercises}
                   className={`flex flex-col justify-evenly flex-wrap border border-black ${!expandExercisesDisplay && 'collapse'}`}>
                   <p className="my-2 underline">Total Exercises: {allSelected.length}</p>
-                  <ul className="max-h-[100px] is-size-6 overflow-y-scroll overflow-x-hidden">
+                  <ul className="max-h-[100px] is-size-6 overflow-y-scroll">
                     {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
                   </ul>
                   <div className='h-[60px]'>

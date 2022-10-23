@@ -52,11 +52,6 @@ a {
 
 /* EXERCISES PAGE */
 
-.modal-content {
-  width: 70% !important;
-  max-width: 900px !important;
-}
-
 .exercise-searchbox {
   width: 70%;
   background-color: #dbdbdb;
@@ -230,16 +225,6 @@ a {
   border-radius: 6px;
 }
 
-.top-btn-replace {
-  right: 17%;
-  bottom: 0;
-}
-
-.top-btn {
-  bottom: 70px;
-  right: 5px;
-}
-
 .top-btn:hover,
 .top-btn-replace:hover {
   color: #dc2626;
@@ -250,11 +235,6 @@ a {
 }
 
 /* WORKOUT PAGE */
-
-.card {
-  width: 30rem;
-  min-width: 280px;
-}
 
 .exercise-head {
   border-top-left-radius: 6px;
@@ -297,20 +277,6 @@ a {
   padding-bottom: 6rem !important;
 }
 
-.pop-exer-options {
-  position: absolute;
-  right: 0;
-  bottom: -82px;
-  border: 2px solid black;
-  border-radius: 6px;
-}
-
-.replace-exer-btn:hover {
-  background-color: #c6c6c6 !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-
 .pop-delete-btn:hover {
   color: white !important;
   border-top-left-radius: 0 !important;
@@ -318,59 +284,14 @@ a {
   background-color: #f14668 !important;
 }
 
-.set-form {
-  height: 47px;
-}
-
-.reps-value,
-.weight-value {
-  height: 45px;
-  width: 90px;
-}
-
 .arrow {
   max-width: 35px;
-}
-
-.unselected-check {
-  margin-top: 0.3rem;
-}
-
-.sets-title,
-.reps-title,
-.weight-title,
-.exer-done-title,
-.set-num {
-  min-width: 30px;
-}
-
-.reps-input,
-.weight-input {
-  min-width: 60px;
-  max-width: 90px;
-  height: 45px;
-  border: none;
-  border-radius: 6px;
 }
 
 .add-set-btn {
   width: 90%;
   height: 35px;
   margin: 0 auto;
-}
-
-.card-footer {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.set-done-btn {
-  cursor: pointer;
-  border: none;
-}
-
-.done-check {
-  color: #ffe247;
 }
 
 /*
