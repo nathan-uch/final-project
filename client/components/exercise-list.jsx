@@ -10,7 +10,7 @@ function AlphabetButtons({ letter }) {
   }
 
   return (
-    <a onClick={handleScroll} className="letter-anchors has-background-black has-text-weight-bold py-1 px-2 is-size-5">{letter}</a>
+    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed bg-black font-bold py-1 px-2 text-xl rounded-md cursor-pointer">{letter}</a>
   );
 }
 
@@ -26,9 +26,9 @@ function LetterSection({ letter, exercises, setSelectedExercise, selectedExercis
   }, [exercises, letter]);
 
   return (
-    <div className="letter-container is-flex is-flex-direction-column is-align-items-center">
+    <div className="w-full flex flex-col items-center">
       <p id={`${letter.toLowerCase()}`}
-        className="letter-title py-1 my-1 mx-4 is-size-5 has-background-black has-text-weight-bold">
+        className="w-[95%] text-priYellow py-1 my-1 mx-auto text-xl bg-black font-bold rounded-md">
         {letter}
       </p>
       {filteredExer && filteredExer.map(exer =>
@@ -77,14 +77,14 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
     !isSelected
       ? <a
         onClick={handleClick}
-        className="exercise-card box has-background-grey-lighter column is-flex-direction-row is-flex-wrap-wrap has-text-centered p-1 mx-4 my-1">
-        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
+        className="w-[95%] h-[40px] border-2 border-white bg-gray-200 flex-row flex-wrap text-center p-1 mx-4 my-1 rounded-md cursor-pointer">
+        <p className="inline text-lg font-bold">{`${name} ${getEquipment()}`}</p>
       </a>
       : <a
         onClick={handleClick}
-        className="selected-exercise-card exercise-card box has-background-white column is-flex-direction-row is-flex-wrap-wrap has-text-centered p-1 mx-4 my-1">
-        <p className="title is-inline is-size-6">{`${name} ${getEquipment()}`}</p>
-        <i className='fa-solid fa-check fa mr-4 selected-check'></i>
+        className="relative w-[95%] h-[40px] bg-white flex-row flex-wrap rounded-md text-center p-1 mx-4 my-1 border-2 border-black cursor-pointer">
+        <p className="inline text-lg font-bold">{`${name} ${getEquipment()}`}</p>
+        <i className='fa-solid fa-check fa mr-4 fa-xl absolute top-[17px] right-[1px] text-amber-400'></i>
       </a>
   );
 }
@@ -131,23 +131,23 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
   }
 
   return (
-    <div className="is-relative has-text-centered pb-6 px-2">
+    <div className="relative text-center pb-6 px-2">
       {isLoading
         ? <LoadingRing />
         : <>
           <input
             onChange={handleSearch}
             type="search"
-            className="exercise-searchbox is-block mx-auto mb-6 py-2 px-4 is-size-5"
-            placeholder="Search exercises" />
+            className="w-[80%] max-w-[340px] block mx-auto mb-6 py-2 px-4 text-xl bg-gray-200 border border-black rounded-md"
+            placeholder="Search exercises..." />
           {searchValue === ''
             ? <>
-              <div className="alphabet-container mb-5 columns is-flex is-flex-wrap-wrap is-justify-content-center">
+              <div className="min-w-[270px] gap-1 mb-5 flex flex-wrap justify-center">
                 {letters && letters.map(letter =>
                   <AlphabetButtons key={letter} letter={letter} />
                 )}
               </div>
-              <div className='exercise-container columns is-flex-direction-row is-flex-wrap-wrap is-justify-content-center'>
+              <div className='md:flex-col flex-row flex-wrap justify-center'>
                 {letters && letters.map(letter =>
                   <LetterSection
                     key={letter}
@@ -159,7 +159,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
                 )}
               </div>
             </>
-            : <div className="search-results-container mx-auto mb-3">
+            : <div className="md:w-[300px] mx-auto mb-3">
               {searchResults.length !== 0 && searchResults.map(exer =>
                 <ExerciseCard
                   key={exer.exerciseId}
