@@ -1,110 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
-
-function AlphabetButtons({ letter }) {
-
-  function handleScroll() {
-    const section = document.getElementById(`${letter.toLowerCase()}`);
-    section.scrollIntoView({ block: 'start', behavior: 'smooth' });
-  }
-
-  return (
-    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed bg-black font-bold text-2xl py-1 px-2 rounded-md cursor-pointer">{letter}</a>
-  );
-}
-
-function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAll }) {
-  const [filteredExer, setFilteredExer] = useState(null);
-
-  useEffect(() => {
-    if (!exercises) return;
-    const filtered = exercises.filter(exercise =>
-      exercise.name[0] === letter
-    );
-    setFilteredExer(filtered);
-  }, [exercises, letter]);
-
-  return (
-    <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
-      <p id={`${letter.toLowerCase()}`}
-        className="w-full text-priYellow py-1 my-2 text-xl bg-black font-semibold rounded-md">
-        {letter}
-      </p>
-      <div className='w-full grid grid-cols-1 gap-1 justify-items-center'>
-        {filteredExer && filteredExer.map(exer =>
-          <ExerciseCard
-            key={exer.exerciseId}
-            exerciseId={exer.exerciseId}
-            name={exer.name}
-            setAllSelected={setAllSelected}
-            allSelected={allSelected}
-            clearAll={clearAll}
-            equipment={exer.equipment} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, exerciseId }) {
-  const [isSelected, setSelected] = useState(false);
-
-  useEffect(() => {
-    if (allSelected.length === 0) return;
-    allSelected.forEach(exer => {
-      if (exer.exerciseId === exerciseId) setSelected(true);
-    });
-  });
-
-  useEffect(() => {
-    if (clearAll) setSelected(false);
-  }, [clearAll]);
-
-  function getEquipment() {
-    if (equipment === null) {
-      return '';
-    } else {
-      return ' (' + equipment + ')';
-    }
-  }
-
-  function handleClick() {
-    if (!isSelected) {
-      setSelected(true);
-      setAllSelected([...allSelected, { name, exerciseId }]);
-    } else {
-      setSelected(false);
-      const updatedSelected = allSelected.filter(exer => exer.exerciseId !== exerciseId);
-      setAllSelected(updatedSelected);
-    }
-  }
-
-  return (
-    !isSelected
-      ? <a
-        onClick={handleClick}
-        className="w-full h-[35px] border-2 border-white bg-gray-200 rounded-md text-center p-1 cursor-pointer">
-        <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
-    </a>
-      : <a
-          onClick={handleClick}
-        className="relative w-full h-[35px] bg-amber-50 text-center p-1 border border-black rounded-md cursor-pointer">
-        <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
-        <i className='fa-solid fa-check mr-4 fa-lg absolute top-[16px] right-[5px] text-amber-400'></i>
-    </a>
-  );
-}
+import ExerciseList from '../components/exercise-list';
 
 export default function Exercises(props) {
-  const [exercises, setExercises] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-  const [searchValue, setSearchValue] = useState('');
-  const [searchResults, setSearchResult] = useState([]);
+  const [fullExerciseList, setFullExerciseList] = useState(null);
+  const [selectedExercises, setSelectedExercises] = useState([]);
   const [letters, setLetters] = useState(null);
-  const [allSelected, setAllSelected] = useState([]);
-  const [clearAll, setClearAll] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [expandExercisesDisplay, setDisplay] = useState(true);
+  const [clearAll, setClearAll] = useState(false);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   useEffect(() => {
@@ -113,22 +18,22 @@ export default function Exercises(props) {
     })
       .then(response => response.json())
       .then(result => {
-        setExercises(result);
+        setFullExerciseList(result);
         setLoading(false);
       })
       .catch(err => console.error('ERROR:', err));
-  }, [accessToken]);
+  }, [accessToken, setLoading, setFullExerciseList]);
 
   useEffect(() => {
+    if (!fullExerciseList) return;
     const letters = [];
-    if (!exercises) return;
-    exercises.forEach(exercise => {
+    fullExerciseList.forEach(exercise => {
       if (!letters.includes(exercise.name[0])) {
         letters.push(exercise.name[0]);
       }
     });
     setLetters(letters);
-  }, [exercises]);
+  }, [fullExerciseList]);
 
   useEffect(() => {
     setClearAll(false);
@@ -137,10 +42,10 @@ export default function Exercises(props) {
   function handleSaveExercises(e) {
     e.preventDefault();
     const savedExercises = [];
-    allSelected.forEach(exer => {
-      for (let e = 0; e < exercises.length; e++) {
-        if (exer.exerciseId === exercises[e].exerciseId) {
-          savedExercises.push(exercises[e].exerciseId);
+    selectedExercises.forEach(exer => {
+      for (let e = 0; e < selectedExercises.length; e++) {
+        if (exer.exerciseId === selectedExercises[e].exerciseId) {
+          savedExercises.push(selectedExercises[e].exerciseId);
         }
       }
     });
@@ -161,23 +66,13 @@ export default function Exercises(props) {
       .catch(err => console.error('ERROR:', err));
   }
 
-  function handleSearch(e) {
-    const val = e.target.value.toLowerCase();
-    setSearchResult([]);
-    setSearchValue(val);
-    const filteredExercises = exercises.filter(exercise => {
-      return exercise.name.toLowerCase().includes(val);
-    });
-    setSearchResult(filteredExercises);
+  function toggleExerciseDisplay() {
+    expandExercisesDisplay ? setDisplay(false) : setDisplay(true);
   }
 
   function clearExercises() {
     setClearAll(true);
-    setAllSelected([]);
-  }
-
-  function toggleExerciseDisplay() {
-    expandExercisesDisplay ? setDisplay(false) : setDisplay(true);
+    setSelectedExercises([]);
   }
 
   function scrollToTop() {
@@ -189,57 +84,25 @@ export default function Exercises(props) {
       <h3 className="block text-3xl md:text-4xl mx-auto mb-5">Add Exercises</h3>
       {isLoading
         ? <LoadingRing />
-        : <>
-            <input
-              onChange={handleSearch}
-              type="search"
-            className="block w-[95%] md:w-[50%] mx-auto mb-6 py-2 px-4 text-xl bg-gray-200 border border-black rounded-md"
-              placeholder="Search exercises..."
-            />
-            {searchValue === ''
-              ? <>
-                  <div className="w-full min-w-[270px] gap-[0.3rem] mb-5 flex flex-wrap justify-center">
-                    {letters && letters.map(letter =>
-                      <AlphabetButtons key={letter} letter={letter} />
-                    )}
-                  </div>
-                  <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start'>
-                    {letters && letters.map(letter =>
-                      <LetterSection
-                        key={letter}
-                        letter={letter}
-                        exercises={exercises}
-                        setAllSelected={setAllSelected}
-                        allSelected={allSelected}
-                        clearAll={clearAll}
-                      />
-                    )}
-                  </div>
-                </>
-              : <div className="md:w-[50%] mx-auto mb-3 flex flex-row flex-wrap gap-2">
-                  {searchResults.length !== 0 && searchResults.map(exer =>
-                    <ExerciseCard
-                      key={exer.exerciseId}
-                      exerciseId={exer.exerciseId}
-                      name={exer.name}
-                      setAllSelected={setAllSelected}
-                      allSelected={allSelected}
-                      clearAll={clearAll}
-                      equipment={exer.equipment} />
-                  )}
-                </div>
-            }
-          </>}
+        : <ExerciseList
+            fullExerciseList={fullExerciseList}
+            letters={letters}
+            selectedExercises={selectedExercises}
+            setSelectedExercises={setSelectedExercises}
+            isLoading={isLoading}
+            setLoading={setLoading}
+            clearAll={clearAll} />
+      }
         <>
-          <a onClick={scrollToTop} className={`fixed h-[50px] right-[1%] bottom-[10%] md:bottom-[1%] text-priYellow hover:text-priRed border border-2 border-white rounded-md bg-black py-2 px-3 ${allSelected.length !== 0 && 'bottom-[145px] md:right-[31%]'}`}>
+          <a onClick={scrollToTop} className={`fixed h-[50px] right-[1%] bottom-[10%] md:bottom-[1%] text-priYellow hover:text-priRed border border-2 border-white rounded-md bg-black py-2 px-3 cursor-pointer ${selectedExercises.length !== 0 && 'bottom-[145px] md:right-[31%]'}`}>
             <i className="fa-solid fa-arrow-up fa-2x"></i>
           </a>
-          {allSelected.length !== 0 &&
+          {selectedExercises.length !== 0 &&
             <>
               <form
                 onSubmit={handleSaveExercises}
                 className="fixed w-full bottom-[61px] left-0 min-h-[45px] md:hidden flex items-center flex-col flex-nowrap justify-evenly bg-gray-200 border-t-4 border-white">
-                <p className="w-full mb-1 text-lg">Total Exercises: {allSelected.length}</p>
+            <p className="w-full mb-1 text-lg">Total Exercises: {selectedExercises.length}</p>
                 <div className='w-full'>
                   <button
                     type="submit"
@@ -265,9 +128,9 @@ export default function Exercises(props) {
                 <form
                   onSubmit={handleSaveExercises}
               className={`flex flex-col justify-evenly flex-nowrap border border-black overflow-hidden ease-in duration-200 ${!expandExercisesDisplay ? 'max-h-0' : 'max-h-[225px]'}`}>
-                  <p className="my-2 underline">Total Exercises: {allSelected.length}</p>
+              <p className="my-2 underline">Total Exercises: {selectedExercises.length}</p>
                   <ul className="max-h-[100px] is-size-6 overflow-y-scroll">
-                    {allSelected.map((exer, index) => <li key={index}>{exer.name}</li>)}
+                    {selectedExercises.map((exer, index) => <li key={index}>{exer.name}</li>)}
                   </ul>
                   <div className='h-[60px]'>
                     <button type="submit"

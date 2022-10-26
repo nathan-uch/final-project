@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingRing from '../components/loading-ring';
-import AppContext from '../lib/app-context';
 
 function AlphabetButtons({ letter }) {
 
   function handleScroll() {
     const section = document.getElementById(`${letter.toLowerCase()}`);
-    section.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    section.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   return (
@@ -14,49 +13,19 @@ function AlphabetButtons({ letter }) {
   );
 }
 
-function LetterSection({ letter, exercises, setSelectedExercise, selectedExercise }) {
-  const [filteredExer, setFilteredExer] = useState(null);
-
-  useEffect(() => {
-    if (!exercises) return;
-    const filtered = exercises.filter(exercise =>
-      exercise.name[0] === letter
-    );
-    setFilteredExer(filtered);
-  }, [exercises, letter]);
-
-  return (
-    <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
-      <p
-        id={`${letter.toLowerCase()}`}
-        className="w-full text-priYellow py-1 my-2 text-xl bg-black font-semibold rounded-md">
-        {letter}
-      </p>
-      <div className='w-full grid grid-cols-1 gap-1 justify-items-center'>
-        {filteredExer && filteredExer.map(exer =>
-          <ExerciseCard
-            key={exer.exerciseId}
-            exerciseId={exer.exerciseId}
-            name={exer.name}
-            setSelectedExercise={setSelectedExercise}
-            selectedExercise={selectedExercise}
-            equipment={exer.equipment} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, exerciseId }) {
+function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll, equipment, exerciseId }) {
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
-    if (selectedExercise === null || selectedExercise.exerciseId !== exerciseId) {
-      setSelected(false);
-    } else if (selectedExercise.exerciseId === exerciseId) {
-      setSelected(true);
-    }
-  }, [selectedExercise, setSelected, exerciseId]);
+    if (selectedExercises.length === 0) return;
+    selectedExercises.forEach(exer => {
+      if (exer.exerciseId === exerciseId) setSelected(true);
+    });
+  }, [selectedExercises, setSelected, exerciseId]);
+
+  useEffect(() => {
+    if (clearAll) setSelected(false);
+  }, [clearAll]);
 
   function getEquipment() {
     if (equipment === null) {
@@ -69,10 +38,11 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   function handleClick() {
     if (!isSelected) {
       setSelected(true);
-      setSelectedExercise({ exerciseId, name, equipment });
+      setSelectedExercises([...selectedExercises, { exerciseId, name, equipment }]);
     } else {
       setSelected(false);
-      setSelectedExercise(null);
+      const updatedSelected = selectedExercises.filter(exer => exer.exerciseId !== exerciseId);
+      setSelectedExercises(updatedSelected);
     }
   }
 
@@ -92,42 +62,48 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
   );
 }
 
-export default function ExerciseList({ selectedExercise, setSelectedExercise }) {
-  const [exercises, setExercises] = useState(null);
-  const [isLoading, setLoading] = useState(true);
+function LetterSection({ letter, fullExerciseList, setSelectedExercises, selectedExercises, clearAll }) {
+  const [filteredByLetterExer, setFilteredByLetterExer] = useState(null);
+
+  useEffect(() => {
+    if (!fullExerciseList) return;
+    const filtered = fullExerciseList.filter(exercise =>
+      exercise.name[0] === letter
+    );
+    setFilteredByLetterExer(filtered);
+  }, [fullExerciseList, letter]);
+
+  return (
+    <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
+      <p
+        id={`${letter.toLowerCase()}`}
+        className="w-full text-priYellow py-1 my-2 text-xl bg-black font-semibold rounded-md">
+        {letter}
+      </p>
+      <div className='w-full grid grid-cols-1 gap-1 justify-items-center'>
+        {filteredByLetterExer && filteredByLetterExer.map(exer =>
+          <ExerciseCard
+            key={exer.exerciseId}
+            exerciseId={exer.exerciseId}
+            name={exer.name}
+            setSelectedExercises={setSelectedExercises}
+            selectedExercises={selectedExercises}
+            clearAll={clearAll}
+            equipment={exer.equipment} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function ExerciseList({ fullExerciseList, letters, selectedExercises, setSelectedExercises, isLoading, setLoading, clearAll }) {
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResult] = useState([]);
-  const [letters, setLetters] = useState(null);
-  const { accessToken } = useContext(AppContext);
-
-  useEffect(() => {
-    fetch('/api/all-exercises', {
-      headers: { 'X-Access-Token': accessToken }
-    })
-      .then(response => response.json())
-      .then(result => {
-        setExercises(result);
-        setLoading(false);
-      })
-      .catch(err => console.error('ERROR:', err));
-  }, [accessToken]);
-
-  useEffect(() => {
-    const letters = [];
-    if (!exercises) return;
-    exercises.forEach(exercise => {
-      if (!letters.includes(exercise.name[0])) {
-        letters.push(exercise.name[0]);
-      }
-    });
-    setLetters(letters);
-  }, [exercises]);
 
   function handleSearch(e) {
     const val = e.target.value.toLowerCase();
-    setSearchResult([]);
     setSearchValue(val);
-    const filteredExercises = exercises.filter(exercise => {
+    const filteredExercises = fullExerciseList.filter(exercise => {
       return exercise.name.toLowerCase().includes(val);
     });
     setSearchResult(filteredExercises);
@@ -155,9 +131,10 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
                   <LetterSection
                     key={letter}
                     letter={letter}
-                    exercises={exercises}
-                    setSelectedExercise={setSelectedExercise}
-                    selectedExercise={selectedExercise}
+                    fullExerciseList={fullExerciseList}
+                    setSelectedExercises={setSelectedExercises}
+                    selectedExercises={selectedExercises}
+                    clearAll={clearAll}
                   />
                 )}
               </div>
@@ -168,8 +145,8 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
                   key={exer.exerciseId}
                   exerciseId={exer.exerciseId}
                   name={exer.name}
-                  setSelectedExercise={setSelectedExercise}
-                  selectedExercise={selectedExercise}
+                  setSelectedExercises={setSelectedExercises}
+                  selectedExercises={selectedExercises}
                   equipment={exer.equipment} />
               )}
             </div>
