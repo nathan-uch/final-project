@@ -62,16 +62,16 @@ function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll,
   );
 }
 
-function LetterSection({ letter, fullExerciseList, setSelectedExercises, selectedExercises, clearAll }) {
+function LetterSection({ letter, allExerciseData, setSelectedExercises, selectedExercises, clearAll }) {
   const [filteredByLetterExer, setFilteredByLetterExer] = useState(null);
 
   useEffect(() => {
-    if (!fullExerciseList) return;
-    const filtered = fullExerciseList.filter(exercise =>
+    if (!allExerciseData.list) return;
+    const filtered = allExerciseData.list.filter(exercise =>
       exercise.name[0] === letter
     );
     setFilteredByLetterExer(filtered);
-  }, [fullExerciseList, letter]);
+  }, [allExerciseData, letter]);
 
   return (
     <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
@@ -96,14 +96,14 @@ function LetterSection({ letter, fullExerciseList, setSelectedExercises, selecte
   );
 }
 
-export default function ExerciseList({ fullExerciseList, letters, selectedExercises, setSelectedExercises, isLoading, setLoading, clearAll }) {
+export default function ExerciseList({ allExerciseData, selectedExercises, setSelectedExercises, isLoading, setLoading, clearAll }) {
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResult] = useState([]);
 
   function handleSearch(e) {
     const val = e.target.value.toLowerCase();
     setSearchValue(val);
-    const filteredExercises = fullExerciseList.filter(exercise => {
+    const filteredExercises = allExerciseData.list.filter(exercise => {
       return exercise.name.toLowerCase().includes(val);
     });
     setSearchResult(filteredExercises);
@@ -122,16 +122,16 @@ export default function ExerciseList({ fullExerciseList, letters, selectedExerci
           {searchValue === ''
             ? <>
               <div className="w-full min-w-[270px] gap-[0.3rem] mb-5 flex flex-wrap justify-center">
-                {letters && letters.map(letter =>
+                {allExerciseData.letters && allExerciseData.letters.map(letter =>
                   <AlphabetButtons key={letter} letter={letter} />
                 )}
               </div>
               <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start'>
-                {letters && letters.map(letter =>
+                {allExerciseData.letters && allExerciseData.letters.map(letter =>
                   <LetterSection
                     key={letter}
                     letter={letter}
-                    fullExerciseList={fullExerciseList}
+                    allExerciseData={allExerciseData}
                     setSelectedExercises={setSelectedExercises}
                     selectedExercises={selectedExercises}
                     clearAll={clearAll}

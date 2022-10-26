@@ -4,9 +4,8 @@ import AppContext from '../lib/app-context';
 import ExerciseList from '../components/exercise-list';
 
 export default function Exercises(props) {
-  const [fullExerciseList, setFullExerciseList] = useState(null);
+  const [allExerciseData, setAllExerciseData] = useState({ list: null, letters: null });
   const [selectedExercises, setSelectedExercises] = useState([]);
-  const [letters, setLetters] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [expandExercisesDisplay, setDisplay] = useState(true);
   const [clearAll, setClearAll] = useState(false);
@@ -18,22 +17,18 @@ export default function Exercises(props) {
     })
       .then(response => response.json())
       .then(result => {
-        setFullExerciseList(result);
+        setAllExerciseData({ ...allExerciseData, list: result });
+        const letters = [];
+        allExerciseData.list.forEach(exercise => {
+          if (!letters.includes(exercise.name[0])) {
+            letters.push(exercise.name[0]);
+          }
+        });
+        setAllExerciseData({ ...allExerciseData, letters });
         setLoading(false);
       })
       .catch(err => console.error('ERROR:', err));
-  }, [accessToken, setLoading, setFullExerciseList]);
-
-  useEffect(() => {
-    if (!fullExerciseList) return;
-    const letters = [];
-    fullExerciseList.forEach(exercise => {
-      if (!letters.includes(exercise.name[0])) {
-        letters.push(exercise.name[0]);
-      }
-    });
-    setLetters(letters);
-  }, [fullExerciseList]);
+  }, [accessToken, setLoading, setAllExerciseData, allExerciseData]);
 
   useEffect(() => {
     setClearAll(false);
@@ -85,8 +80,7 @@ export default function Exercises(props) {
       {isLoading
         ? <LoadingRing />
         : <ExerciseList
-            fullExerciseList={fullExerciseList}
-            letters={letters}
+            allExerciseData={allExerciseData}
             selectedExercises={selectedExercises}
             setSelectedExercises={setSelectedExercises}
             isLoading={isLoading}
