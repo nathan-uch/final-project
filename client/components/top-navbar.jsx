@@ -20,7 +20,7 @@ export default function TopNavbar() {
           </figure>
         </a>
         <div className="hidden md:flex gap-12 items-center">
-          <a href="#new-workout" className="text-xl text-priYellow hover:text-priRed font-semibold">Workouts</a>
+          <a href="#new-workout" className="text-xl text-priYellow hover:text-priRed font-semibold">Workout</a>
           <a href="#user-profile" className="text-xl text-priYellow hover:text-priRed font-semibold">Profile</a>
           <a href="#charts" className="text-xl text-priYellow hover:text-priRed font-semibold">Progress</a>
         </div>

@@ -10,7 +10,7 @@ function AlphabetButtons({ letter }) {
   }
 
   return (
-    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed rounded-md bg-black font-bold text-2xl py-1 px-2">{letter}</a>
+    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed bg-black font-bold text-2xl py-1 px-2 rounded-md cursor-pointer">{letter}</a>
   );
 }
 
@@ -26,12 +26,12 @@ function LetterSection({ letter, exercises, setAllSelected, allSelected, clearAl
   }, [exercises, letter]);
 
   return (
-    <div className="w-full md:w-[40%] max-w-[900px] flex flex-col flex-nowrap items-center md:gap-x-4 ">
+    <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
       <p id={`${letter.toLowerCase()}`}
-        className="w-full text-priYellow rounded-md scroll-mt-[65px] text-xl bg-black font-semibold py-1 mx-4 my-2">
+        className="w-full text-priYellow py-1 my-2 text-xl bg-black font-semibold rounded-md">
         {letter}
       </p>
-      <div className='w-full grid grid-cols-1 gap-2 justify-items-center'>
+      <div className='w-full grid grid-cols-1 gap-1 justify-items-center'>
         {filteredExer && filteredExer.map(exer =>
           <ExerciseCard
             key={exer.exerciseId}
@@ -84,14 +84,14 @@ function ExerciseCard({ name, allSelected, setAllSelected, clearAll, equipment, 
     !isSelected
       ? <a
         onClick={handleClick}
-        className="w-full max-h-[35px] border border-white  bg-gray-200 rounded-md text-center p-1 cursor-pointer">
+        className="w-full h-[35px] border-2 border-white bg-gray-200 rounded-md text-center p-1 cursor-pointer">
         <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
     </a>
       : <a
           onClick={handleClick}
-        className="relative w-full max-h-[35px] border border-black bg-amber-50 rounded-md text-center p-1 cursor-pointer">
+        className="relative w-full h-[35px] bg-amber-50 text-center p-1 border border-black rounded-md cursor-pointer">
         <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
-        <i className='fa-solid fa-check fa mr-4 fa-lg absolute top-[16px] right-[5px] text-amber-400'></i>
+        <i className='fa-solid fa-check mr-4 fa-lg absolute top-[16px] right-[5px] text-amber-400'></i>
     </a>
   );
 }
@@ -193,17 +193,17 @@ export default function Exercises(props) {
             <input
               onChange={handleSearch}
               type="search"
-              className="w-[95%] md:w-[50%] bg-gray-100 border border-black rounded-md block mx-auto mb-6 py-2 px-4 text-2xl"
+            className="block w-[95%] md:w-[50%] mx-auto mb-6 py-2 px-4 text-xl bg-gray-200 border border-black rounded-md"
               placeholder="Search exercises..."
             />
             {searchValue === ''
               ? <>
-                  <div className="w-full min-w-[270px] h-auto gap-[0.3rem] mb-5 flex flex-wrap justify-center">
+                  <div className="w-full min-w-[270px] gap-[0.3rem] mb-5 flex flex-wrap justify-center">
                     {letters && letters.map(letter =>
                       <AlphabetButtons key={letter} letter={letter} />
                     )}
                   </div>
-                  <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start md:gap-x-4'>
+                  <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start'>
                     {letters && letters.map(letter =>
                       <LetterSection
                         key={letter}
@@ -229,8 +229,7 @@ export default function Exercises(props) {
                   )}
                 </div>
             }
-          </>
-        }
+          </>}
         <>
           <a onClick={scrollToTop} className={`fixed h-[50px] right-[1%] bottom-[10%] md:bottom-[1%] text-priYellow hover:text-priRed border border-2 border-white rounded-md bg-black py-2 px-3 ${allSelected.length !== 0 && 'bottom-[145px] md:right-[31%]'}`}>
             <i className="fa-solid fa-arrow-up fa-2x"></i>
@@ -244,13 +243,13 @@ export default function Exercises(props) {
                 <div className='w-full'>
                   <button
                     type="submit"
-                    className='primary-button w-[45%] h-[35px] text-xl mb-3 shadow-xl mx-2'>
+                    className='primary-button w-[45%] h-[35px] text-lg mb-3 shadow-xl mx-2'>
                     Add all
                   </button>
                   <button
                     onClick={clearExercises}
                     type="button"
-                    className=' w-[45%] h-[35px] bg-white text-xl mb-3 rounded-md shadow-xl active:scale-95 mx-2'>
+                    className=' w-[45%] h-[35px] bg-white text-lg mb-3 rounded-md shadow-xl active:scale-95 mx-2'>
                     Clear
                   </button>
                 </div>
@@ -272,13 +271,13 @@ export default function Exercises(props) {
                   </ul>
                   <div className='h-[60px]'>
                     <button type="submit"
-                      className='primary-button w-[40%] h-[40px] shadow-xl m-2 text-xl'>
+                      className='primary-button w-[40%] h-[40px] shadow-xl m-2 text-lg'>
                       Add all
                     </button>
                     <button
                       onClick={clearExercises}
                       type="button"
-                      className='w-[40%] h-[40px] shadow-xl text-xl bg-white hover:bg-gray-200 m-2 border border-gray-300 rounded-md'>
+                      className='w-[40%] h-[40px] shadow-xl text-lg bg-white hover:bg-gray-200 m-2 border border-gray-300 rounded-md'>
                       Clear
                     </button>
                   </div>

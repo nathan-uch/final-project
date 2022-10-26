@@ -39,7 +39,6 @@ function AuthForm({ existingUsernames, path }) {
         setAction({ ...action, message: 'error' });
         return;
       }
-
       fetch('/api/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,7 +52,6 @@ function AuthForm({ existingUsernames, path }) {
           }, 3000);
         })
         .catch(err => console.error('ERROR:', err));
-
     } else if (action.type === 'sign-in') {
       fetch('/api/auth/sign-in', {
         method: 'POST',

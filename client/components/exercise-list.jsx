@@ -6,11 +6,11 @@ function AlphabetButtons({ letter }) {
 
   function handleScroll() {
     const section = document.getElementById(`${letter.toLowerCase()}`);
-    section.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    section.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
   return (
-    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed bg-black font-bold py-1 px-2 text-xl rounded-md cursor-pointer">{letter}</a>
+    <a onClick={handleScroll} className="w-[35px] text-priYellow hover:text-priRed bg-black font-bold py-1 px-2 text-2xl rounded-md cursor-pointer">{letter}</a>
   );
 }
 
@@ -26,20 +26,23 @@ function LetterSection({ letter, exercises, setSelectedExercise, selectedExercis
   }, [exercises, letter]);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <p id={`${letter.toLowerCase()}`}
-        className="w-[95%] text-priYellow py-1 my-1 mx-auto text-xl bg-black font-bold rounded-md">
+    <div className="w-full max-w-[370px] mx-auto flex flex-col justify-center items-center">
+      <p
+        id={`${letter.toLowerCase()}`}
+        className="w-full text-priYellow py-1 my-2 text-xl bg-black font-semibold rounded-md">
         {letter}
       </p>
-      {filteredExer && filteredExer.map(exer =>
-        <ExerciseCard
-          key={exer.exerciseId}
-          exerciseId={exer.exerciseId}
-          name={exer.name}
-          setSelectedExercise={setSelectedExercise}
-          selectedExercise={selectedExercise}
-          equipment={exer.equipment} />
-      )}
+      <div className='w-full grid grid-cols-1 gap-1 justify-items-center'>
+        {filteredExer && filteredExer.map(exer =>
+          <ExerciseCard
+            key={exer.exerciseId}
+            exerciseId={exer.exerciseId}
+            name={exer.name}
+            setSelectedExercise={setSelectedExercise}
+            selectedExercise={selectedExercise}
+            equipment={exer.equipment} />
+        )}
+      </div>
     </div>
   );
 }
@@ -77,14 +80,14 @@ function ExerciseCard({ name, selectedExercise, setSelectedExercise, equipment, 
     !isSelected
       ? <a
         onClick={handleClick}
-        className="w-[95%] h-[40px] border-2 border-white bg-gray-200 flex-row flex-wrap text-center p-1 mx-4 my-1 rounded-md cursor-pointer">
-        <p className="inline text-lg font-bold">{`${name} ${getEquipment()}`}</p>
+        className="w-full h-[35px] border border-white bg-gray-200 rounded-md text-center p-1 cursor-pointer">
+        <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
       </a>
       : <a
         onClick={handleClick}
-        className="relative w-[95%] h-[40px] bg-white flex-row flex-wrap rounded-md text-center p-1 mx-4 my-1 border-2 border-black cursor-pointer">
-        <p className="inline text-lg font-bold">{`${name} ${getEquipment()}`}</p>
-        <i className='fa-solid fa-check fa mr-4 fa-xl absolute top-[17px] right-[1px] text-amber-400'></i>
+        className="relative w-full h-[35px] bg-amber-50 text-center p-1 border border-black rounded-md cursor-pointer">
+        <p className="inline font-bold">{`${name} ${getEquipment()}`}</p>
+        <i className='fa-solid fa-check mr-4 fa-lg absolute top-[16px] right-[5px] text-amber-400'></i>
       </a>
   );
 }
@@ -138,16 +141,16 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
           <input
             onChange={handleSearch}
             type="search"
-            className="w-[80%] max-w-[340px] block mx-auto mb-6 py-2 px-4 text-xl bg-gray-200 border border-black rounded-md"
+            className="block w-[95%] md:w-[50%] mx-auto mb-6 py-2 px-4 text-xl bg-gray-200 border border-black rounded-md"
             placeholder="Search exercises..." />
           {searchValue === ''
             ? <>
-              <div className="min-w-[270px] gap-1 mb-5 flex flex-wrap justify-center">
+              <div className="w-full min-w-[270px] gap-[0.3rem] mb-5 flex flex-wrap justify-center">
                 {letters && letters.map(letter =>
                   <AlphabetButtons key={letter} letter={letter} />
                 )}
               </div>
-              <div className='md:flex-col flex-row flex-wrap justify-center'>
+              <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start'>
                 {letters && letters.map(letter =>
                   <LetterSection
                     key={letter}
@@ -159,7 +162,7 @@ export default function ExerciseList({ selectedExercise, setSelectedExercise }) 
                 )}
               </div>
             </>
-            : <div className="md:w-[300px] mx-auto mb-3">
+            : <div className="md:w-[50%] flex flex-row flex-wrap mx-auto mb-3 gap-2">
               {searchResults.length !== 0 && searchResults.map(exer =>
                 <ExerciseCard
                   key={exer.exerciseId}
