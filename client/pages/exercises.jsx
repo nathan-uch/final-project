@@ -1,34 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
 import ExerciseList from '../components/exercise-list';
 
 export default function Exercises(props) {
-  const [allExerciseData, setAllExerciseData] = useState({ list: null, letters: null });
   const [selectedExercises, setSelectedExercises] = useState([]);
-  const [isLoading, setLoading] = useState(true);
   const [expandExercisesDisplay, setDisplay] = useState(true);
   const [clearAll, setClearAll] = useState(false);
   const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
-
-  useEffect(() => {
-    fetch('/api/all-exercises', {
-      headers: { 'X-Access-Token': accessToken }
-    })
-      .then(response => response.json())
-      .then(result => {
-        setAllExerciseData({ ...allExerciseData, list: result });
-        const letters = [];
-        allExerciseData.list.forEach(exercise => {
-          if (!letters.includes(exercise.name[0])) {
-            letters.push(exercise.name[0]);
-          }
-        });
-        setAllExerciseData({ ...allExerciseData, letters });
-        setLoading(false);
-      })
-      .catch(err => console.error('ERROR:', err));
-  }, [accessToken, setLoading, setAllExerciseData, allExerciseData]);
 
   useEffect(() => {
     setClearAll(false);
@@ -77,17 +55,11 @@ export default function Exercises(props) {
   return (
     <div className="pb-[150px] pt-[80px] text-center mx-4">
       <h3 className="block text-3xl md:text-4xl mx-auto mb-5">Add Exercises</h3>
-      {isLoading
-        ? <LoadingRing />
-        : <ExerciseList
-            allExerciseData={allExerciseData}
+        <ExerciseList
             selectedExercises={selectedExercises}
             setSelectedExercises={setSelectedExercises}
-            isLoading={isLoading}
-            setLoading={setLoading}
-            clearAll={clearAll} />
-      }
-        <>
+            clearAll={clearAll}
+            isSingleExercise={false} />
           <a onClick={scrollToTop} className={`fixed h-[50px] right-[1%] bottom-[10%] md:bottom-[1%] text-priYellow hover:text-priRed border border-2 border-white rounded-md bg-black py-2 px-3 cursor-pointer ${selectedExercises.length !== 0 && 'bottom-[145px] md:right-[31%]'}`}>
             <i className="fa-solid fa-arrow-up fa-2x"></i>
           </a>
@@ -142,7 +114,6 @@ export default function Exercises(props) {
               </div>
             </>
           }
-        </>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import AppContext from '../lib/app-context';
 import LoadingRing from '../components/loading-ring';
 
 function AlphabetButtons({ letter }) {
@@ -13,18 +14,24 @@ function AlphabetButtons({ letter }) {
   );
 }
 
-function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll, equipment, exerciseId }) {
+function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll, clearExercises, equipment, exerciseId, isSingleExercise }) {
   const [isSelected, setSelected] = useState(false);
 
   useEffect(() => {
     if (selectedExercises.length === 0) return;
     selectedExercises.forEach(exer => {
-      if (exer.exerciseId === exerciseId) setSelected(true);
+      if (exer.exerciseId === exerciseId) {
+        setSelected(true);
+      } else if (isSingleExercise) {
+        setSelected(false);
+      }
     });
-  }, [selectedExercises, setSelected, exerciseId]);
+  }, [selectedExercises, setSelected, exerciseId, isSingleExercise]);
 
   useEffect(() => {
-    if (clearAll) setSelected(false);
+    if (clearAll) {
+      setSelected(false);
+    }
   }, [clearAll]);
 
   function getEquipment() {
@@ -36,13 +43,17 @@ function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll,
   }
 
   function handleClick() {
-    if (!isSelected) {
+    if (!isSelected && isSingleExercise) {
+      clearExercises();
+      setSelected(true);
+      setSelectedExercises([{ exerciseId, name, equipment }]);
+    } else if (!isSelected && !isSingleExercise) {
       setSelected(true);
       setSelectedExercises([...selectedExercises, { exerciseId, name, equipment }]);
-    } else {
+    } else if (isSelected) {
       setSelected(false);
-      const updatedSelected = selectedExercises.filter(exer => exer.exerciseId !== exerciseId);
-      setSelectedExercises(updatedSelected);
+      const updatedSelectedExercises = selectedExercises.filter(exer => exer.exerciseId !== exerciseId);
+      setSelectedExercises(updatedSelectedExercises);
     }
   }
 
@@ -62,12 +73,12 @@ function ExerciseCard({ name, selectedExercises, setSelectedExercises, clearAll,
   );
 }
 
-function LetterSection({ letter, allExerciseData, setSelectedExercises, selectedExercises, clearAll }) {
+function LetterSection({ letter, allExerciseData, setSelectedExercises, selectedExercises, clearAll, clearExercises, isSingleExercise }) {
   const [filteredByLetterExer, setFilteredByLetterExer] = useState(null);
 
   useEffect(() => {
-    if (!allExerciseData.list) return;
-    const filtered = allExerciseData.list.filter(exercise =>
+    if (!allExerciseData || !letter) return;
+    const filtered = allExerciseData.filter(exercise =>
       exercise.name[0] === letter
     );
     setFilteredByLetterExer(filtered);
@@ -89,16 +100,45 @@ function LetterSection({ letter, allExerciseData, setSelectedExercises, selected
             setSelectedExercises={setSelectedExercises}
             selectedExercises={selectedExercises}
             clearAll={clearAll}
-            equipment={exer.equipment} />
+            clearExercises={clearExercises}
+            equipment={exer.equipment}
+            isSingleExercise={isSingleExercise} />
         )}
       </div>
     </div>
   );
 }
 
-export default function ExerciseList({ allExerciseData, selectedExercises, setSelectedExercises, isLoading, setLoading, clearAll }) {
+export default function ExerciseList({ selectedExercises, setSelectedExercises, clearExercises, clearAll, isSingleExercise }) {
+  const [allExerciseData, setAllExerciseData] = useState(null);
+  const [letters, setLetters] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResult] = useState([]);
+  const { accessToken } = useContext(AppContext);
+
+  useEffect(() => {
+    fetch('/api/all-exercises', {
+      headers: { 'X-Access-Token': accessToken }
+    })
+      .then(response => response.json())
+      .then(result => {
+        setAllExerciseData(result);
+        setLoading(false);
+      })
+      .catch(err => console.error('ERROR:', err));
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!allExerciseData) return;
+    const letters = [];
+    allExerciseData.forEach(exercise => {
+      if (!letters.includes(exercise.name[0])) {
+        letters.push(exercise.name[0]);
+      }
+    });
+    setLetters(letters);
+  }, [allExerciseData]);
 
   function handleSearch(e) {
     const val = e.target.value.toLowerCase();
@@ -122,12 +162,12 @@ export default function ExerciseList({ allExerciseData, selectedExercises, setSe
           {searchValue === ''
             ? <>
               <div className="w-full min-w-[270px] gap-[0.3rem] mb-5 flex flex-wrap justify-center">
-                {allExerciseData.letters && allExerciseData.letters.map(letter =>
+                {letters && letters.map(letter =>
                   <AlphabetButtons key={letter} letter={letter} />
                 )}
               </div>
               <div className='max-w-[900px] flex flex-row flex-wrap justify-center items-center mx-auto md:items-start'>
-                {allExerciseData.letters && allExerciseData.letters.map(letter =>
+                {letters && letters.map(letter =>
                   <LetterSection
                     key={letter}
                     letter={letter}
@@ -135,6 +175,8 @@ export default function ExerciseList({ allExerciseData, selectedExercises, setSe
                     setSelectedExercises={setSelectedExercises}
                     selectedExercises={selectedExercises}
                     clearAll={clearAll}
+                    clearExercises={clearExercises}
+                    isSingleExercise={isSingleExercise}
                   />
                 )}
               </div>
@@ -147,7 +189,9 @@ export default function ExerciseList({ allExerciseData, selectedExercises, setSe
                   name={exer.name}
                   setSelectedExercises={setSelectedExercises}
                   selectedExercises={selectedExercises}
-                  equipment={exer.equipment} />
+                  equipment={exer.equipment}
+                  clearExercises={clearExercises}
+                  isSingleExercise={isSingleExercise} />
               )}
             </div>
           }
