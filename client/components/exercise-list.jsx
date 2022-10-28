@@ -97,11 +97,11 @@ function LetterSection({ letter, allExerciseData, setSelectedExercises, selected
             key={exer.exerciseId}
             exerciseId={exer.exerciseId}
             name={exer.name}
+            equipment={exer.equipment}
             setSelectedExercises={setSelectedExercises}
             selectedExercises={selectedExercises}
             clearAll={clearAll}
             clearExercises={clearExercises}
-            equipment={exer.equipment}
             isSingleExercise={isSingleExercise} />
         )}
       </div>
@@ -187,9 +187,9 @@ export default function ExerciseList({ selectedExercises, setSelectedExercises, 
                   key={exer.exerciseId}
                   exerciseId={exer.exerciseId}
                   name={exer.name}
+                  equipment={exer.equipment}
                   setSelectedExercises={setSelectedExercises}
                   selectedExercises={selectedExercises}
-                  equipment={exer.equipment}
                   clearExercises={clearExercises}
                   isSingleExercise={isSingleExercise} />
               )}
