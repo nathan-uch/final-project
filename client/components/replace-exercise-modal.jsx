@@ -5,8 +5,8 @@ import ExerciseList from '../components/exercise-list';
 export default function ReplaceExerciseModal({ replaceModalIsOpen, toggleReplaceModal, exerToReplace, setExerToReplace, setWorkout, workout }) {
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [clearAll, setClearAll] = useState(false);
-  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
   const modalRef = useRef();
+  const { accessToken, user, curWorkout: workoutId } = useContext(AppContext);
 
   function handleReplaceExercise(e) {
     e.preventDefault();
