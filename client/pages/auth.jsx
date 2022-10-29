@@ -148,7 +148,7 @@ function AuthForm({ existingUsernames, path }) {
         minLength={5}
         type="text"
         name="username"
-        className="text-xl py-2 px-3 mb-4 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black rounded-md"
         id="username" />
       <label
         htmlFor="password"
@@ -159,7 +159,7 @@ function AuthForm({ existingUsernames, path }) {
         minLength={6}
         type="password"
         name="password"
-        className="text-xl py-2 px-3 mb-4 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black rounded-md"
         id="password" />
       {displayAlternative()}
       {action.message && showDisplayMessage()}
