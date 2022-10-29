@@ -20,9 +20,9 @@ export default function NewWorkout() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='body-container has-text-centered'>
-      <h3 className="is-size-3 mb-4">Quick Start</h3>
-      <button type="submit" className="button primary-button is-size-5 p-5">Begin a new Workout</button>
+    <form onSubmit={handleSubmit} className='pt-[90px] text-center'>
+      <h3 className="text-3xl mb-5">Begin Workout</h3>
+      <button type="submit" className="primary-button py-3 px-6 text-xl">Select Exercises</button>
     </form>
   );
 }

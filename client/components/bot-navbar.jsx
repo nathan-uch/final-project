@@ -3,24 +3,22 @@ import React from 'react';
 export default function BotNavbar() {
 
   return (
-    <nav className="navbar is-hidden-desktop px-5 is-fixed-bottom has-background-black" role="navigation" aria-label="main navigation">
-      <div className="navbar-menu is-active is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around p-0">
-        <a href="#user-profile" className="navbar-item p-0">
-          <figure className="navbar-icon">
-            <img src="images/user-icon.png" className="bot-navbar-icon my-2 nav-user-icon" />
+    <nav className="navbar z-20 md:hidden fixed bottom-0 w-full flex flex-row justify-evenly items-center bg-black" role="navigation" aria-label="main navigation">
+        <a href="#user-profile" className="p-0">
+          <figure className="bg-black ">
+            <img src="images/user-icon.png" className="object-contain w-[40px] h-[45px] my-2" />
           </figure>
         </a>
-        <a href="#new-workout" className="navbar-item p-0">
-          <figure className="navbar-icon">
-            <img src="images/db-yellow.png" className="bot-navbar-icon my-2" />
+        <a href="#new-workout" className="p-0">
+          <figure className="bg-black">
+            <img src="images/db-yellow.png" className="object-contain w-[60px] h-[60px]" />
           </figure>
         </a>
-        <a href="#charts" className="navbar-item p-0">
-          <figure className="navbar-icon">
-            <img src="images/chart-yellow.png" className="bot-navbar-icon chart-icon my-2" />
+        <a href="#charts" className="p-0">
+          <figure className="bg-black">
+            <img src="images/chart-yellow.png" className="object-contain w-[42px] h-[40px]" />
           </figure>
         </a>
-      </div>
     </nav>
   );
 }

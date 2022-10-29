@@ -10,33 +10,31 @@ export default function TopNavbar() {
   }
 
   return (
-    <nav className="navbar px-5 is-flex is-align-items-center is-fixed-top is-flex-direction-row is-flex-wrap-nowrap
-    is-justify-content-space-between has-background-black" role="navigation" aria-label="main navigation">
-      <div className="navbar-start">
-          <a href="#" className="navbar-item">
-            <figure className="image is-48x48">
-              <img className="logo-img" src="images/flame-red.png" alt="logo icon" />
-            </figure>
-          <h2 className="m-0 is-size-5 logo-text has-text-weight-bold">Strive</h2>
-          </a>
-        <div className="navbar-menu is-hidden-touch desktop-links">
-          <a href="#new-workout" className="navbar-item top-links is-size-5 has-text-weight-semibold mx-4">Workouts</a>
-          <a href="#user-profile" className="navbar-item top-links is-size-5 has-text-weight-semibold mx-4">Profile</a>
-          <a href="#charts" className="navbar-item top-links is-size-5 has-text-weight-semibold mx-4">Progress</a>
+    <nav className="fixed z-20 top-0 min-h-[60px] w-screen px-5 flex items-center flex-row flex-nowrap justify-between bg-black"
+    role="navigation" aria-label="main navigation">
+      <div className='flex w-[95%] justify-between mr-6'>
+        <a href="#">
+          <figure>
+          <img className="w-[120px] h-[40px] md:h-[35px] md:w-[90px] object-contain"
+            src="images/strive-logo.png" alt="logo icon"/>
+          </figure>
+        </a>
+        <div className="hidden md:flex gap-12 items-center">
+          <a href="#new-workout" className="text-xl text-priYellow hover:text-priRed font-semibold">Workout</a>
+          <a href="#user-profile" className="text-xl text-priYellow hover:text-priRed font-semibold">Profile</a>
+          <a href="#charts" className="text-xl text-priYellow hover:text-priRed font-semibold">Progress</a>
         </div>
       </div>
-      <div className="navbar-end">
-        <div className="navbar-item">
-          <button className="signout-btn" onClick={toggleSignOut}>
-            <i className="fa-solid fa-arrow-right-from-bracket fa-xl"></i>
-          </button>
-          <button
-            onClick={handleSignOut}
-            type="button"
-            className={`signout-pop-btn button is-danger is-outlined has-background-danger-light ${!signOutIsOpen && 'hidden'}`}>
-            Sign Out
-          </button>
-        </div>
+      <div className="w-[5%] ml-6">
+        <a className="cursor-pointer" onClick={toggleSignOut}>
+          <i className="fa-solid fa-arrow-right-from-bracket fa-xl text-priYellow hover:text-priRed"></i>
+        </a>
+        <button
+          onClick={handleSignOut}
+          type="button"
+          className={`absolute top-[50px] right-[40px] p-2 border rounded-md border-priRed bg-red-100 text-priRed font-bold hover:bg-priRed hover:text-white ${!signOutIsOpen && 'hidden'}`}>
+          Sign Out
+        </button>
       </div>
     </nav>
   );

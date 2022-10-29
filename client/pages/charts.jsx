@@ -110,11 +110,11 @@ export default function FrequencyChart() {
   };
 
   return (
-    <div className="body-container has-text-centered">
-      <h4 className="is-size-2 my-4 center">Progress</h4>
+    <div className="pt-[80px] text-center">
+      <h4 className="text-4xl mb-5 mx-auto">Progress</h4>
       {!labels
         ? <LoadingRing />
-        : <div className="chart-container mx-auto p-2">
+        : <div className="w-[95%] min-h-[300px] md:w-[75%] md:min-h-[400px] mx-auto p-2 border border-black rounded-md">
           <Bar
             options={options}
             data={chartData}

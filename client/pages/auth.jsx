@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import LoadingRing from '../components/loading-ring';
 import AppContext from '../lib/app-context';
-import Redirect from '../components/redirect';
+import Redirect from '../lib/redirect';
 
 function AuthForm({ existingUsernames, path }) {
   const [userInfo, setUserInfo] = useState({
@@ -13,6 +13,7 @@ function AuthForm({ existingUsernames, path }) {
     message: null
   });
   const { handleSignIn, curRoute, user } = useContext(AppContext);
+  const authFormRef = useRef();
 
   useEffect(() => {
     setAction({
@@ -30,9 +31,9 @@ function AuthForm({ existingUsernames, path }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const authForm = document.querySelector('.auth-form');
-    authForm.reset();
+    authFormRef.current.reset();
     const { username } = userInfo;
+
     if (action.type === 'sign-up') {
       if (existingUsernames.includes(username)) {
         setAction({ ...action, message: 'error' });
@@ -46,7 +47,9 @@ function AuthForm({ existingUsernames, path }) {
         .then(response => response.json())
         .then(result => {
           setAction({ ...action, message: 'success' });
-          window.location.hash = 'sign-in';
+          setTimeout(() => {
+            window.location.hash = 'sign-in';
+          }, 3000);
         })
         .catch(err => console.error('ERROR:', err));
     } else if (action.type === 'sign-in') {
@@ -75,49 +78,56 @@ function AuthForm({ existingUsernames, path }) {
         <>
           <button
               type="submit"
-            className="mt-3 py-3 px-6 primary-button is-size-5 text-black">
+              className='primary-button w-[90%] max-w-[240px] mt-4 py-2 text font-bold text-xl'>
               Sign In
             </button>
           <div>
-            <p className='is-size-5 mt-4'>Don&apos;t have an account?</p>
-            <a href="#sign-up" className='alt-anchor is-size-5'>Click here to sign up.</a>
+            <p className='text-xl mt-4'>Don&apos;t have an account?</p>
+            <a href="#sign-up" className='text-xl underline text-priYellow hover:text-priRed'>Click here to sign up.</a>
           </div>
         </>
       );
     } else if (action.type === 'sign-up') {
-      return (
-        <div>
-          <button
-            type="submit"
-            className="mt-3 py-3 px-4 primary-button is-size-5 text-black">
-            Sign Up
-          </button>
-          <p className="is-inline is-size-5 mx-5">or </p>
-          <a href="#sign-in" className='alt-anchor is-size-5'>Sign in</a>
-        </div>
-      );
+      if (action.message === 'success') {
+        return <LoadingRing />;
+      } else {
+        return (
+          <div>
+            <button
+              type="submit"
+              className="primary-button mt-4 py-3 px-3 text font-bold text-xl">
+              Sign Up
+            </button>
+            <p className="inline text-xl mx-5">or </p>
+            <a href="#sign-in" className='text-xl underline text-priYellow hover:text-priRed'>Sign in</a>
+          </div>
+        );
+      }
     }
   }
 
   function showDisplayMessage() {
     if (action.type === 'sign-up' && action.message === 'error') {
       return (
-        <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'>
+        <p className='relative w-[260px] rounded-md text-priRed text-priRed border-2 border-priRed float-left my-5 p-3 font-bold bg-red-100'>
           <i className="fa-solid fa-xmark fa-lg mr-3"></i>
           Username already exists.
         </p>
       );
     } else if (action.type === 'sign-up' && action.message === 'success') {
       return (
-        <div className='auth-success-message is-flex is-flex-direction-row has-text-left my-5 p-3 has-text-weight-bold has-background-success-light'>
-          <i className="fa-solid fa-check fa-lg mr-4 pt-5"></i>
-          <p>Account created! <br />You are ready to STRVE!</p>
-        </div>
+        <>
+          <p className="mt-3 text-green-500"> Please wait, redirecting...</p >
+          <div className='flex justify-around items-center text-sm relative w-[220px] my-5 p-3 font-bold bg-green-100 text-[#419552] rounded-md border-[#419552] border-2'>
+            <i className="fa-solid fa-check fa-xl mx-2 color-[#419552] "></i>
+            <p>Account created!<br />Ready to STRVE!</p>
+          </div>
+        </>
       );
     } else if (action.type === 'sign-in' && action.message === 'error') {
       return (
-        <p className='auth-error-message has-text-left my-5 p-3 has-text-weight-bold has-background-danger-light'>
-          <i className="fa-solid fa-xmark fa-lg mr-3"></i>
+        <p className='relative w-[260px] rounded-md text-lg text-priRed border-2 border-priRed float-left my-5 p-3 font-bold bg-red-100'>
+          <i className="fa-solid fa-xmark fa-xl mr-3 relative top-[15px] -left-[8px]"></i>
           Invalid username or password.
         </p>
       );
@@ -125,28 +135,31 @@ function AuthForm({ existingUsernames, path }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="my-3 auth-form mx-auto is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+    <form
+      onSubmit={handleSubmit}
+      ref={authFormRef}
+      className="my-3 w-[250px] mx-auto flex flex-col justify-center items-center">
       <label
         htmlFor="username"
-        className="is-size-5 auth-label mr-auto ml-2">Username</label>
+        className="text-xl mb-1 mr-auto ml-2">Username</label>
       <input
         onChange={handleChange}
         required={true}
         minLength={5}
         type="text"
         name="username"
-        className="py-2 px-3 mb-4 is-size-5 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black"
         id="username" />
       <label
         htmlFor="password"
-        className="is-size-5 auth-label mr-auto ml-2">Password</label>
+        className="text-xl mb-1 mr-auto ml-2">Password</label>
       <input
         onChange={handleChange}
         required={true}
         minLength={6}
         type="password"
         name="password"
-        className="py-2 px-3 mb-4 is-size-5 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black"
         id="password" />
       {displayAlternative()}
       {action.message && showDisplayMessage()}
@@ -168,17 +181,16 @@ export default function AuthPage() {
   if (user) return <Redirect to='' />;
 
   return (
-    <div className="auth-body has-background-black has-text-centered is-flex is-flex-direction-column is-align-items-center">
-      <div className="is-relative auth-logo mx-auto mb-2">
-        <figure className="is-absolute auth-logo-img image is-64x64">
+    <div className="h-full min-h-screen bg-black text-center flex flex-col items-center text-priYellow pt-14">
+      <div className="relative min-w-[340px] h-[100px] mx-auto mb-2">
+        <figure className="auth-logo-img absolute -top-[9px] left-0 right-0 mx-auto h-[65px] w-[220px]">
           <img
-            src="images/flame-red.png"
-            alt="logo icon" />
+            src="images/strive-logo.png"
+            alt="logo icon"/>
         </figure>
-        <h1 className="auth-logo-text">Strive</h1>
-        <h2 className="auth-logo-subtext is-size-5">Workout Tracker</h2>
+        <h2 className="auth-logo-subtext absolute bottom-0 min-w-[220px] text-xl left-0 right-0 mx-auto">Workout Tracker</h2>
       </div>
-      <h3 className="is-size-3 my-5">{curRoute.path === 'sign-up' ? 'Sign Up' : 'Sign In'}</h3>
+      <h3 className="text-3xl my-5">{curRoute.path === 'sign-up' ? 'Sign Up' : 'Sign In'}</h3>
       {existingUsernames
         ? <AuthForm existingUsernames={existingUsernames} path={curRoute.path} />
         : <LoadingRing />
