@@ -18,7 +18,7 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 * Express.js
 * PostgreSQL
 * HTML5, CSS3
-* Bulma.io
+* ~~Bulma.io~~ Tailwind
 * Dokku
 
 ## Features:
