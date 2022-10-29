@@ -271,7 +271,7 @@ app.post('/api/workout/new-exercises', (req, res, next) => {
 
 app.patch('/api/workout/:workoutId', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
-  const { exercises } = req.body;
+  const { exercises, workoutName } = req.body;
   if (!exercises) throw new ClientError(400, 'ERROR: Missing exercises.');
   const exercisePromises = exercises.flatMap(exercise => {
     const { exerciseId, sets } = exercise;
@@ -298,6 +298,16 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
         return db.query(addSql, params);
       }
     });
+    if (workoutName) {
+      const params = [workoutId, workoutName];
+      const nameSql = `
+      update "workouts"
+      set "workoutName" = $2
+      where "workoutId" = $1
+      returning *;
+      `;
+      setPromises.push(db.query(nameSql, params));
+    }
     return setPromises;
   });
   Promise.all(exercisePromises)
@@ -309,8 +319,7 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
 });
 
 app.patch('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
-  const workoutId = Number(req.params.workoutId);
-  const exerciseId = Number(req.params.exerciseId);
+  const { workoutId, exerciseId } = Number(req.params);
   const { newExerciseId } = req.body;
   if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
   const params = [workoutId, exerciseId, newExerciseId];

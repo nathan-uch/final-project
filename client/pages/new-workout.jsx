@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 
 export default function NewWorkout() {
-  const [workoutName] = useState('');
+  const [workoutName] = useState('NewWorkout');
   const { setCurWorkout, accessToken } = useContext(AppContext);
 
   function handleSubmit(e) {
