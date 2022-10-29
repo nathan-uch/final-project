@@ -26,7 +26,7 @@ export default function TopNavbar() {
         </div>
       </div>
       <div className="w-[5%] ml-6">
-        <a className="" onClick={toggleSignOut}>
+        <a className="cursor-pointer" onClick={toggleSignOut}>
           <i className="fa-solid fa-arrow-right-from-bracket fa-xl text-priYellow hover:text-priRed"></i>
         </a>
         <button
