@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 
 export default function NewWorkout() {
+  const [workoutName] = useState('');
   const { setCurWorkout, accessToken } = useContext(AppContext);
 
   function handleSubmit(e) {
+    const body = { workoutName };
     e.preventDefault();
     fetch('/api/new-workout', {
       method: 'POST',
-      headers: { 'X-Access-Token': accessToken }
+      headers: { 'X-Access-Token': accessToken },
+      body: JSON.stringify(body)
     })
       .then(response => response.json())
       .then(result => {

@@ -184,6 +184,7 @@ app.get('/api/user/workout-sets', (req, res, next) => {
                 "sets"."weight",
                 "workouts"."userId",
                 "workouts"."completedAt",
+                "workouts"."workoutName",
                 "exercises"."name",
                 "exercises"."muscleGroup",
                 "exercises"."equipment"
@@ -227,11 +228,12 @@ app.get('/api/user/workout-sets', (req, res, next) => {
 
 app.post('/api/new-workout', (req, res, next) => {
   const userId = Number(req.user.userId);
+  const workoutName = req.body;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
-  const params = [userId];
+  const params = [userId, workoutName];
   const sql = `
-    insert into "workouts" ("userId")
-    values      ($1)
+    insert into "workouts" ("userId", "workoutName")
+    values      ($1, $2)
     returning *;
   `;
   db.query(sql, params)
