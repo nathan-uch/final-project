@@ -249,7 +249,7 @@ app.get('/api/user/workout-sets', (req, res, next) => {
 
 app.post('/api/new-workout', (req, res, next) => {
   const userId = Number(req.user.userId);
-  const workoutName = req.body;
+  const { workoutName } = req.body;
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
   const params = [userId, workoutName];
   const sql = `
