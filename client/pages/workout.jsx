@@ -57,7 +57,7 @@ export default function WorkoutPage() {
         toggleSaveModal={toggleSaveModal}
         workout={workout}
         deleteExercise={deleteExercise} />
-      <h3 className="text-3xl font-semibold pt-4">New Workout</h3>
+      <h3 className="text-3xl font-semibold pt-4">{workout ? workout.workoutName : 'Workout'}</h3>
       <button
         type="button"
         className="primary-button h-[40px] mt-3 px-6"

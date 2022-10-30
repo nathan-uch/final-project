@@ -116,14 +116,18 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
            "sets"."reps",
            "sets"."weight",
            "exercises"."name",
-           "exercises"."equipment"
-    from "sets"
-    join "exercises" using ("exerciseId")
-    where "sets"."workoutId" = $1;
+           "exercises"."equipment",
+           "workouts"."workoutName"
+    from   "sets"
+    join   "exercises" using ("exerciseId")
+    join   "workouts" using ("workoutId")
+    where   "sets"."workoutId" = $1
+    and     "workouts"."workoutId" = $1;
   `;
   db.query(sql, params)
     .then(result => {
-      const splitExercises = result.rows.map(exercise => {
+      const workoutName = result.rows[0].workoutName;
+      const splitExercises = result.rows.map((exercise, index) => {
         const exerObj = {
           exerciseId: exercise.exerciseId,
           name: exercise.name,
@@ -138,6 +142,7 @@ app.get('/api/workout/:workoutId', (req, res, next) => {
       });
       const workout = {
         workoutId,
+        workoutName,
         exercises: splitExercises
       };
       res.status(200).json(workout);
