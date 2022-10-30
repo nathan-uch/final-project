@@ -64,6 +64,14 @@ export default function UserProfile() {
       .catch(err => console.error('ERROR:', err));
   }, [accessToken]);
 
+  useEffect(() => {
+    fetch('/api/user/empty-workouts', {
+      method: 'delete',
+      headers: { 'X-Access-Token': accessToken }
+    })
+      .catch(err => console.error('ERROR:', err));
+  }, [accessToken]);
+
   return (
     <div className='text-center flex flex-col md:flex-row md:min-h-screen py-[80px] md:pb-0 md:pt-[64px]'>
       <div className="w-[60%] min-w-[290px] mx-auto md:w-[30%] md:h-auto py-5 shadow-xl rounded-md md:pb-[80px]">

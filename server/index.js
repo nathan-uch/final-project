@@ -162,6 +162,27 @@ app.get('/api/user/all-workouts', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/user/empty-workouts', (req, res, next) => {
+  const userId = Number(req.user.userId);
+  if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
+  const params = [userId];
+  const sql = `
+  WITH workoutDelete AS (
+    DELETE from "workouts"
+    where "completedAt" is null
+    and "userId" = $1
+    returning "workoutId"
+  )
+  delete from "sets"
+  where "workoutId" in (select "workoutId" from workoutDelete)
+  `;
+  db.query(sql, params)
+    .then(result => {
+      res.status(204).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/user/workout-sets', (req, res, next) => {
   const userId = Number(req.user.userId);
   if (!userId) throw new ClientError(400, 'ERROR: Invalid user.');
