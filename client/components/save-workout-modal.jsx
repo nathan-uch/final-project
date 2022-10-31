@@ -7,6 +7,7 @@ export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, setS
   function saveWorkout(e) {
     e.preventDefault();
     toggleSaveModal();
+    const workoutName = { workoutName: workout.workoutName };
     const finalWorkout = workout;
     const deleteExercises = [];
     const finalExercises = [];
@@ -37,12 +38,13 @@ export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, setS
     })
       .catch(err => console.error('ERROR:', err));
 
-    fetch(`/api/workout/${workout.workoutId}/completed-time`, {
+    fetch(`/api/workout/${workout.workoutId}/completed`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'X-Access-Token': accessToken
-      }
+      },
+      body: JSON.stringify(workoutName)
     })
       .then(result => { window.location.hash = 'user-profile'; })
       .catch(err => console.error('ERROR:', err));

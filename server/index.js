@@ -364,14 +364,16 @@ app.patch('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.patch('/api/workout/:workoutId/completed-time', (req, res, next) => {
+app.patch('/api/workout/:workoutId/completed', (req, res, next) => {
   const workoutId = Number(req.params.workoutId);
+  const { workoutName } = req.body;
   if (!workoutId) throw new ClientError(400, 'ERROR: Existing workoutId is required');
   const date = new Date();
-  const params = [workoutId, date];
+  const params = [workoutId, workoutName, date];
   const sql = `
   update "workouts"
-  set    "completedAt" = $2
+  set    "completedAt" = $3,
+         "workoutName" = $2
   where  "workoutId" = $1;
   `;
   db.query(sql, params)

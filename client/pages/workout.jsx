@@ -7,6 +7,7 @@ import EditWorkout from '../components/edit-workout';
 export default function WorkoutPage() {
   const [workout, setWorkout] = useState(null);
   const [exerToReplace, setExerToReplace] = useState({ exerciseId: null, name: null });
+  const [editWorkoutNameOpen, setEditWorkoutNameOpen] = useState(false);
   const [replaceModalIsOpen, setReplaceModalOpenClose] = useState(false);
   const [saveWorkoutModalIsOpen, setSaveWorkoutModalOpen] = useState(false);
   const { accessToken, curWorkout: workoutId } = useContext(AppContext);
@@ -33,6 +34,10 @@ export default function WorkoutPage() {
     );
   }
 
+  function handleChange(e) {
+    setWorkout({ ...workout, workoutName: e.target.value });
+  }
+
   function toggleReplaceModal() {
     setReplaceModalOpenClose(!replaceModalIsOpen);
     if (replaceModalIsOpen) setExerToReplace({ exerciseId: null, name: null });
@@ -40,6 +45,10 @@ export default function WorkoutPage() {
 
   function toggleSaveModal() {
     setSaveWorkoutModalOpen(!saveWorkoutModalIsOpen);
+  }
+
+  function toggleEditWorkoutName() {
+    setEditWorkoutNameOpen(!editWorkoutNameOpen);
   }
 
   return (
@@ -57,7 +66,18 @@ export default function WorkoutPage() {
         toggleSaveModal={toggleSaveModal}
         workout={workout}
         deleteExercise={deleteExercise} />
-      <h3 className="text-3xl font-semibold pt-4">{workout ? workout.workoutName : 'Workout'}</h3>
+      <div className="relative w-[65%] max-w-[340px] min-w-[160px] h-[52px] my-4 mx-auto">
+        {editWorkoutNameOpen
+          ? <>
+              <input onChange={handleChange} type="text" className="text-3xl w-full bg-gray-200 py-2 px-2 rounded-md text-center" value={`${workout && workout.workoutName}`} maxLength={20} />
+              <a className="absolute -right-[13%] top-[13px] cursor-pointer" onClick={toggleEditWorkoutName}><i className="fa-solid fa-circle-check fa-xl"></i></a>
+            </>
+          : <>
+              <h3 className="w-full absolute top-[50%] -translate-y-1/2 text-3xl py-2 px-1 font-semibold text-center truncate">{workout ? workout.workoutName : 'Workout'}</h3>
+              <a onClick={toggleEditWorkoutName} className="absolute -right-[13%] top-[50%] -translate-y-1/2 cursor-pointer"><i className="fa-solid fa-pen-to-square fa-xl"></i></a>
+            </>
+        }
+      </div>
       <button
         type="button"
         className="primary-button h-[40px] mt-3 px-6"
