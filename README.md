@@ -36,7 +36,7 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 
 ## Future Features:
 * ~~User can replace exercises in workout~~
-* User can name and rename workouts
+* ~~User can name and rename workouts~~
 * User can select equipment used for exercise
 * User can filter exercises by muscle group
 * User can create workout templates (presaved exercises)
