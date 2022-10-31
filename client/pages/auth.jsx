@@ -117,7 +117,7 @@ function AuthForm({ existingUsernames, path }) {
     } else if (action.type === 'sign-up' && action.message === 'success') {
       return (
         <>
-          <p className="mt-3 text-green-500"> Please wait, redirecting...</p >
+          <p className="mt-3 text-priYellow"> Please wait, redirecting...</p >
           <div className='flex justify-around items-center text-sm relative w-[220px] my-5 p-3 font-bold bg-green-100 text-[#419552] rounded-md border-[#419552] border-2'>
             <i className="fa-solid fa-check fa-xl mx-2 color-[#419552] "></i>
             <p>Account created!<br />Ready to STRVE!</p>
@@ -148,7 +148,7 @@ function AuthForm({ existingUsernames, path }) {
         minLength={5}
         type="text"
         name="username"
-        className="text-xl py-2 px-3 mb-4 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black rounded-md"
         id="username" />
       <label
         htmlFor="password"
@@ -159,7 +159,7 @@ function AuthForm({ existingUsernames, path }) {
         minLength={6}
         type="password"
         name="password"
-        className="text-xl py-2 px-3 mb-4 text-black"
+        className="text-xl py-2 px-3 mb-4 text-black rounded-md"
         id="password" />
       {displayAlternative()}
       {action.message && showDisplayMessage()}
