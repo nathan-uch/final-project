@@ -12,13 +12,13 @@ function ExerciseTableRow({ exercise }) {
 }
 
 function WorkoutCard({ index, workout, workoutId }) {
-  const [wId] = useState(workoutId[0]);
+  const wId = workoutId[0];
   const date = new Date(workout[wId][0].completedAt);
 
   return (
     <div className=" w-[95%] min-w-[290px] max-w-[500px] bg-gray-200 mx-auto my-6 py-2 rounded-md shadow-xl">
       <div className="py-1 px-0">
-        <h4 className="font-bold text-xl mt-3">Workout {wId}</h4>
+        <h4 className="font-bold text-2xl mt-3">{workout[wId][0].workoutName}</h4>
         <p className='mb-5'>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
         <table className="table-fixed text-left w-full bg-gray-200">
           <thead>
@@ -29,7 +29,9 @@ function WorkoutCard({ index, workout, workoutId }) {
           </thead>
           <tbody>
             {workout[wId].map(exercise => {
-              return <ExerciseTableRow key={exercise.exerciseId} exercise={exercise} />;
+              return <ExerciseTableRow
+                      key={exercise.exerciseId}
+                      exercise={exercise} />;
             })}
           </tbody>
         </table>
@@ -86,7 +88,11 @@ export default function UserProfile() {
         {!workouts
           ? <LoadingRing />
           : workouts.map((workout, index) => {
-            return <WorkoutCard key={index} index={index} workout={workout} workoutId={Object.keys(workout)} />;
+            return <WorkoutCard
+                    key={index}
+                    index={index}
+                    workout={workout}
+                    workoutId={Object.keys(workout)} />;
           })}
       </div>
     </div>
