@@ -23,11 +23,8 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 
 ## Features:
 * User can create workout
-* User can view exercise list
 * User can add exercises to workout
-* User can view a workout's exercises and sets
 * User can edit and add sets
-* User can delete exercise from workout
 * User can save workouts
 * User can view workout history
 
@@ -37,6 +34,8 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 ## Future Features:
 * ~~User can replace exercises in workout~~
 * ~~User can name and rename workouts~~
+* User can mark all sets done for an exercise
+* User can view workout total volume
 * User can select equipment used for exercise
 * User can filter exercises by muscle group
 * User can create workout templates (presaved exercises)
