@@ -35,7 +35,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   return (
     <form onSubmit={handleSubmit}
       className="h-[45px] mb-1 text-center flex justify-between items-center content-start">
-      <p className="mx-1 text-2xl min-w-[25px] font-bold">{setOrder}</p>
+      <p className="mx-2 text-2xl w-[28px] font-bold">{setOrder}</p>
       {!isDone
         ? <input
           required={true}
@@ -56,10 +56,10 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
       }
       <button
         href="#"
-        className="cursor-pointer border-0 bg-white"
+        className="cursor-pointer border-0 bg-white w-[72px] mx-2"
         onClick={toggleSetDone}
         type="submit">
-        <i className={`fa-solid fa-check fa-2x mx-4 ${isDone ? 'text-amber-400' : 'mt-[0.3rem]'}`}></i></button>
+        <i className={`fa-solid fa-check fa-2x mx-4 ${isDone && 'text-amber-400'}`}></i></button>
     </form>
   );
 }
@@ -126,8 +126,8 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
         <div className="mb-4 text-center flex justify-between content-start">
           <p className="mx-2 inline text-lg font-semibold">Set</p>
           <p className="mx-2 inline text-lg font-semibold">Reps</p>
-          <p className="mx-2 inline text-lg font-semibold">Weight (lb)</p>
-          <p className="mx-2 inline text-lg font-semibold">Done</p>
+          <p className="mx-2 inline text-lg font-semibold">Weight</p>
+          <button type="button" className="mx-1 inline px-3 text-lg font-semibold border border-black rounded-md">Done</button>
         </div>
         {exerciseSets.map((set, index) =>
           <Set
