@@ -7,9 +7,7 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
   const [weight, setWeight] = useState(0);
 
   function toggleSetDone() {
-    if (!reps) {
-      return false;
-    }
+    if (!reps) return;
     const updatedDoneValue = exerciseSets.map((set, index) => {
       if (setIndex === index) {
         return !isDone ? { ...set, isDone: true, reps, weight } : { ...set, isDone: false };
@@ -21,10 +19,20 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
 
   function repsChange(e) {
     setReps(Math.round(e.target.value));
+    const updatedReps = exerciseSets.map((set, index) => {
+      if (setIndex === index) return { ...set, reps };
+      return set;
+    });
+    setSets(updatedReps);
   }
 
   function weightChange(e) {
     setWeight(Math.round(e.target.value * 10) / 10);
+    const updatedWeight = exerciseSets.map((set, index) => {
+      if (setIndex === index) return { ...set, weight };
+      return set;
+    });
+    setSets(updatedWeight);
   }
 
   function handleSubmit(e) {
@@ -56,8 +64,8 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
       }
       <button
         href="#"
-        className="cursor-pointer border-0 bg-white w-[72px] mx-2"
         onClick={toggleSetDone}
+        className="cursor-pointer border-0 bg-white w-[72px] mx-2"
         type="submit">
         <i className={`fa-solid fa-check fa-2x mx-4 ${isDone && 'text-amber-400'}`}></i></button>
     </form>
@@ -65,15 +73,34 @@ function Set({ setOrder, isDone, exerciseSets, setSets, setIndex, updateWorkout 
 }
 
 function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, setExerToReplace, toggleReplaceModal }) {
-  const [exerciseSets, setSets] = useState([{ setOrder: 1, reps: null, weight: null, isDone: false }]);
+  const [exerciseSets, setSets] = useState([{
+    setOrder: 1,
+    reps: null,
+    weight: null,
+    isDone: false
+  }]);
   const [setCount, changeSetCount] = useState(1);
   const [exerOptionsIsOpen, setExerOptionsIsOpen] = useState(false);
   const exerciseId = exercise.exerciseId;
 
+  function markAllDone() {
+    const areDone = exerciseSets.map(set => {
+      if (set.reps === 0 || set.reps === null) return set;
+      return { ...set, isDone: true };
+    });
+    setSets(areDone);
+    updateWorkout();
+  }
+
   function updateWorkout() {
     const finishedSets = exerciseSets.filter(set => set.isDone);
-    const updatedExercise = exercise;
-    updatedExercise.sets = finishedSets;
+    const updatedExercise = { ...exercise, sets: finishedSets };
+    const updatedWorkoutExercises = workout.exercises.map(exer => {
+      if (exer.exerciseId !== exerciseId) return exer;
+      return updatedExercise;
+    });
+    const finalWorkout = { ...workout, exercises: updatedWorkoutExercises };
+    setWorkout(finalWorkout);
   }
 
   function addNewSet() {
@@ -92,7 +119,7 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
   }
 
   function confirmDelete() {
-    const finalWorkout = { workoutId, exercises: null };
+    const finalWorkout = { ...workout, exercises: null };
     const updatedWorkoutExercises = workout.exercises.filter(exercise =>
       exercise.exerciseId !== exerciseId ? exercise : false
     );
@@ -127,7 +154,10 @@ function Exercise({ workoutId, exercise, workout, setWorkout, deleteExercise, se
           <p className="mx-2 inline text-lg font-semibold">Set</p>
           <p className="mx-2 inline text-lg font-semibold">Reps</p>
           <p className="mx-2 inline text-lg font-semibold">Weight</p>
-          <button type="button" className="mx-1 inline px-3 text-lg font-semibold border border-black rounded-md">Done</button>
+          <button
+            type="button"
+            onClick={markAllDone}
+            className="mx-1 inline px-3 text-lg font-semibold border border-black rounded-md">Done</button>
         </div>
         {exerciseSets.map((set, index) =>
           <Set
