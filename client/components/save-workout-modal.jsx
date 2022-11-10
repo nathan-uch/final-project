@@ -20,9 +20,13 @@ export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, setS
     }
 
     finalExercises.forEach(exercise => {
+      const updatedSets = [];
       exercise.sets.forEach((set, index) => {
+        if (!set.isDone) return;
         set.setOrder = index + 1;
+        updatedSets.push(set);
       });
+      exercise.sets = updatedSets;
     });
 
     finalWorkout.exercises = finalExercises;
