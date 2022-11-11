@@ -67,7 +67,6 @@ export default function WorkoutPage() {
         workout={workout} />
       <SaveWorkoutModal
         saveWorkoutModalIsOpen={saveWorkoutModalIsOpen}
-        setSaveWorkoutModalOpen={setSaveWorkoutModalOpen}
         toggleSaveModal={toggleSaveModal}
         workout={workout}
         deleteExercise={deleteExercise} />

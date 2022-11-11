@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import LoadingRing from '../components/loading-ring';
 
-function Set({ exercise, setExercise, index, setOrder, isDone, setIndex, updateWorkout }) {
+function Set({ exercise, setExercise, setIndex, setOrder, isDone, updateWorkout }) {
 
   function toggleSetDone() {
-    if (exercise.sets[index].reps === 0 || exercise.sets[index].reps === null) return;
+    if (exercise.sets[setIndex].reps === 0 || exercise.sets[setIndex].reps === null) return;
     const updatedSets = exercise.sets.map((s, i) => {
-      if (i === index) {
-        return { ...s, isDone: !exercise.sets[index].isDone };
+      if (i === setIndex) {
+        return { ...s, isDone: !exercise.sets[setIndex].isDone };
       }
       return s;
     });
@@ -16,7 +16,7 @@ function Set({ exercise, setExercise, index, setOrder, isDone, setIndex, updateW
 
   function repsChange(e) {
     const updatedSets = exercise.sets.map((s, i) => {
-      if (i === index) return { ...s, reps: Math.round(e.target.value) };
+      if (i === setIndex) return { ...s, reps: Math.round(e.target.value) };
       return s;
     });
     setExercise({ ...exercise, sets: updatedSets });
@@ -24,7 +24,7 @@ function Set({ exercise, setExercise, index, setOrder, isDone, setIndex, updateW
 
   function weightChange(e) {
     const updatedSets = exercise.sets.map((s, i) => {
-      if (i === index) return { ...s, weight: Math.round((e.target.value * 10) / 10) };
+      if (i === setIndex) return { ...s, weight: Math.round((e.target.value * 10) / 10) };
       return s;
     });
     setExercise({ ...exercise, sets: updatedSets });
@@ -39,39 +39,39 @@ function Set({ exercise, setExercise, index, setOrder, isDone, setIndex, updateW
     <form onSubmit={handleSubmit}
       className="h-[45px] mb-1 text-center flex justify-between items-center content-start">
       <p className="mx-2 text-2xl w-[28px] font-bold">{setOrder}</p>
-      {!exercise.sets[index].isDone
+      {!exercise.sets[setIndex].isDone
         ? <input
           required={true}
           type="number"
           min="1"
-          value={exercise.sets[index].reps}
+          value={exercise.sets[setIndex].reps}
           onChange={repsChange}
           className="w-[50px] md:w-[90px] h-[40px] rounded-md border-0 text-center text-2xl py-1 mx-2 bg-gray-100" />
-        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{exercise.sets[index].reps}</p>}
-      {!exercise.sets[index].isDone
+        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{exercise.sets[setIndex].reps}</p>}
+      {!exercise.sets[setIndex].isDone
         ? <input
           type="number"
           min="0"
-          value={exercise.sets[index].weight}
+          value={exercise.sets[setIndex].weight}
           onChange={weightChange}
           className="w-[50px] md:w-[90px] h-[40px] rounded-md border-0 text-center text-2xl py-1 mx-2 bg-gray-100" />
-        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{exercise.sets[index].weight}</p>
+        : <p className="min-w-[50px] md:min-w-[90px] h-[40px] text-2xl py-1 mx-2">{exercise.sets[setIndex].weight}</p>
       }
       <button
         href="#"
         onClick={toggleSetDone}
         className="cursor-pointer border-0 bg-white w-[72px] mx-2"
         type="submit">
-        <i className={`fa-solid fa-check fa-2x mx-4 ${exercise.sets[index].isDone && 'text-amber-400'}`}></i></button>
+        <i className={`fa-solid fa-check fa-2x mx-4 ${exercise.sets[setIndex].isDone && 'text-amber-400'}`}></i></button>
     </form>
   );
 }
 
-function Exercise({ exer, exerciseIndex, workout, setWorkout, deleteExercise, setExerToReplace, toggleReplaceModal }) {
+function Exercise({ exer, workout, setWorkout, deleteExercise, setExerToReplace, toggleReplaceModal }) {
   const [exercise, setExercise] = useState(exer);
   const [setCount, changeSetCount] = useState(2);
   const [exerOptionsIsOpen, setExerOptionsIsOpen] = useState(false);
-  const exerciseId = exercise.exerciseId;
+  const exerciseId = exer.exerciseId;
 
   function markAllDone() {
     const updatedSets = exercise.sets.map(s => {
@@ -113,11 +113,10 @@ function Exercise({ exer, exerciseIndex, workout, setWorkout, deleteExercise, se
   }
 
   function confirmDelete() {
-    const finalWorkout = { ...workout, exercises: null };
     const updatedWorkoutExercises = workout.exercises.filter(exercise =>
-      exercise.exerciseId !== exerciseId ? exercise : false
+      exercise.exerciseId !== exerciseId
     );
-    finalWorkout.exercises = updatedWorkoutExercises;
+    const finalWorkout = { ...workout, exercises: updatedWorkoutExercises };
     deleteExercise([exerciseId]);
     setWorkout(finalWorkout);
     setExerOptionsIsOpen(false);
@@ -127,7 +126,7 @@ function Exercise({ exer, exerciseIndex, workout, setWorkout, deleteExercise, se
     <div className="w-[98%] min-w-[270px] max-w-[500px] rounded-md shadow-xl mb-5 mx-auto">
       <div className="relative bg-black rounded-t-md">
         <h3 className="font-semibold text-2xl text-priYellow py-2 justify-center">
-          {exercise.name}</h3>
+          {exer.name}</h3>
         <button type="button" className="absolute right-0 bottom-0 py-3 px-4 border-0 is-large rounded-t-md has-background-black"
           onClick={openOptions}>
           <i className="fa-solid fa-ellipsis-vertical fa-xl text-priYellow" />
@@ -158,10 +157,9 @@ function Exercise({ exer, exerciseIndex, workout, setWorkout, deleteExercise, se
             key={index}
             exercise={exercise}
             setExercise={setExercise}
-            index={index}
+            setIndex={index}
             setOrder={set.setOrder}
             isDone={set.isDone}
-            setIndex={index}
             updateWorkout={updateWorkout} />
         )}
       </div>
@@ -180,11 +178,10 @@ export default function EditWorkout({ workout, setWorkout, replaceModalIsOpen, t
     <div className='mt-5 flex items-center justify-center flex-col'>
       {!workout
         ? <LoadingRing />
-        : workout.exercises.map((exer, index) =>
+        : workout.exercises.map(exer =>
           <Exercise
-            key={index}
+            key={exer.exerciseId}
             exer={exer}
-            exerciseIndex={index}
             workout={workout}
             setWorkout={setWorkout}
             deleteExercise={deleteExercise}

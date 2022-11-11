@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import AppContext from '../lib/app-context';
 
-export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, setSaveWorkoutModalOpen, toggleSaveModal, deleteExercise }) {
+export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, toggleSaveModal, deleteExercise }) {
   const { accessToken } = useContext(AppContext);
 
   function saveWorkout(e) {
