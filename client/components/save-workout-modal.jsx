@@ -10,16 +10,17 @@ export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, togg
     const workoutName = { workoutName: workout.workoutName };
     const finalWorkout = workout;
     const deleteExercises = [];
-    const finalExercises = [];
-    for (let i = 0; i < workout.exercises.length; i++) {
-      if (workout.exercises[i].sets.length === 1 && !workout.exercises[i].sets[0].isDone) {
-        deleteExercises.push(workout.exercises[i].exerciseId);
+    const checkExercisesSets = [];
+    workout.exercises.forEach(exer => {
+      if (exer.sets.length === 1 && !exer.sets[0].isDone) {
+        deleteExercises.push(exer.exerciseId);
       } else {
-        finalExercises.push(workout.exercises[i]);
+        checkExercisesSets.push(exer);
       }
-    }
+    });
 
-    finalExercises.forEach(exercise => {
+    const finalExercises = [];
+    checkExercisesSets.forEach(exercise => {
       const updatedSets = [];
       exercise.sets.forEach((set, index) => {
         if (!set.isDone) return;
@@ -27,10 +28,19 @@ export default function SaveWorkoutModal({ workout, saveWorkoutModalIsOpen, togg
         updatedSets.push(set);
       });
       exercise.sets = updatedSets;
+      if (exercise.sets.length === 0) {
+        deleteExercises.push(exercise.exerciseId);
+      } else {
+        finalExercises.push(exercise);
+      }
     });
 
-    finalWorkout.exercises = finalExercises;
     deleteExercise(deleteExercises);
+    if (finalExercises.length === 0) {
+      window.location.hash = 'user-profile';
+      return;
+    }
+    finalWorkout.exercises = finalExercises;
 
     fetch(`/api/workout/${workout.workoutId}`, {
       method: 'PATCH',
