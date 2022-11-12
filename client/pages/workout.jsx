@@ -18,6 +18,11 @@ export default function WorkoutPage() {
     })
       .then(response => response.json())
       .then(result => {
+        const updatedExer = result.exercises.map(exer => {
+          exer.sets = [{ reps: 0, setOrder: 1, weight: 0, isDone: false }];
+          return exer;
+        });
+        result.exercises = updatedExer;
         setWorkout(result);
       })
       .catch(err => console.error('ERROR:', err));
@@ -62,7 +67,6 @@ export default function WorkoutPage() {
         workout={workout} />
       <SaveWorkoutModal
         saveWorkoutModalIsOpen={saveWorkoutModalIsOpen}
-        setSaveWorkoutModalOpen={setSaveWorkoutModalOpen}
         toggleSaveModal={toggleSaveModal}
         workout={workout}
         deleteExercise={deleteExercise} />

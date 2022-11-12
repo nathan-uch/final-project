@@ -346,7 +346,8 @@ app.patch('/api/workout/:workoutId', (req, res, next) => {
 });
 
 app.patch('/api/workout/:workoutId/exercise/:exerciseId', (req, res, next) => {
-  const { workoutId, exerciseId } = Number(req.params);
+  const workoutId = Number(req.params.workoutId);
+  const exerciseId = Number(req.params.exerciseId);
   const { newExerciseId } = req.body;
   if (!workoutId || !exerciseId) throw new ClientError(400, 'ERROR: Missing valid workoutId or exerciseId');
   const params = [workoutId, exerciseId, newExerciseId];
