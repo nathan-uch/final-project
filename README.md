@@ -34,7 +34,7 @@ As a regular gym goer, I found myself regularly forgetting previous workout volu
 ## Future Features:
 * ~~User can replace exercises in workout~~
 * ~~User can name and rename workouts~~
-* User can mark all sets done for an exercise
+* ~~User can mark all sets done for an exercise~~
 * User can view workout total volume
 * User can select equipment used for exercise
 * User can filter exercises by muscle group
